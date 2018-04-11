@@ -11,12 +11,12 @@ func main() {
 	// You need to set your Username and Password here
 	a.Initialize("root", "OC#oc2018", "db", "News")
 
-	a.CrawNews()
+	a.insertNewsItem()
 
 	c := cron.New()
 	c.AddFunc("@hourly",      func() {
 		fmt.Println("Every hour")
-		a.CrawNews()
+		a.insertNewsItem()
 	})
 
 	c.Start()

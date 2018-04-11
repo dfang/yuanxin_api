@@ -94,4 +94,9 @@ func (a *App) getNewsItem(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, u)
 }
 
-
+func (a *App) insertNewsItem() {
+	news := a.CrawNews()
+	for _ , v := range news {
+		v.insertNewsItem(a.DB)
+	}
+}

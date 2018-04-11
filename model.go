@@ -58,7 +58,7 @@ func (u *NewsItem) getNewsItem(db *sql.DB) error {
 }
 
 func (item *NewsItem) insertNewsItem(db *sql.DB) (sql.Result, error)  {
-	insertStatement, _ := db.Prepare("INSERT INTO NewsItem (Title, Description, Body, Type, UpdatedAt) VALUES (?, ?, ?, ?, ?)")
+	//insertStatement, _ := db.prep()
 
 	//res, err := insertStatement.Exec(item.Title, item.Description, "", item.Type, item.UpdatedAt)
 	//checkErr(err)
@@ -67,5 +67,7 @@ func (item *NewsItem) insertNewsItem(db *sql.DB) (sql.Result, error)  {
 	//checkErr(err)
 	//
 	//fmt.Printf("lastInsertId is %d\n", id)
-	return insertStatement.Exec(item.Title, item.Description, "", item.Type, item.UpdatedAt)
+
+	//return insertStatement.Exec(item.Title, item.Description, "", item.Type, item.UpdatedAt)
+	return db.Exec("INSERT INTO NewsItem (Title, Description, Body, Type, UpdatedAt) VALUES (?, ?, ?, ?, ?)", item.Title, item.Description, "", item.Type, item.UpdatedAt)
 }

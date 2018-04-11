@@ -24,7 +24,7 @@ func (item *NewsItem) CollectBody(collector *colly.Collector) *NewsItem  {
 	return item
 }
 
-func (a *App) CrawNews() {
+func (a *App) CrawNews() []NewsItem {
 	c := colly.NewCollector(
 		// Turn on asynchronous requests
 		//	colly.Async(true),
@@ -47,7 +47,6 @@ func (a *App) CrawNews() {
 				Link: e.Request.AbsoluteURL(el.ChildAttr(".top-title h3 a", "href")),
 			}
 
-			//item.insertNewsItem(a.DB)
 			//db, err := sql.Open("mysql", connectionString)
 			//checkErr(err)
 
@@ -66,7 +65,6 @@ func (a *App) CrawNews() {
 			//item.CollectBody(detailCollector)
 			//detailCollector.Visit(e.Request.AbsoluteURL(item.Link))
 			items = append(items, item)
-
 		})
 	})
 
@@ -96,6 +94,8 @@ func (a *App) CrawNews() {
 
 	// Dump json to the standard output
 	enc.Encode(items)
+
+	return items
 }
 
 
