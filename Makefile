@@ -26,6 +26,7 @@ pack:
 
 upload:
 	docker push dfang/yuanxin:$(TAG)
+	docker push dfang/yuanxin:latest
 
 deploy:
 	envsubst < k8s/deployment.yml | kubectl apply -f -
