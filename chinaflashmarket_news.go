@@ -62,7 +62,7 @@ func (a *App) craw_news() {
 			id, err := res.LastInsertId()
 			checkErr(err)
 
-			fmt.Println("lastInsertId is %s", id)
+			fmt.Printf("lastInsertId is %d\n", id)
 
 			//item.CollectBody(detailCollector)
 			//detailCollector.Visit(e.Request.AbsoluteURL(item.Link))

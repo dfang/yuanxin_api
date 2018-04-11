@@ -8,7 +8,7 @@ install:
 	go get .
 
 test:
-	go test ./...
+	go test .
 
 build: install
 	go build -ldflags "-X main.version=$(TAG)" -o news .
@@ -31,4 +31,4 @@ upload:
 deploy:
 	envsubst < k8s/deployment.yml | kubectl apply -f -
 
-ship: test pack upload deploy clean
+ship: test pack upload clean
