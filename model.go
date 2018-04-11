@@ -57,3 +57,15 @@ func (u *NewsItem) getNewsItem(db *sql.DB) error {
 	return db.QueryRow(statement).Scan(&u.Title, &u.Link, &u.Type, &u.Description, &u.Body, &u.UpdatedAt)
 }
 
+func (item *NewsItem) insertNewsItem(db *sql.DB) (sql.Result, error)  {
+	insertStatement, _ := db.Prepare("INSERT INTO NewsItem (Title, Description, Body, Type, UpdatedAt) VALUES (?, ?, ?, ?, ?)")
+
+	//res, err := insertStatement.Exec(item.Title, item.Description, "", item.Type, item.UpdatedAt)
+	//checkErr(err)
+	//
+	//id, err := res.LastInsertId()
+	//checkErr(err)
+	//
+	//fmt.Printf("lastInsertId is %d\n", id)
+	return insertStatement.Exec(item.Title, item.Description, "", item.Type, item.UpdatedAt)
+}

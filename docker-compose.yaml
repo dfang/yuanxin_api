@@ -11,6 +11,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: OC#oc2018
       MYSQL_ROOT_HOST: "%"
+    volumes:
+#      - /root/db/mysql/data:/var/lib/mysql
+      - ./init.d/:/docker-entrypoint-initdb.d/:ro
 
 #  adminer:
 #    image: adminer

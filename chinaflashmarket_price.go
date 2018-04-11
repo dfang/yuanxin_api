@@ -8,7 +8,6 @@ import (
 	"github.com/gocolly/colly"
 )
 
-
 func (a *App) craw_price() {
 	c := colly.NewCollector()
 

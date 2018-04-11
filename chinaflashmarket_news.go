@@ -9,10 +9,8 @@ import (
 	//"github.com/gocolly/colly/debug"
 	//"github.com/PuerkitoBio/goquery"
 
-	"database/sql"
+	//"database/sql"
 	 _ "github.com/go-sql-driver/mysql"
-
-	"fmt"
 )
 
 func (item *NewsItem) CollectBody(collector *colly.Collector) *NewsItem  {
@@ -26,7 +24,7 @@ func (item *NewsItem) CollectBody(collector *colly.Collector) *NewsItem  {
 	return item
 }
 
-func (a *App) craw_news() {
+func (a *App) CrawNews() {
 	c := colly.NewCollector(
 		// Turn on asynchronous requests
 		//	colly.Async(true),
@@ -49,20 +47,21 @@ func (a *App) craw_news() {
 				Link: e.Request.AbsoluteURL(el.ChildAttr(".top-title h3 a", "href")),
 			}
 
-			db, err := sql.Open("mysql", "root:OC#oc2018@/News")
-			checkErr(err)
+			//item.insertNewsItem(a.DB)
+			//db, err := sql.Open("mysql", connectionString)
+			//checkErr(err)
 
-			defer db.Close()
-
-			insertStatement, _ := db.Prepare("INSERT INTO NewsItem (Title, Description, Body, Type, UpdatedAt) VALUES (?, ?, ?, ?, ?)")
-
-			res, err := insertStatement.Exec(item.Title, item.Description, "", item.Type, item.UpdatedAt)
-			checkErr(err)
-
-			id, err := res.LastInsertId()
-			checkErr(err)
-
-			fmt.Printf("lastInsertId is %d\n", id)
+			//defer a.DB.Close()
+			//
+			//insertStatement, _ := a.DB.Prepare("INSERT INTO NewsItem (Title, Description, Body, Type, UpdatedAt) VALUES (?, ?, ?, ?, ?)")
+			//
+			//res, err := insertStatement.Exec(item.Title, item.Description, "", item.Type, item.UpdatedAt)
+			//checkErr(err)
+			//
+			//id, err := res.LastInsertId()
+			//checkErr(err)
+			//
+			//fmt.Printf("lastInsertId is %d\n", id)
 
 			//item.CollectBody(detailCollector)
 			//detailCollector.Visit(e.Request.AbsoluteURL(item.Link))
@@ -98,7 +97,6 @@ func (a *App) craw_news() {
 	// Dump json to the standard output
 	enc.Encode(items)
 }
-
 
 
 func checkErr(err error) {

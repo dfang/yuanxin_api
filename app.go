@@ -52,7 +52,6 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Write(response)
 }
 
-
 func (a *App) getNews(w http.ResponseWriter, r *http.Request) {
 	count, _ := strconv.Atoi(r.FormValue("count"))
 	start, _ := strconv.Atoi(r.FormValue("start"))
@@ -64,13 +63,13 @@ func (a *App) getNews(w http.ResponseWriter, r *http.Request) {
 		start = 0
 	}
 
-	products, err := getNews(a.DB, start, count)
+	news, err := getNews(a.DB, start, count)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	respondWithJSON(w, http.StatusOK, products)
+	respondWithJSON(w, http.StatusOK, news)
 }
 
 func (a *App) getNewsItem(w http.ResponseWriter, r *http.Request) {
