@@ -15,7 +15,7 @@ func main() {
 	})
 
 	// You need to set your Username and Password here
-	a.Initialize("root", "OC#oc2018", "News")
+	a.Initialize("root", "OC#oc2018", "db", "News")
 
 	a.Run(":9090")
 }
