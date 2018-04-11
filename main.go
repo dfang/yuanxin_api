@@ -14,6 +14,8 @@ func main() {
 		a.craw_news()
 	})
 
+	c.Start()
+
 	// You need to set your Username and Password here
 	a.Initialize("root", "OC#oc2018", "db", "News")
 
