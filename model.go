@@ -60,11 +60,7 @@ func (u *NewsItem) getNewsItem(db *sql.DB) error {
 
 func (item *NewsItem) InsertNewsItem(db *sql.DB) (sql.Result, error)  {
 	insertSql := "INSERT INTO news_item (title, description, body, type, updated_at) VALUES (?, ?, ?, ?, ?)"
-
-	//return db.Exec(sql, "1", "2", "3", "4", time.Now())
 	insertStatement, _ := db.Prepare(insertSql)
 
-	return insertStatement.Exec(item.Title, item.Description, "", item.Type, time.Now())
-
-	//return insertStatement.Exec(&item.Title, &item.Description, &item.Body, &item.Type, 	time.Now())
+	return insertStatement.Exec(&item.Title, &item.Description, &item.Body, &item.Type, time.Now())
 }
