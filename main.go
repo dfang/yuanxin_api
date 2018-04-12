@@ -9,7 +9,7 @@ func main() {
 	a := App{}
 
 	// You need to set your Username and Password here
-	a.Initialize("root", "OC#oc2018", "db", "News")
+	a.Initialize("root", "OC#oc2018", "tcp(127.0.0.1:3306)", "news")
 
 	a.insertNewsItem()
 

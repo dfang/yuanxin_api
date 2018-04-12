@@ -8,8 +8,10 @@ import (
 	"net/http"
 
 	"database/sql"
-	"github.com/gorilla/mux"
 	_ "github.com/go-sql-driver/mysql"
+
+	"github.com/gorilla/mux"
+	"github.com/d4l3k/go-pry/pry"
 )
 
 type App struct {
@@ -17,8 +19,8 @@ type App struct {
 	DB     *sql.DB
 }
 
-func (a *App) Initialize(user, password, host, dbname string) {
-	connectionString := fmt.Sprintf("%s:%s@%s/%s", user, password, "tcp(db:3306)", dbname)
+func (a *App) Initialize(user, password, host, dbName string) {
+	connectionString := fmt.Sprintf("%s:%s@%s/%s", user, password, host, dbName)
 	var err error
 	a.DB, err = sql.Open("mysql", connectionString)
 	if err != nil {
@@ -96,7 +98,13 @@ func (a *App) getNewsItem(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) insertNewsItem() {
 	news := a.CrawNews()
-	for _ , v := range news {
-		v.insertNewsItem(a.DB)
+
+	for _ , item := range news {
+		fmt.Printf("%v", item)
+		pry.Pry()
+
+		result, _ := item.InsertNewsItem(a.DB)
+		fmt.Println(result)
+		//fmt.Println(err)
 	}
 }

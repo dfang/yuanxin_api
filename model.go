@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"time"
 )
 
 type Product struct {
@@ -29,7 +30,7 @@ type NewsItem struct {
 }
 
 func getNews(db *sql.DB, start, count int) ([]NewsItem, error) {
-	statement := fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, UpdatedAt FROM NewsItem")
+	statement := fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM News_Item")
 	rows, err := db.Query(statement)
 
 	if err != nil {
@@ -53,11 +54,11 @@ func getNews(db *sql.DB, start, count int) ([]NewsItem, error) {
 }
 
 func (u *NewsItem) getNewsItem(db *sql.DB) error {
-	statement := fmt.Sprintf("SELECT Title, Link, Type, Description, Body, UpdatedAt, Source FROM News WHERE id=%d", u.ID)
+	statement := fmt.Sprintf("SELECT title, link, type, description, body, updated_at, source FROM News_Item WHERE id=%d", u.ID)
 	return db.QueryRow(statement).Scan(&u.Title, &u.Link, &u.Type, &u.Description, &u.Body, &u.UpdatedAt)
 }
 
-func (item *NewsItem) insertNewsItem(db *sql.DB) (sql.Result, error)  {
+func (item *NewsItem) InsertNewsItem(db *sql.DB) (sql.Result, error)  {
 	//insertStatement, _ := db.prep()
 
 	//res, err := insertStatement.Exec(item.Title, item.Description, "", item.Type, item.UpdatedAt)
@@ -69,5 +70,18 @@ func (item *NewsItem) insertNewsItem(db *sql.DB) (sql.Result, error)  {
 	//fmt.Printf("lastInsertId is %d\n", id)
 
 	//return insertStatement.Exec(item.Title, item.Description, "", item.Type, item.UpdatedAt)
-	return db.Exec("INSERT INTO NewsItem (Title, Description, Body, Type, UpdatedAt) VALUES (?, ?, ?, ?, ?)", item.Title, item.Description, "", item.Type, item.UpdatedAt)
+	//result, _ := db.Exec("INSERT INTO NewsItem (Title, Description, Body, Type, UpdatedAt) VALUES ($1, $2, $3, $4, $5)", item.Title, item.Description, "", item.Type, item.UpdatedAt)
+	//
+	//rowsAffected, _ := result.RowsAffected()
+
+
+	//stmt := fmt.Sprintf(`INSERT INTO NewsItem (Title, Description, Body, Type, UpdatedAt) VALUES (%s, %s, %s, %s, %s)`, item.Title, item.Description, "", item.Type, item.UpdatedAt)
+
+	sqlStmt := "INSERT INTO news_item (title, description, body, type, updated_at) VALUES (?, ?, ?, ?, ?)"
+	fmt.Println(sqlStmt)
+
+	//return db.Exec(sql, "1", "2", "3", "4", time.Now())
+	insStmt, _ := db.Prepare(sqlStmt)
+
+	return insStmt.Exec(item.Title, item.Description, item.Body, item.Type, time.Now())
 }
