@@ -7,26 +7,26 @@ import (
 )
 
 type Product struct {
-	Name        			string
+	Name                    string
 	Closing_price_yesterday string
-	Current_price     		string
+	Current_price           string
 	Lowest_price_in_a_day   string
 	Highest_price_in_a_day  string
-	Daily_change    		string
-	Price_in_hk  			string
-	Lowest_price_in_a_week   string
-	Highest_price_in_a_week      string
+	Daily_change            string
+	Price_in_hk             string
+	Lowest_price_in_a_week  string
+	Highest_price_in_a_week string
 }
 
 type NewsItem struct {
-	ID  					int  	`json:"id"`
-	Title        			string  `json:"title"`
-	Link					string	`json:"link"`
-	Type					string  `json:"type"`
-	Description 			string  `json:"description"`
-	Body 					string  `json:"body"`
-	UpdatedAt  				string  `json:"updated_at"`
-	Source     				string  `json:"source"`
+	ID          int    `json:"id"`
+	Title       string `json:"title"`
+	Link        string `json:"link"`
+	Type        string `json:"type"`
+	Description string `json:"description"`
+	Body        string `json:"body"`
+	UpdatedAt   string `json:"updated_at"`
+	Source      string `json:"source"`
 }
 
 func getNews(db *sql.DB, start, count int) ([]NewsItem, error) {
@@ -50,17 +50,17 @@ func getNews(db *sql.DB, start, count int) ([]NewsItem, error) {
 	}
 
 	return news, nil
-
 }
 
-func (u *NewsItem) getNewsItem(db *sql.DB) error {
-	statement := fmt.Sprintf("SELECT title, link, type, description, body, updated_at, source FROM news_item WHERE id=%d", u.ID)
-	return db.QueryRow(statement).Scan(&u.Title, &u.Link, &u.Type, &u.Description, &u.Body, &u.UpdatedAt)
+func (item *NewsItem) getNewsItem(db *sql.DB) error {
+	statement := fmt.Sprintf("SELECT title, link, type, description, body, updated_at, source FROM news_item WHERE id=%d", item.ID)
+	return db.QueryRow(statement).Scan(&item.Title, &item.Link, &item.Type, &item.Description, &item.Body, &item.UpdatedAt)
 }
 
-func (item *NewsItem) InsertNewsItem(db *sql.DB) (sql.Result, error)  {
+func (item *NewsItem) InsertNewsItem(db *sql.DB) (sql.Result, error) {
 	insertSql := "INSERT INTO news_item (title, description, body, type, updated_at) VALUES (?, ?, ?, ?, ?)"
-	insertStatement, _ := db.Prepare(insertSql)
+	// insertStatement, _ := db.Prepare(insertSql)
+	fmt.Println(db)
 
-	return insertStatement.Exec(&item.Title, &item.Description, &item.Body, &item.Type, time.Now())
+	return db.Exec(insertSql, item.Title, item.Description, item.Body, item.Type, time.Now())
 }

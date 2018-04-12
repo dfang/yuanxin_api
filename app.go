@@ -1,13 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
-	"strconv"
-	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"database/sql"
+
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/gorilla/mux"
@@ -22,6 +23,7 @@ func (a *App) Initialize(user, password, host, dbName string) {
 	connectionString := fmt.Sprintf("%s:%s@%s/%s", user, password, host, dbName)
 	var err error
 	a.DB, err = sql.Open("mysql", connectionString)
+	// defer a.DB.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -98,7 +100,7 @@ func (a *App) getNewsItem(w http.ResponseWriter, r *http.Request) {
 func (a *App) insertNewsItem() {
 	news := a.CrawNews()
 
-	for _ , item := range news {
+	for _, item := range news {
 		//fmt.Printf("%v", item)
 		result, _ := item.InsertNewsItem(a.DB)
 		fmt.Println(result.RowsAffected())

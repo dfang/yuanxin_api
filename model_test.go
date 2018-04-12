@@ -4,9 +4,9 @@ import (
 	"testing"
 	//"database/sql"
 	//_ "github.com/go-sql-driver/mysql"
+	"database/sql"
 	"fmt"
 	"log"
-	"database/sql"
 )
 
 func TestNewsItem_InsertNewsItem(t *testing.T) {
