@@ -54,7 +54,7 @@ func getNews(db *sql.DB, start, count int) ([]NewsItem, error) {
 }
 
 func (u *NewsItem) getNewsItem(db *sql.DB) error {
-	statement := fmt.Sprintf("SELECT title, link, type, description, body, updated_at, source FROM News_Item WHERE id=%d", u.ID)
+	statement := fmt.Sprintf("SELECT title, link, type, description, body, updated_at, source FROM news_item WHERE id=%d", u.ID)
 	return db.QueryRow(statement).Scan(&u.Title, &u.Link, &u.Type, &u.Description, &u.Body, &u.UpdatedAt)
 }
 
