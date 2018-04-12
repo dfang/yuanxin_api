@@ -23,7 +23,7 @@ func TestNewsItem_InsertNewsItem(t *testing.T) {
 
 	username := "root"
 	password := "OC#oc2018"
-	host := "tcp(127.0.0.1:3306)"
+	host := "tcp(localhost:3306)"
 	dbName := "news"
 	connectionString := fmt.Sprintf("%s:%s@%s/%s", username, password, host, dbName)
 
@@ -37,12 +37,13 @@ func TestNewsItem_InsertNewsItem(t *testing.T) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	//
+
 	//sqlStr := "INSERT INTO news_item (title, description, body, type, updated_at) VALUES (?, ?, ?, ?, ?)"
 	//insStmt, _ := db.Prepare(sqlStr)
-	//insStmt.Exec(item.Title, "2", "3", "4", time.Now())
-
+	//_, err = insStmt.Exec(item.Title, item.Description, item.Body, item.Type, time.Now())
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 
 	item.InsertNewsItem(db)
-
 }

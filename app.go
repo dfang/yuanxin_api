@@ -11,7 +11,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/gorilla/mux"
-	"github.com/d4l3k/go-pry/pry"
 )
 
 type App struct {
@@ -100,11 +99,9 @@ func (a *App) insertNewsItem() {
 	news := a.CrawNews()
 
 	for _ , item := range news {
-		fmt.Printf("%v", item)
-		pry.Pry()
-
+		//fmt.Printf("%v", item)
 		result, _ := item.InsertNewsItem(a.DB)
-		fmt.Println(result)
+		fmt.Println(result.RowsAffected())
 		//fmt.Println(err)
 	}
 }

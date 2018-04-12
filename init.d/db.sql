@@ -1,4 +1,4 @@
-CREATE DATABASE news;
+CREATE DATABASE news CHARACTER SET utf8;
 
 use news;
 
