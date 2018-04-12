@@ -12,6 +12,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/handlers"
+	"os"
 )
 
 type App struct {
@@ -29,15 +31,27 @@ func (a *App) Initialize(user, password, host, dbName string) {
 	}
 	a.Router = mux.NewRouter()
 	a.initializeRoutes()
+
+	//a.Router.HandleFunc("/news", func(writer http.ResponseWriter, request *http.Request) {
+	//	writer.Write([]byte("news"));
+	//})
+	//a.Router.HandleFunc("/news/{id:[0-9]+}", a.getNewsItem).Methods("GET")
+	//a.Router.HandleFunc("/sms_captcha", a.getSmsCaptcha).Methods("POST")
+	//
+	//http.ListenAndServe(":9090", handlers.LoggingHandler(os.Stdout, a.Router))
+
 }
 
 func (a *App) Run(addr string) {
-	log.Fatal(http.ListenAndServe(addr, a.Router))
+	//loggedRouter := handlers.LoggingHandler(os.Stdout, a.Router)
+	//log.Fatal(http.ListenAndServe(addr, a.Router))
+	http.ListenAndServe(addr, handlers.LoggingHandler(os.Stdout, a.Router))
 }
 
 func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/news", a.getNews).Methods("GET")
 	a.Router.HandleFunc("/news/{id:[0-9]+}", a.getNewsItem).Methods("GET")
+	a.Router.HandleFunc("/sms_captcha", a.getSmsCaptcha).Methods("POST")
 	//a.Router.HandleFunc("/user", a.createUser).Methods("POST")
 	//a.Router.HandleFunc("/user/{id:[0-9]+}", a.updateUser).Methods("PUT")
 	//a.Router.HandleFunc("/user/{id:[0-9]+}", a.deleteUser).Methods("DELETE")
@@ -56,6 +70,9 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 }
 
 func (a *App) getNews(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("get news")
+	log.Println(r.RequestURI)
+
 	count, _ := strconv.Atoi(r.FormValue("count"))
 	start, _ := strconv.Atoi(r.FormValue("start"))
 
@@ -102,8 +119,23 @@ func (a *App) insertNewsItem() {
 
 	for _, item := range news {
 		//fmt.Printf("%v", item)
-		result, _ := item.InsertNewsItem(a.DB)
-		fmt.Println(result.RowsAffected())
+		item.InsertNewsItem(a.DB)
+		//result, _ := item.InsertNewsItem(a.DB)
+		//fmt.Println(result.RowsAffected())
 		//fmt.Println(err)
 	}
+}
+
+func (a *App) getSmsCaptcha(w http.ResponseWriter, r *http.Request){
+	phone := r.FormValue("phone")
+
+	fmt.Println()
+
+	data := SMSData{
+		Phone: phone,
+	}
+
+	fmt.Println(data.Phone)
+
+	SendSms(&data)
 }
