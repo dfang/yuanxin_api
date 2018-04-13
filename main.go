@@ -16,7 +16,7 @@ func main() {
 	a.Initialize("root", "OC#oc2018", "tcp(db:3306)", "news")
 
 	//craw news for the first time
-	//a.insertNewsItem()
+	a.insertNewsItem()
 
 	// add a job, craw news every hour
 	c := cron.New()

@@ -58,9 +58,9 @@ func (item *NewsItem) getNewsItem(db *sql.DB) error {
 }
 
 func (item *NewsItem) InsertNewsItem(db *sql.DB) (sql.Result, error) {
-	insertSql := "INSERT INTO news_item (title, description, body, type, updated_at) VALUES (?, ?, ?, ?, ?)"
+	insertSql := "INSERT INTO news_item (title, description, body, type, source, link, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
 	// insertStatement, _ := db.Prepare(insertSql)
 	fmt.Println(db)
 
-	return db.Exec(insertSql, item.Title, item.Description, item.Body, item.Type, time.Now())
+	return db.Exec(insertSql, item.Title, item.Description, item.Body, item.Type, item.Source, item.Link, time.Now())
 }
