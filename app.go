@@ -31,20 +31,9 @@ func (a *App) Initialize(user, password, host, dbName string) {
 	}
 	a.Router = mux.NewRouter()
 	a.initializeRoutes()
-
-	//a.Router.HandleFunc("/news", func(writer http.ResponseWriter, request *http.Request) {
-	//	writer.Write([]byte("news"));
-	//})
-	//a.Router.HandleFunc("/news/{id:[0-9]+}", a.getNewsItem).Methods("GET")
-	//a.Router.HandleFunc("/sms_captcha", a.getSmsCaptcha).Methods("POST")
-	//
-	//http.ListenAndServe(":9090", handlers.LoggingHandler(os.Stdout, a.Router))
-
 }
 
 func (a *App) Run(addr string) {
-	//loggedRouter := handlers.LoggingHandler(os.Stdout, a.Router)
-	//log.Fatal(http.ListenAndServe(addr, a.Router))
 	http.ListenAndServe(addr, handlers.LoggingHandler(os.Stdout, a.Router))
 }
 
@@ -129,13 +118,14 @@ func (a *App) insertNewsItem() {
 func (a *App) getSmsCaptcha(w http.ResponseWriter, r *http.Request){
 	phone := r.FormValue("phone")
 
-	fmt.Println()
-
 	data := SMSData{
 		Phone: phone,
 	}
 
-	fmt.Println(data.Phone)
+	result, err := SendSms(&data)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+	}
 
-	SendSms(&data)
+	respondWithJSON(w, http.StatusOK, *result)
 }

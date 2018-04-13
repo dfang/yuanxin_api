@@ -30,7 +30,7 @@ type NewsItem struct {
 }
 
 func getNews(db *sql.DB, start, count int) ([]NewsItem, error) {
-	statement := fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item")
+	statement := fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item LIMIT %d, %d", start, start + count)
 	rows, err := db.Query(statement)
 
 	if err != nil {
