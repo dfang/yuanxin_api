@@ -59,9 +59,6 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 }
 
 func (a *App) getNews(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("get news")
-	log.Println(r.RequestURI)
-
 	count, _ := strconv.Atoi(r.FormValue("count"))
 	start, _ := strconv.Atoi(r.FormValue("start"))
 
@@ -111,7 +108,7 @@ func (a *App) insertNewsItem() {
 		//item.InsertNewsItem(a.DB)
 		result, err := item.InsertNewsItem(a.DB)
 		if err != nil {
-			fmt.Println("插入新闻出错")
+			fmt.Println(err)
 		}
 		fmt.Println(result.RowsAffected())
 	}

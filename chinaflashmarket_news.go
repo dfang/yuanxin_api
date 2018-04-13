@@ -38,9 +38,18 @@ func (a *App) CrawNews() []NewsItem {
 
 	c.OnHTML(".list-box.article-list", func(e *colly.HTMLElement) {
 		e.ForEach(".newsli", func(_ int, el *colly.HTMLElement) {
+
+			// 新闻列表中有的item没有小图片
+			image := ""
+			imageNode := el.ChildAttr(".top-title .brand img", "src")
+			if imageNode != "" {
+				image = e.Request.AbsoluteURL(imageNode)
+			}
+
 			item := NewsItem{
 				Title: el.ChildText(".top-title h3"),
 				Type: el.ChildText(".top-title .info a"),
+				Image: image,
 				UpdatedAt: el.ChildText(".top-title .add-time"),
 				Source: el.ChildText(".top-title .source"),
 				Description: el.ChildText("p"),

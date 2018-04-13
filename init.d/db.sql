@@ -9,6 +9,7 @@ CREATE TABLE news_item(
     body text,
     type varchar(255),
     link varchar(255),
+    image varchar(255),
     source varchar(255),
     updated_at datetime
 );

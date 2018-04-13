@@ -26,11 +26,12 @@ type NewsItem struct {
 	Description string `json:"description"`
 	Body        string `json:"body"`
 	UpdatedAt   string `json:"updated_at"`
+	Image     	string `json:"image"`
 	Source      string `json:"source"`
 }
 
 func getNews(db *sql.DB, start, count int) ([]NewsItem, error) {
-	statement := fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item LIMIT %d, %d", start, (start + count) -1)
+	statement := fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item LIMIT %d, %d", start, (start + count) -1)
 	rows, err := db.Query(statement)
 
 	if err != nil {
@@ -42,23 +43,23 @@ func getNews(db *sql.DB, start, count int) ([]NewsItem, error) {
 	news := []NewsItem{}
 
 	for rows.Next() {
-		var u NewsItem
-		if err := rows.Scan(&u.ID, &u.Title, &u.Description, &u.Type, &u.Link, &u.Source, &u.UpdatedAt); err != nil {
+		var item NewsItem
+		if err := rows.Scan(&item.ID, &item.Title, &item.Description, &item.Image, &item.Type, &item.Link, &item.Source, &item.UpdatedAt); err != nil {
 			return nil, err
 		}
-		news = append(news, u)
+		news = append(news, item)
 	}
 
 	return news, nil
 }
 
 func (item *NewsItem) getNewsItem(db *sql.DB) error {
-	statement := fmt.Sprintf("SELECT title, link, type, description, body, updated_at, source FROM news_item WHERE id=%d", item.ID)
-	return db.QueryRow(statement).Scan(&item.Title, &item.Link, &item.Type, &item.Description, &item.Body, &item.UpdatedAt)
+	statement := fmt.Sprintf("SELECT title, link, type, image, description, body, source, updated_at FROM news_item WHERE id=%d", item.ID)
+	return db.QueryRow(statement).Scan(&item.Title, &item.Link, &item.Image, &item.Type, &item.Description, &item.Body, &item.Source, &item.UpdatedAt)
 }
 
 func (item *NewsItem) InsertNewsItem(db *sql.DB) (sql.Result, error) {
-	insertSql := "INSERT INTO news_item (title, description, body, type, source, link, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
+	insertSql := "INSERT INTO news_item (title, description, image, body, type, source, link, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 	// insertStatement, _ := db.Prepare(insertSql)
-	return db.Exec(insertSql, item.Title, item.Description, item.Body, item.Type, item.Source, item.Link, time.Now())
+	return db.Exec(insertSql, item.Title, item.Description, item.Image, item.Body, item.Type, item.Source, item.Link, time.Now())
 }
