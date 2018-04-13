@@ -2,6 +2,7 @@ package main
 
 import (
 	"testing"
+	"log"
 )
 
 func TestSendSms(t *testing.T) {
@@ -19,6 +20,15 @@ func TestSendSms(t *testing.T) {
 		//Message: url.QueryEscape("【253云通讯】您好，您的验证码是999999"),
 		//Report: true,
 	}
+	t.Logf("%#v", sms)
 
-	SendSms(&sms)
+	result, err := SendSms(&sms)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	t.Log(*result)
+	//log.Println(result)
+	//
+	//fmt.Println(result)
 }

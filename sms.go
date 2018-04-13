@@ -18,7 +18,7 @@ type SMSData struct {
 	Report   bool
 }
 
-func SendSms(config *SMSData) {
+func SendSms(config *SMSData) (*string, error) {
 	config.Account = "N9718791"
 	config.Password = "Gzcl888888"
 	config.Message = url.QueryEscape("【253云通讯】您好，您的验证码是999999")
@@ -35,28 +35,29 @@ func SendSms(config *SMSData) {
 	bytesData, err := json.Marshal(params)
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return nil, err
 	}
 	reader := bytes.NewReader(bytesData)
 	url := "http://smssh1.253.com/msg/send/json" //请求地址请参考253云通讯自助通平台查看或者询问您的商务负责人获取
 	request, err := http.NewRequest("POST", url, reader)
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return nil, err
 	}
 	request.Header.Set("Content-Type", "application/json;charset=UTF-8")
 	client := http.Client{}
 	resp, err := client.Do(request)
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return nil, err
 	}
 	respBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return nil, err
 	}
 
 	str := (*string)(unsafe.Pointer(&respBytes))
-	fmt.Println(*str)
+	//fmt.Println(*str)
+	return str, err
 }
