@@ -108,10 +108,12 @@ func (a *App) insertNewsItem() {
 
 	for _, item := range news {
 		//fmt.Printf("%v", item)
-		item.InsertNewsItem(a.DB)
-		//result, _ := item.InsertNewsItem(a.DB)
-		//fmt.Println(result.RowsAffected())
-		//fmt.Println(err)
+		//item.InsertNewsItem(a.DB)
+		result, err := item.InsertNewsItem(a.DB)
+		if err != nil {
+			fmt.Println("插入新闻出错")
+		}
+		fmt.Println(result.RowsAffected())
 	}
 }
 
