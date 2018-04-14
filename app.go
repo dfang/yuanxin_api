@@ -67,11 +67,10 @@ func (a *App) getNews(w http.ResponseWriter, r *http.Request) {
 	if count < 1 {
 		count = 9
 	}
+
 	if start < 0 {
 		start = 0
 	}
-
-	// var s NewsItemType = itemType
 
 	news, err := getNews(a.DB, start, count, NewsItemType(t))
 	if err != nil {
