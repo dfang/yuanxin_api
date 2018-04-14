@@ -3,14 +3,13 @@ package main
 import (
 	"fmt"
 
-	"github.com/jpfuentes2/go-env"
-	"github.com/robfig/cron"
 	"os"
+
+	_ "github.com/jpfuentes2/go-env/autoload"
+	"github.com/robfig/cron"
 )
 
 func main() {
-	env.ReadEnv(".env")
-
 	a := App{}
 
 	// You need to set your Username and Password here
