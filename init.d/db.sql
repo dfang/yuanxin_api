@@ -14,7 +14,6 @@ CREATE TABLE news_item(
     updated_at datetime
 );
 
-
 CREATE TABLE user(
     id int PRIMARY KEY AUTO_INCREMENT,
     nickname varchar(255),  
@@ -26,7 +25,6 @@ CREATE TABLE user(
     created_at datetime, 
     login_date datetime 
 );
-
 
 CREATE TABLE  authentication(
     id int PRIMARY KEY AUTO_INCREMENT,
@@ -41,7 +39,6 @@ CREATE TABLE user_role(
     user_id int  
 );
 
-
 CREATE TABLE role(
     id int PRIMARY KEY AUTO_INCREMENT,
     real_name varchar(20), 
@@ -51,7 +48,6 @@ CREATE TABLE role(
     license varchar(256),
     expertise varchar(256) 
 );
-
 
 CREATE TABLE captcha(
     id int PRIMARY KEY AUTO_INCREMENT,
