@@ -19,7 +19,7 @@ func main() {
 	a.Initialize(os.Getenv("APP_DB_USER"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_HOST"), os.Getenv("APP_DB_NAME"))
 
 	var flagVal bool
-	flag.BoolVar(&flagVal, "craw", true, "craw data ....")
+	flag.BoolVar(&flagVal, "craw", false, "craw data ....")
 	flag.Parse()
 
 	if flagVal {
