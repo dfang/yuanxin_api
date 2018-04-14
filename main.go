@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"log"
 	"os"
 
 	_ "github.com/jpfuentes2/go-env/autoload"
@@ -12,7 +13,7 @@ import (
 func main() {
 	a := App{}
 
-	fmt.Printf("%s:%s@%s/%s\n", os.Getenv("APP_DB_USER"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_HOST"), os.Getenv("APP_DB_NAME"))
+	log.Printf("%s:%s@%s/%s\n", os.Getenv("APP_DB_USER"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_HOST"), os.Getenv("APP_DB_NAME"))
 
 	// You need to set your Username and Password here
 	a.Initialize(os.Getenv("APP_DB_USER"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_HOST"), os.Getenv("APP_DB_NAME"))
