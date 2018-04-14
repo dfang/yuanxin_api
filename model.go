@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -60,6 +61,19 @@ func (item *NewsItem) getNewsItem(db *sql.DB) error {
 
 func (item *NewsItem) InsertNewsItem(db *sql.DB) (sql.Result, error) {
 	insertSql := "INSERT INTO news_item (title, description, image, body, type, source, link, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-	// insertStatement, _ := db.Prepare(insertSql)
-	return db.Exec(insertSql, item.Title, item.Description, item.Image, item.Body, item.Type, item.Source, item.Link, time.Now())
+
+	selectSql := "select count(*) from news_item where title = ?"
+	var count int
+	err := db.QueryRow(selectSql, item.Title).Scan(&count)
+	switch {
+	case err == sql.ErrNoRows:
+		log.Printf("No news with that title. can insert")
+		return db.Exec(insertSql, item.Title, item.Description, item.Image, item.Body, item.Type, item.Source, item.Link, time.Now())
+	case err != nil:
+		log.Fatal(err)
+		return nil, err
+	default:
+		log.Printf("news with that title exists, don't insert")
+		return nil, err
+	}
 }
