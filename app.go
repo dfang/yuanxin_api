@@ -11,8 +11,8 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/gorilla/mux"
 	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 	"os"
 )
 
@@ -114,7 +114,7 @@ func (a *App) insertNewsItem() {
 	}
 }
 
-func (a *App) getSmsCaptcha(w http.ResponseWriter, r *http.Request){
+func (a *App) getSmsCaptcha(w http.ResponseWriter, r *http.Request) {
 	phone := r.FormValue("phone")
 
 	data := SMSData{

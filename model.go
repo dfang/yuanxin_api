@@ -26,12 +26,12 @@ type NewsItem struct {
 	Description string `json:"description"`
 	Body        string `json:"body"`
 	UpdatedAt   string `json:"updated_at"`
-	Image     	string `json:"image"`
+	Image       string `json:"image"`
 	Source      string `json:"source"`
 }
 
 func getNews(db *sql.DB, start, count int) ([]NewsItem, error) {
-	statement := fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item LIMIT %d, %d", start, (start + count) -1)
+	statement := fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item LIMIT %d, %d", start, (start+count)-1)
 	rows, err := db.Query(statement)
 
 	if err != nil {

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"testing"
 	"log"
+	"testing"
 )
 
 func TestSendSms(t *testing.T) {

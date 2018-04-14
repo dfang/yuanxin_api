@@ -8,17 +8,13 @@ import (
 	"github.com/gocolly/colly"
 	//"github.com/gocolly/colly/debug"
 	//"github.com/PuerkitoBio/goquery"
-
 	//"database/sql"
-	 _ "github.com/go-sql-driver/mysql"
+	// _ "github.com/go-sql-driver/mysql"
 )
 
-func (item *NewsItem) CollectBody(collector *colly.Collector) *NewsItem  {
-	//&collector.
+func (item *NewsItem) CollectBody(collector *colly.Collector) *NewsItem {
 	collector.Visit(item.Link)
 	collector.OnHTML(".article-box", func(e *colly.HTMLElement) {
-		//log.Println(e)
-		//log.Println(e.DOM.Text())
 		item.Body = e.Text
 	})
 	return item
@@ -26,10 +22,10 @@ func (item *NewsItem) CollectBody(collector *colly.Collector) *NewsItem  {
 
 func (a *App) CrawNews() []NewsItem {
 	c := colly.NewCollector(
-		// Turn on asynchronous requests
-		//	colly.Async(true),
-		// Attach a debugger to the collector
-		//	colly.Debugger(&debug.LogDebugger{}),
+	// Turn on asynchronous requests
+	//	colly.Async(true),
+	// Attach a debugger to the collector
+	//	colly.Debugger(&debug.LogDebugger{}),
 	)
 
 	//detailCollector := c.Clone()
@@ -47,13 +43,13 @@ func (a *App) CrawNews() []NewsItem {
 			}
 
 			item := NewsItem{
-				Title: el.ChildText(".top-title h3"),
-				Type: el.ChildText(".top-title .info a"),
-				Image: image,
-				UpdatedAt: el.ChildText(".top-title .add-time"),
-				Source: el.ChildText(".top-title .source"),
+				Title:       el.ChildText(".top-title h3"),
+				Type:        el.ChildText(".top-title .info a"),
+				Image:       image,
+				UpdatedAt:   el.ChildText(".top-title .add-time"),
+				Source:      el.ChildText(".top-title .source"),
 				Description: el.ChildText("p"),
-				Link: e.Request.AbsoluteURL(el.ChildAttr(".top-title h3 a", "href")),
+				Link:        e.Request.AbsoluteURL(el.ChildAttr(".top-title h3 a", "href")),
 			}
 
 			//db, err := sql.Open("mysql", connectionString)
@@ -106,7 +102,6 @@ func (a *App) CrawNews() []NewsItem {
 
 	return items
 }
-
 
 func checkErr(err error) {
 	if err != nil {

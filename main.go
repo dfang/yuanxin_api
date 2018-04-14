@@ -11,6 +11,8 @@ import (
 )
 
 func main() {
+	fmt.Println("Server listening on 0.0.0.0:9090")
+
 	a := App{}
 
 	log.Printf("%s:%s@%s/%s\n", os.Getenv("APP_DB_USER"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_HOST"), os.Getenv("APP_DB_NAME"))
@@ -19,7 +21,7 @@ func main() {
 	a.Initialize("root", "OC#oc2018", "tcp(db:3306)", "news")
 
 	//craw news for the first time
-	a.insertNewsItem()
+	// a.insertNewsItem()
 
 	// add a job, craw news every hour
 	c := cron.New()

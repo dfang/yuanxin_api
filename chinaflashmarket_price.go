@@ -18,12 +18,12 @@ func (a *App) craw_price() {
 			p := Product{
 				Name: el.ChildText("td:nth-child(1)"),
 				Closing_price_yesterday: el.ChildText("td:nth-child(2)"),
-				Current_price: el.ChildText("td:nth-child(3)"),
-				Lowest_price_in_a_day: el.ChildText("td:nth-child(4)"),
-				Highest_price_in_a_day: el.ChildText("td:nth-child(5)"),
-				Daily_change: el.ChildText("td:nth-child(6)"),
-				Price_in_hk: el.ChildText("td:nth-child(7)"),
-				Lowest_price_in_a_week: el.ChildText("td:nth-child(7)"),
+				Current_price:           el.ChildText("td:nth-child(3)"),
+				Lowest_price_in_a_day:   el.ChildText("td:nth-child(4)"),
+				Highest_price_in_a_day:  el.ChildText("td:nth-child(5)"),
+				Daily_change:            el.ChildText("td:nth-child(6)"),
+				Price_in_hk:             el.ChildText("td:nth-child(7)"),
+				Lowest_price_in_a_week:  el.ChildText("td:nth-child(7)"),
 				Highest_price_in_a_week: el.ChildText("td:nth-child(8)"),
 			}
 			products = append(products, p)
