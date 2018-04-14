@@ -38,12 +38,5 @@ func TestNewsItem_InsertNewsItem(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	//sqlStr := "INSERT INTO news_item (title, description, body, type, updated_at) VALUES (?, ?, ?, ?, ?)"
-	//insStmt, _ := db.Prepare(sqlStr)
-	//_, err = insStmt.Exec(item.Title, item.Description, item.Body, item.Type, time.Now())
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-
 	item.InsertNewsItem(db)
 }
