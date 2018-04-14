@@ -16,7 +16,7 @@ func main() {
 	log.Printf("%s:%s@%s/%s\n", os.Getenv("APP_DB_USER"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_HOST"), os.Getenv("APP_DB_NAME"))
 
 	// You need to set your Username and Password here
-	a.Initialize(os.Getenv("APP_DB_USER"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_HOST"), os.Getenv("APP_DB_NAME"))
+	a.Initialize("root", "OC#oc2018", "tcp(db:3306)", "news")
 
 	//craw news for the first time
 	a.insertNewsItem()
