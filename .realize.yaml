@@ -1,0 +1,43 @@
+settings:
+  legacy:
+    force: false
+    interval: 0s
+server:
+  status: false
+  open: false
+  port: 5002
+  host: localhost
+schema:
+- name: news
+  path: .
+  commands:
+    clean:
+      status: true
+    test:
+      status: true
+    generate:
+      status: true
+    vet:
+      status: true
+    fmt:
+      status: true
+      args:
+      - -s
+      - -w
+    build:
+      status: true
+      args:
+        - -o news
+    install:
+      status: true
+    run:
+      status: true
+  watcher:
+    paths:
+    - /
+    extensions:
+    - go
+    ignored_paths:
+    - .git
+    - .realize
+    - vendor
