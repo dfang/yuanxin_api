@@ -31,8 +31,40 @@ type NewsItem struct {
 	Source      string `json:"source"`
 }
 
-func getNews(db *sql.DB, start, count int) ([]NewsItem, error) {
-	statement := fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item LIMIT %d, %d", start, (start+count)-1)
+type NewsItemType int
+
+const (
+	Zero NewsItemType = iota
+	One
+	Two
+	Three
+	Four
+	Five
+	Six
+	Seven
+	Eight
+)
+
+func (s NewsItemType) String() string {
+	return [...]string{"所有", "所有", "产业报道", "厂商动态", "数码相机/摄像机 ", "智能家电", "智能手机", "电脑", ""}[s]
+}
+
+// var s NewsItemType = Eight
+
+func getNews(db *sql.DB, start, count int, t NewsItemType) ([]NewsItem, error) {
+	statement := ""
+
+	fmt.Println(t)
+	fmt.Println(int(t))
+
+	if t == Zero || t == One {
+		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item LIMIT %d, %d", start, (start+count)-1)
+	} else {
+		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item where type = '%s' LIMIT %d, %d", t, start, (start+count)-1)
+	}
+
+	log.Println(statement)
+
 	rows, err := db.Query(statement)
 
 	if err != nil {

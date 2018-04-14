@@ -62,15 +62,18 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 func (a *App) getNews(w http.ResponseWriter, r *http.Request) {
 	count, _ := strconv.Atoi(r.FormValue("count"))
 	start, _ := strconv.Atoi(r.FormValue("start"))
+	t, _ := strconv.Atoi(r.FormValue("type"))
 
-	if count > 10 || count < 1 {
-		count = 10
+	if count < 1 {
+		count = 9
 	}
 	if start < 0 {
 		start = 0
 	}
 
-	news, err := getNews(a.DB, start, count)
+	// var s NewsItemType = itemType
+
+	news, err := getNews(a.DB, start, count, NewsItemType(t))
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return

@@ -14,6 +14,14 @@ CREATE TABLE news_item(
     updated_at datetime
 );
 
+
+-- 所有
+-- 产业报道               
+-- 厂商动态               
+-- 数码相机/摄像机        
+-- 智能家电               
+-- 智能手机               
+-- 电脑
 CREATE TABLE user(
     id int PRIMARY KEY AUTO_INCREMENT,
     nickname varchar(255),  

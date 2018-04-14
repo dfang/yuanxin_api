@@ -43,8 +43,8 @@ func (a *App) CrawNews() []NewsItem {
 			}
 
 			item := NewsItem{
-				Title:       el.ChildText(".top-title h3"),
-				Type:        el.ChildText(".top-title .info a"),
+				Title:       el.ChildText(".top-title h3 a"),
+				Type:        el.ChildText(".top-title .info a.lmmc"),
 				Image:       image,
 				UpdatedAt:   el.ChildText(".top-title .add-time"),
 				Source:      el.ChildText(".top-title .source"),
@@ -78,11 +78,11 @@ func (a *App) CrawNews() []NewsItem {
 	})
 
 	urls := []string{
-		"http://www.chinaflashmarket.com/News",
-		"http://www.chinaflashmarket.com/News/Page-2",
-		"http://www.chinaflashmarket.com/News/Page-3",
-		"http://www.chinaflashmarket.com/News/Page-4",
-		"http://www.chinaflashmarket.com/News/Page-5",
+		// "http://www.chinaflashmarket.com/News",
+		// "http://www.chinaflashmarket.com/News/Page-2",
+		// "http://www.chinaflashmarket.com/News/Page-3",
+		// "http://www.chinaflashmarket.com/News/Page-4",
+		// "http://www.chinaflashmarket.com/News/Page-5",
 
 		"http://www.chinaflashmarket.com/Industry",
 		"http://www.chinaflashmarket.com/Industry/Page-2",
