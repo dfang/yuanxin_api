@@ -58,9 +58,9 @@ func getNews(db *sql.DB, start, count int, t NewsItemType) ([]NewsItem, error) {
 	fmt.Println(int(t))
 
 	if t == Zero || t == One {
-		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item LIMIT %d, %d", start, (start+count)-1)
+		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item LIMIT %d, %d", start, count)
 	} else {
-		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item where type = '%s' LIMIT %d, %d", t, start, (start+count)-1)
+		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item where type = '%s' LIMIT %d, %d", t, start, count)
 	}
 
 	log.Println(statement)
