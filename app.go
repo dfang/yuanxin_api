@@ -11,9 +11,10 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
+	"os"
+
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"os"
 )
 
 type App struct {
@@ -107,10 +108,13 @@ func (a *App) insertNewsItem() {
 		//fmt.Printf("%v", item)
 		//item.InsertNewsItem(a.DB)
 		result, err := item.InsertNewsItem(a.DB)
+		fmt.Println(result)
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(result.RowsAffected())
+		if result != nil {
+			fmt.Println(result.RowsAffected())
+		}
 	}
 }
 

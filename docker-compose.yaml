@@ -25,6 +25,11 @@ services:
   news:
     image: dfang/yuanxin:latest
     container_name: news
+    environment:
+      APP_DB_USER: root
+      APP_DB_PASSWORD: OC#oc2018
+      APP_DB_HOST: tcp(db:3306)
+      APP_DB_NAME: news
     links:
       - db
     ports:
