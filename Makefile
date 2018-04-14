@@ -35,6 +35,12 @@ upload:
 	docker push dfang/yuanxin:$(TAG)
 	docker push dfang/yuanxin:latest
 
+
+download:
+	git pull 
+	docker pull dfang/yuanxin:$(TAG)
+	docker tag  dfang/yuanxin:$(TAG) dfang/yuanxin:latest
+
 deploy:
 	envsubst < k8s/deployment.yml | kubectl apply -f -
 
