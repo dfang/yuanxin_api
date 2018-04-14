@@ -65,15 +65,28 @@ func (item *NewsItem) InsertNewsItem(db *sql.DB) (sql.Result, error) {
 	selectSql := "select count(*) from news_item where title = ?"
 	var count int
 	err := db.QueryRow(selectSql, item.Title).Scan(&count)
+
+	log.Println(count)
+	log.Println("errr issssss")
+	log.Println(err)
+
 	switch {
 	case err == sql.ErrNoRows:
-		log.Printf("No news with that title. can insert")
-		return db.Exec(insertSql, item.Title, item.Description, item.Image, item.Body, item.Type, item.Source, item.Link, time.Now())
+		log.Fatalln("No news with that title. can insert")
+		return nil, err
 	case err != nil:
 		log.Fatal(err)
 		return nil, err
 	default:
-		log.Printf("news with that title exists, don't insert")
+
+		log.Println("err is nil")
+		log.Println(err)
+		log.Println(count)
+
+		if count == 0 {
+			return db.Exec(insertSql, item.Title, item.Description, item.Image, item.Body, item.Type, item.Source, item.Link, time.Now())
+		}
+
 		return nil, err
 	}
 }

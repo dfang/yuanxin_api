@@ -79,6 +79,17 @@ func (a *App) CrawNews() []NewsItem {
 
 	urls := []string{
 		"http://www.chinaflashmarket.com/News",
+		"http://www.chinaflashmarket.com/News/Page-2",
+		"http://www.chinaflashmarket.com/News/Page-3",
+		"http://www.chinaflashmarket.com/News/Page-4",
+		"http://www.chinaflashmarket.com/News/Page-5",
+
+		"http://www.chinaflashmarket.com/Industry",
+		"http://www.chinaflashmarket.com/Industry/Page-2",
+		"http://www.chinaflashmarket.com/Industry/Page-3",
+		"http://www.chinaflashmarket.com/Industry/Page-4",
+		"http://www.chinaflashmarket.com/Industry/Page-5",
+
 		//"http://www.chinaflashmarket.com/pricecenter/nandflash",
 		//"http://www.chinaflashmarket.com/pricecenter/ddr",
 		//"http://www.chinaflashmarket.com/pricecenter/lpddr",
