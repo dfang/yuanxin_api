@@ -9,7 +9,10 @@ server:
   host: localhost
 schema:
 - name: news
-  path: .
+  path: /Users/mj/go/src/github.com/dfang/yuanxin
+  environment:
+    APP_DB_USER: root
+    APP_DB_NAME: news
   commands:
     clean:
       status: true
@@ -34,10 +37,11 @@ schema:
       status: true
   watcher:
     paths:
-    - /
+    - ./
     extensions:
     - go
     ignored_paths:
+    - .idea
     - .git
     - .realize
     - vendor
