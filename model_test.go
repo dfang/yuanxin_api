@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"testing"
 	//"database/sql"
 	//_ "github.com/go-sql-driver/mysql"
@@ -21,12 +22,7 @@ func TestNewsItem_InsertNewsItem(t *testing.T) {
 		Source:      "来源：凤凰科技",
 	}
 
-	username := "root"
-	password := "OC#oc2018"
-	host := "tcp(localhost:3306)"
-	dbName := "news"
-	connectionString := fmt.Sprintf("%s:%s@%s/%s", username, password, host, dbName)
-
+	connectionString := fmt.Sprintf("%s:%s@%s/%s", os.Getenv("APP_DB_USER"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_HOST"), os.Getenv("APP_DB_NAME"))
 	db, err := sql.Open("mysql", connectionString)
 	if err != nil {
 		log.Fatal(err)
