@@ -1,6 +1,8 @@
+DROP DATABASE IF EXISTS news;
+
 CREATE DATABASE news CHARACTER SET utf8;
 
-use news;
+USE news;
 
 CREATE TABLE news_item(
     id int PRIMARY KEY AUTO_INCREMENT,
@@ -14,22 +16,14 @@ CREATE TABLE news_item(
     updated_at datetime
 );
 
-
--- 所有
--- 产业报道               
--- 厂商动态               
--- 数码相机/摄像机        
--- 智能家电               
--- 智能手机               
--- 电脑
 CREATE TABLE user(
     id int PRIMARY KEY AUTO_INCREMENT,
     nickname varchar(255),  
     pwd varchar(56),  
     phone varchar(11), 
     email varchar(128), 
-    avantar varchar(255), 
-    sex int, 
+    avatar varchar(255),
+    gender int,
     created_at datetime, 
     login_date datetime 
 );
@@ -61,7 +55,7 @@ CREATE TABLE role(
 CREATE TABLE captcha(
     id int PRIMARY KEY AUTO_INCREMENT,
     user_id int , 
-    captcha_code varchar(6), 
+    captcha_code varchar(6)
 );
 
 CREATE TABLE invitation(
