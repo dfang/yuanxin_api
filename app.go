@@ -65,7 +65,7 @@ func (a *App) getNews(w http.ResponseWriter, r *http.Request) {
 	t, _ := strconv.Atoi(r.FormValue("type"))
 
 	if count < 1 {
-		count = 9
+		count = 10
 	}
 
 	if start < 0 {
