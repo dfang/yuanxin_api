@@ -54,7 +54,8 @@ CREATE TABLE role(
     identity_card_front varchar(256),
     identity_card_end varchar(256), 
     license varchar(256),
-    expertise varchar(256) 
+    expertise varchar(256),
+    vip_resume varchar(512)
 );
 
 CREATE TABLE captcha(
