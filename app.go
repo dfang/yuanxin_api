@@ -50,7 +50,7 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/captcha/validate", endpoints.ValidateSMSEndpoint).Methods("POST")
 
 	a.Router.HandleFunc("/registrations", endpoints.RegistrationEndpoint(a.DB)).Methods("POST")
-	a.Router.HandleFunc("/sessions", endpoints.SessionEndpoint).Methods("POST")
+	a.Router.HandleFunc("/sessions", endpoints.SessionEndpoint(a.DB)).Methods("POST")
 	a.Router.HandleFunc("/passwords", endpoints.PasswordEndpoint).Methods("PUT")
 
 	a.Router.HandleFunc("/exists", endpoints.ValidateSMSEndpoint).Methods("POST")

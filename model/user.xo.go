@@ -5,19 +5,21 @@ package model
 
 import (
 	"errors"
+
+	"gopkg.in/guregu/null.v3"
 )
 
 // User represents a row from 'news.user'.
 type User struct {
-	ID        int    `json:"id"`         // id
-	Nickname  string `json:"nickname"`   // nickname
-	Pwd       string `json:"pwd"`        // pwd
-	Phone     string `json:"phone"`      // phone
-	Email     string `json:"email"`      // email
-	Avatar    string `json:"avatar"`     // avatar
-	Gender    string `json:"gender"`     // gender
-	CreatedAt string `json:"created_at"` // created_at
-	LoginDate string `json:"login_date"` // login_date
+	ID        int         `json:"id"`         // id
+	Nickname  string      `json:"nickname"`   // nickname
+	Pwd       string      `json:"pwd"`        // pwd
+	Phone     string      `json:"phone"`      // phone
+	Email     string      `json:"email"`      // email
+	Avatar    null.String `json:"avatar"`     // avatar
+	Gender    null.String `json:"gender"`     // gender
+	CreatedAt null.String `json:"created_at"` // created_at
+	LoginDate null.String `json:"login_date"` // login_date
 
 	// xo fields
 	_exists, _deleted bool
