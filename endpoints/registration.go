@@ -36,9 +36,23 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 		// insert into db
 		err := user.RegisterUser(db)
 		if err != nil {
-			RespondWithError(w, http.StatusServiceUnavailable, err.Error())
+			// RespondWithError(w, http.StatusServiceUnavailable, err.Error())
+			RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode string `json:"status_code"`
+				Message    string `json:"msg"`
+			}{
+				StatusCode: "200",
+				Message:    "注册失败",
+			})
 		} else {
-			RespondWithJSON(w, http.StatusOK, user)
+			// RespondWithJSON(w, http.StatusOK, user)
+			RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode string `json:"status_code"`
+				Message    string `json:"msg"`
+			}{
+				StatusCode: "200",
+				Message:    "注册成功",
+			})
 		}
 	})
 }
