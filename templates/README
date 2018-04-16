@@ -1,0 +1,8 @@
+https://github.com/xo/xo
+
+http://tdoc.info/blog/2016/07/06/xo.html
+
+cp "$GOPATH/src/github.com/knq/xo/templates/mysql*" templates/
+cp "$GOPATH/src/github.com/knq/xo/templates/xo*" templates/
+
+xo pgsql://user:pass@host/db -o models --template-path templates

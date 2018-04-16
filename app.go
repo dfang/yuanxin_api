@@ -31,10 +31,6 @@ func (a *App) Initialize(user, password, host, dbName string) {
 		log.Fatal(err)
 	}
 	a.Router = mux.NewRouter()
-
-	// a.Router.HandleFunc("/news", endpoints.ListNewsItemEndpoint(a.DB)).Methods("GET")
-	// a.Router.HandleFunc("/news/{id:[0-9]+}", endpoints.GetNewsItemEndpoint(a.DB)).Methods("GET")
-
 	a.initializeRoutes()
 }
 
@@ -43,10 +39,14 @@ func (a App) Run(addr string) {
 }
 
 func (a *App) initializeRoutes() {
-	// a.Router.Handle("/news2")
 	a.Router.HandleFunc("/news", endpoints.ListNewsItemEndpoint(a.DB)).Methods("GET")
 	a.Router.HandleFunc("/news/{id:[0-9]+}", endpoints.GetNewsItemEndpoint(a.DB)).Methods("GET")
-	// a.Router.HandleFunc("/sms_captcha", a.getSmsCaptcha).Methods("POST")
+
+	a.Router.HandleFunc("/users", endpoints.RegisterUserEndpoint(a.DB)).Methods("POST")
+
+	a.Router.HandleFunc("/captcha/send", endpoints.SendSMSEndpoint).Methods("POST")
+	a.Router.HandleFunc("/captcha/validate", endpoints.ValidateSMSEndpoint).Methods("POST")
+
 	//a.Router.HandleFunc("/user", a.createUser).Methods("POST")
 	//a.Router.HandleFunc("/user/{id:[0-9]+}", a.updateUser).Methods("PUT")
 	//a.Router.HandleFunc("/user/{id:[0-9]+}", a.deleteUser).Methods("DELETE")

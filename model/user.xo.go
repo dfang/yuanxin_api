@@ -7,17 +7,18 @@ import (
 	"database/sql"
 	"errors"
 
+	// . "github.com/dfang/yuanxin/util"
 	"github.com/go-sql-driver/mysql"
 )
 
 // User represents a row from 'news.user'.
 type User struct {
 	ID        int            `json:"id"`         // id
-	Nickname  sql.NullString `json:"nickname"`   // nickname
-	Pwd       sql.NullString `json:"pwd"`        // pwd
-	Phone     sql.NullString `json:"phone"`      // phone
-	Email     sql.NullString `json:"email"`      // email
-	Avatar    sql.NullString `json:"avatar"`     // avatar
+	Nickname  string         `json:"nickname"`   // nickname
+	Pwd       string         `json:"pwd"`        // pwd
+	Phone     string         `json:"phone"`      // phone
+	Email     string         `json:"email"`      // email
+	Avatar    string         `json:"avatar"`     // avatar
 	Gender    sql.NullInt64  `json:"gender"`     // gender
 	CreatedAt mysql.NullTime `json:"created_at"` // created_at
 	LoginDate mysql.NullTime `json:"login_date"` // login_date
