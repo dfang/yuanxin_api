@@ -45,9 +45,27 @@ func SessionEndpoint(db *sql.DB) http.HandlerFunc {
 		user, err := SignInUser(db, phone, password)
 
 		if err != nil {
-			RespondWithError(w, http.StatusServiceUnavailable, err.Error())
+			// RespondWithError(w, http.StatusServiceUnavailable, err.Error())
+			RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode string `json:"status_code"`
+				Message    string `json:"msg"`
+				User       *User  `json:"user"`
+			}{
+				StatusCode: "205",
+				Message:    "手机号码或密码错误",
+				User:       user,
+			})
 		} else {
-			RespondWithJSON(w, http.StatusOK, user)
+			RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode string `json:"status_code"`
+				Message    string `json:"msg"`
+				User       *User  `json:"user"`
+			}{
+				StatusCode: "200",
+				Message:    "登录成功",
+				User:       user,
+			})
+
 		}
 	})
 }

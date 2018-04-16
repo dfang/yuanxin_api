@@ -1,6 +1,9 @@
 package model
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 // 注册
 func (u *User) RegisterUser(db XODB) error {
@@ -46,16 +49,15 @@ func SignInUser(db XODB, phone, pwd string) (*User, error) {
 	const sqlstr = `SELECT ` +
 		`id, nickname, pwd, phone, email, avatar, gender, created_at, login_date ` +
 		`FROM news.user ` +
-		`WHERE phone = ? & pwd = ?`
+		`WHERE phone = ? AND pwd = ?`
 
 	// run query
 	XOLog(sqlstr, phone, pwd)
-	u := User{
-		_exists: true,
-	}
+	u := User{}
 
 	err = db.QueryRow(sqlstr, phone, pwd).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Avatar, &u.Gender, &u.CreatedAt, &u.LoginDate)
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
