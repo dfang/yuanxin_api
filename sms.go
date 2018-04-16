@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"unsafe"
@@ -60,4 +61,12 @@ func SendSms(config *SMSData) (*string, error) {
 	str := (*string)(unsafe.Pointer(&respBytes))
 	//fmt.Println(*str)
 	return str, err
+}
+
+func GenCaptcha() int {
+	return rangeIn(100000, 999999)
+}
+
+func rangeIn(low, hi int) int {
+	return low + rand.Intn(hi-low)
 }
