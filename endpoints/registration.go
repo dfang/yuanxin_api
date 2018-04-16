@@ -31,10 +31,10 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 		// schema.NewDecoder().Decode(&user, r.PostForm)
 		// decoder.Decode(user, r.PostForm)
 
-		fmt.Printf("%+v", user)
+		fmt.Printf("%+v\n", user)
 
 		// insert into db
-		err := user.Insert(db)
+		err := user.RegisterUser(db)
 		if err != nil {
 			RespondWithError(w, http.StatusServiceUnavailable, err.Error())
 		} else {
