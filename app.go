@@ -8,11 +8,10 @@ import (
 	"database/sql"
 
 	"github.com/dfang/yuanxin/endpoints"
+	"github.com/dfang/yuanxin/model"
 	_ "github.com/go-sql-driver/mysql"
 
 	"os"
-
-	// . "github.com/dfang/yuanxin/model"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -30,6 +29,11 @@ func (a *App) Initialize(user, password, host, dbName string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	model.XOLog = func(s string, p ...interface{}) {
+		fmt.Printf("> SQL: %s -- params: %v\n", s, p)
+	}
+
 	a.Router = mux.NewRouter()
 	a.initializeRoutes()
 }
