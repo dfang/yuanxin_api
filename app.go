@@ -47,6 +47,12 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/captcha/send", endpoints.SendSMSEndpoint).Methods("POST")
 	a.Router.HandleFunc("/captcha/validate", endpoints.ValidateSMSEndpoint).Methods("POST")
 
+	a.Router.HandleFunc("/registrations", endpoints.RegistrationEndpoint).Methods("POST")
+	a.Router.HandleFunc("/sessions", endpoints.SessionEndpoint).Methods("POST")
+	a.Router.HandleFunc("/passwords", endpoints.PasswordEndpoint).Methods("PUT")
+
+	a.Router.HandleFunc("/exists", endpoints.ValidateSMSEndpoint).Methods("POST")
+
 	//a.Router.HandleFunc("/user", a.createUser).Methods("POST")
 	//a.Router.HandleFunc("/user/{id:[0-9]+}", a.updateUser).Methods("PUT")
 	//a.Router.HandleFunc("/user/{id:[0-9]+}", a.deleteUser).Methods("DELETE")
