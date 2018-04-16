@@ -9,7 +9,7 @@ import (
 	. "github.com/dfang/yuanxin/util"
 )
 
-func RegisterUserEndpoint(db *sql.DB) http.HandlerFunc {
+func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// w.Write([]byte("not implemented"))
 
