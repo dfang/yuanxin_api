@@ -25,3 +25,7 @@ func {{ .Name }}(db XODB{{ goparamlist .Params true true }}) ({{ if $notVoid }}{
 {{- end }}
 }
 {{- end }}
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop

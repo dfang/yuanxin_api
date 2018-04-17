@@ -175,3 +175,7 @@ func ({{ $short }} *{{ .Name }}) Delete(db XODB) error {
 	return nil
 }
 {{- end }}
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop

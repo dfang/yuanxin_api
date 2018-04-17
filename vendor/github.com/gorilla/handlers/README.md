@@ -20,7 +20,11 @@ with Go's `net/http` package (or any framework supporting `http.Handler`), inclu
 * [**ProxyHeaders**](https://godoc.org/github.com/gorilla/handlers#ProxyHeaders) for populating `r.RemoteAddr` and `r.URL.Scheme` based on the
   `X-Forwarded-For`, `X-Real-IP`, `X-Forwarded-Proto` and RFC7239 `Forwarded`
   headers when running a Go server behind a HTTP reverse proxy.
+<<<<<<< HEAD
 * [**CanonicalHost**](https://godoc.org/github.com/gorilla/handlers#CanonicalHost) for re-directing to the preferred host when handling multiple
+=======
+* [**CanonicalHost**](https://godoc.org/github.com/gorilla/handlers#CanonicalHost) for re-directing to the preferred host when handling multiple 
+>>>>>>> develop
   domains (i.e. multiple CNAME aliases).
 * [**RecoveryHandler**](https://godoc.org/github.com/gorilla/handlers#RecoveryHandler) for recovering from unexpected panics.
 
@@ -52,3 +56,7 @@ func main() {
 ## License
 
 BSD licensed. See the included LICENSE file for details.
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop

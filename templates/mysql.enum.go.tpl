@@ -59,3 +59,7 @@ func ({{ $short }} *{{ $type }}) Scan(src interface{}) error {
 
 	return {{ $short }}.UnmarshalText(buf)
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop

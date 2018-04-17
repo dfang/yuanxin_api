@@ -9,3 +9,7 @@ type {{ .Name }} struct {
 	{{ .Name }} {{ retype .Type }} // {{ .Col.ColumnName }}
 {{- end }}
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop

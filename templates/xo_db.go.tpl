@@ -68,3 +68,7 @@ func (ss StringSlice) Value() (driver.Value, error) {
 
 // Slice is a slice of ScannerValuers.
 type Slice []ScannerValuer
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop

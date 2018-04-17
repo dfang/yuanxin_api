@@ -46,3 +46,7 @@ func {{ .Name }} (db XODB{{ range .QueryParams }}, {{ .Name }} {{ .Type }}{{ end
 	return res, nil
 {{- end }}
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop

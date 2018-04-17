@@ -22,8 +22,8 @@ CREATE TABLE user(
     pwd varchar(56),  
     phone varchar(11), 
     email varchar(128), 
-    avatar varchar(255),
-    gender int,
+    avatar varchar(255), 
+    gender int, 
     created_at datetime, 
     login_date datetime 
 );

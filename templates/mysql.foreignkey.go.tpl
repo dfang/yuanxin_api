@@ -5,3 +5,7 @@
 func ({{ $short }} *{{ .Type.Name }}) {{ .Name }}(db XODB) (*{{ .RefType.Name }}, error) {
 	return {{ .RefType.Name }}By{{ .RefField.Name }}(db, {{ convext $short .Field .RefField }})
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop

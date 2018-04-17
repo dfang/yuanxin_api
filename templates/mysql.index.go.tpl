@@ -55,3 +55,7 @@ func {{ .FuncName }}(db XODB{{ goparamlist .Fields true true }}) ({{ if not .Ind
 	return res, nil
 {{- end }}
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
