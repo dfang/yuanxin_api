@@ -26,6 +26,12 @@
   version = "v1.6.1"
 
 [[projects]]
+  name = "github.com/gorilla/schema"
+  packages = ["."]
+  revision = "d0e4c24cff97ae983e9847e0ed5a02dc10013d41"
+  version = "v1.0.2"
+
+[[projects]]
   branch = "master"
   name = "github.com/jpfuentes2/go-env"
   packages = [
@@ -46,9 +52,15 @@
   revision = "418b41d23a1bf978c06faea5313ba194650ac088"
   version = "v0.8.7"
 
+[[projects]]
+  name = "gopkg.in/guregu/null.v3"
+  packages = ["."]
+  revision = "e81d6d8d57747b34d7c5fe0d20ebf57692f04ea9"
+  version = "v3.3.0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7399e7691a9fdad46ffcf38213c03226b6de25b041db0bc1f5297bd9d8845c1b"
+  inputs-digest = "879d2b0a6f153dc4b5dce13c19a6093efdfbec6db6a721a67a149960697a8214"
   solver-name = "gps-cdcl"
   solver-version = 1
