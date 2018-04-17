@@ -6,21 +6,20 @@ package model
 import (
 	"errors"
 
-	"github.com/go-sql-driver/mysql"
 	null "gopkg.in/guregu/null.v3"
 )
 
 // User represents a row from 'news.user'.
 type User struct {
-	ID        int            `json:"id"`         // id
-	Nickname  null.String    `json:"nickname"`   // nickname
-	Pwd       null.String    `json:"pwd"`        // pwd
-	Phone     null.String    `json:"phone"`      // phone
-	Email     null.String    `json:"email"`      // email
-	Avatar    null.String    `json:"avatar"`     // avatar
-	Gender    null.Int       `json:"gender"`     // gender
-	CreatedAt mysql.NullTime `json:"created_at"` // created_at
-	LoginDate mysql.NullTime `json:"login_date"` // login_date
+	ID        int         `json:"id"`         // id
+	Nickname  null.String `json:"nickname"`   // nickname
+	Pwd       null.String `json:"pwd"`        // pwd
+	Phone     null.String `json:"phone"`      // phone
+	Email     null.String `json:"email"`      // email
+	Avatar    null.String `json:"avatar"`     // avatar
+	Gender    null.Int    `json:"gender"`     // gender
+	CreatedAt null.Time   `json:"created_at"` // created_at
+	LoginDate null.Time   `json:"login_date"` // login_date
 
 	// xo fields
 	_exists, _deleted bool
