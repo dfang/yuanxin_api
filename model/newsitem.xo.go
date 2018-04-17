@@ -5,19 +5,22 @@ package model
 
 import (
 	"errors"
+
+	"github.com/go-sql-driver/mysql"
+	null "gopkg.in/guregu/null.v3"
 )
 
 // NewsItem represents a row from 'news.news_item'.
 type NewsItem struct {
-	ID          int    `json:"id"`          // id
-	Title       string `json:"title"`       // title
-	Description string `json:"description"` // description
-	Body        string `json:"body"`        // body
-	Type        string `json:"type"`        // type
-	Link        string `json:"link"`        // link
-	Image       string `json:"image"`       // image
-	Source      string `json:"source"`      // source
-	UpdatedAt   string `json:"updated_at"`  // updated_at
+	ID          int            `json:"id"`          // id
+	Title       null.String    `json:"title"`       // title
+	Description null.String    `json:"description"` // description
+	Body        null.String    `json:"body"`        // body
+	Type        null.String    `json:"type"`        // type
+	Link        null.String    `json:"link"`        // link
+	Image       null.String    `json:"image"`       // image
+	Source      null.String    `json:"source"`      // source
+	UpdatedAt   mysql.NullTime `json:"updated_at"`  // updated_at
 
 	// xo fields
 	_exists, _deleted bool
