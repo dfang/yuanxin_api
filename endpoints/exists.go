@@ -55,10 +55,6 @@ func captchaExists(w http.ResponseWriter, db *sql.DB, phone, code string) {
 
 func phoneExists(w http.ResponseWriter, db *sql.DB, phone string) {
 	user, err := model.UserByPhone(db, phone)
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
 	if err != nil {
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode int    `json:"status_code"`
@@ -68,10 +64,6 @@ func phoneExists(w http.ResponseWriter, db *sql.DB, phone string) {
 			Message:    "手机号码没有被注册",
 		})
 	}
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
 	if user != nil {
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode string `json:"status_code"`
