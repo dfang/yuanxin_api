@@ -53,8 +53,8 @@ CREATE TABLE role(
 
 CREATE TABLE captcha(
     id int PRIMARY KEY AUTO_INCREMENT,
-    user_id int , 
-    captcha_code varchar(6)
+    phone varchar(11),
+    code varchar(6)
 );
 
 CREATE TABLE invitation(
