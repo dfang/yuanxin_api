@@ -9,6 +9,8 @@ import (
 func (u *User) RegisterUser(db XODB) error {
 	var err error
 
+	u, err = UserByPhone(db, u.Phone.String)
+
 	// if already exist, bail
 	if u._exists {
 		return errors.New("insert failed: already exists")
