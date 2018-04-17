@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
+	null "gopkg.in/guregu/null.v3"
+
 	. "github.com/dfang/yuanxin/model"
 	. "github.com/dfang/yuanxin/util"
 )
@@ -18,10 +20,10 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 		}
 
 		user := User{
-			Nickname: r.PostFormValue("nickname"),
-			Phone:    r.PostFormValue("phone"),
-			Email:    r.PostFormValue("email"),
-			Pwd:      r.PostFormValue("password"),
+			Nickname: null.StringFrom(r.PostFormValue("nickname")),
+			Phone:    null.StringFrom(r.PostFormValue("phone")),
+			Email:    null.StringFrom(r.PostFormValue("email")),
+			Pwd:      null.StringFrom(r.PostFormValue("password")),
 		}
 
 		// use gorilla scheme to decode form values to user, that's called data binding in rails/asp.net mvc
