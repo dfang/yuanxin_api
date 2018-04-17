@@ -21,7 +21,7 @@ func ExistsEndpoint(db *sql.DB) http.HandlerFunc {
 		}
 
 		if phone != "" {
-			emailExists(w, db, phone)
+			phoneExists(w, db, phone)
 		}
 
 		if email != "" {
