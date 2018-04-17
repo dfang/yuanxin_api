@@ -8,40 +8,78 @@ server:
   port: 5002
   host: localhost
 schema:
-- name: news
+- name: yuanxin
   path: /Users/mj/go/src/github.com/dfang/yuanxin
-  environment:
-    APP_DB_USER: root
-    APP_DB_NAME: news
   commands:
     clean:
+      status: true
+    vet:
+      status: true
+    fmt:
+      args:
+      - -s
+      - -w
       status: true
     test:
       status: true
     generate:
       status: true
-    vet:
-      status: true
-    fmt:
-      status: true
-      args:
-      - -s
-      - -w
-    build:
-      status: true
-      args:
-        - -o news
     install:
+      status: true
+    build:
+      args:
+      - -o news
       status: true
     run:
       status: true
   watcher:
-    paths:
-    - ./
     extensions:
     - go
+    paths:
+    - ./
     ignored_paths:
     - .idea
+    - .git
+    - .realize
+    - vendor
+- name: util
+  path: /Users/mj/go/src/github.com/dfang/yuanxin/util
+  commands: 
+    vet:
+      status: true
+    fmt:
+      status: true
+    test:
+      status: true
+    clean:
+      status: true
+  watcher:
+    extensions:
+    - go
+    paths:
+    - ./
+    ignored_paths:
+    - .git
+    - .realize
+    - vendor
+- name: model
+  path: /Users/mj/go/src/github.com/dfang/yuanxin/model/
+  commands: 
+    vet:
+      status: true
+    fmt:
+      args:
+      - -s
+      - -w
+      status: true
+    test:
+      status: true
+  watcher:
+    extensions:
+    - go
+    paths:
+    - /
+    ignored_paths:
     - .git
     - .realize
     - vendor

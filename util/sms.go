@@ -1,4 +1,4 @@
-package main
+package util
 
 import (
 	"bytes"
@@ -19,20 +19,32 @@ type SMSData struct {
 	Report   bool
 }
 
-func SendSms(config *SMSData) (*string, error) {
-	config.Account = "N9718791"
-	config.Password = "Gzcl888888"
-	config.Message = url.QueryEscape("【253云通讯】您好，您的验证码是999999")
-	config.Report = true
+type Sendable interface {
+	Send() error
+}
 
+func NewSMSAccount() SMSData {
+	return SMSData{
+		Account:  "N9718791",
+		Password: "Gzcl888888",
+		// Message:  url.QueryEscape("【253云通讯】您好，您的验证码是999999"),
+		Report: true,
+	}
+}
+func (config SMSData) Send(phone, msg string) (*string, error) {
+	// sms.Account = "N9718791"
+	// sms.Password = "Gzcl888888"
+	// sms.Message = url.QueryEscape("【253云通讯】您好，您的验证码是999999")
+	// sms.Report = true
 	params := make(map[string]interface{})
 	params["account"] = config.Account
 	params["password"] = config.Password
-	params["phone"] = config.Phone
-	params["msg"] = url.QueryEscape("【253云通讯】您好，您的验证码是999999")
 	params["report"] = config.Report
+	params["phone"] = phone
+	params["msg"] = msg
 
 	fmt.Println(params)
+
 	bytesData, err := json.Marshal(params)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -69,4 +81,9 @@ func GenCaptcha() int {
 
 func rangeIn(low, hi int) int {
 	return low + rand.Intn(hi-low)
+}
+
+func sms_captcha_template() string {
+	msg := fmt.Sprintf("【253云通讯】您好，您的验证码是%d", GenCaptcha())
+	return url.QueryEscape(msg)
 }
