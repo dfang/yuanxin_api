@@ -63,3 +63,49 @@ func SignInUser(db XODB, phone, pwd string) (*User, error) {
 
 	return &u, nil
 }
+
+func UserByEmail(db XODB, email string) (*User, error) {
+	var err error
+
+	// sql query
+	const sqlstr = `SELECT ` +
+		`id, nickname, pwd, phone, email, avatar, gender, created_at, login_date ` +
+		`FROM news.user ` +
+		`WHERE email = ?`
+
+	// run query
+	XOLog(sqlstr, email)
+	u := User{
+		_exists: true,
+	}
+
+	err = db.QueryRow(sqlstr, email).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Avatar, &u.Gender, &u.CreatedAt, &u.LoginDate)
+	if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
+}
+
+func UserByPhone(db XODB, phone string) (*User, error) {
+	var err error
+
+	// sql query
+	const sqlstr = `SELECT ` +
+		`id, nickname, pwd, phone, email, avatar, gender, created_at, login_date ` +
+		`FROM news.user ` +
+		`WHERE phone = ?`
+
+	// run query
+	XOLog(sqlstr, phone)
+	u := User{
+		_exists: true,
+	}
+
+	err = db.QueryRow(sqlstr, phone).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Avatar, &u.Gender, &u.CreatedAt, &u.LoginDate)
+	if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
+}

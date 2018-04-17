@@ -53,5 +53,5 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/sessions", endpoints.SessionEndpoint(a.DB)).Methods("POST")
 	a.Router.HandleFunc("/passwords", endpoints.PasswordEndpoint).Methods("PUT")
 
-	a.Router.HandleFunc("/exists", endpoints.ValidateSMSEndpoint).Methods("POST")
+	a.Router.HandleFunc("/exists", endpoints.ExistsEndpoint(a.DB)).Methods("POST")
 }
