@@ -1,0 +1,5 @@
+### generate model from db(sql first)
+xo mysql://root:@127.0.0.1/news -o model
+
+### generate sql scans
+scaneo -p model *.xo.go
