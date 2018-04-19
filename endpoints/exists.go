@@ -17,22 +17,21 @@ func ExistsEndpoint(db *sql.DB) http.HandlerFunc {
 		captcha := r.PostFormValue("captcha")
 
 		if captcha != "" && phone != "" {
-			captchaExists(w, db, phone, captcha)
+			CaptchaExists(w, db, phone, captcha)
 		}
 
 		if phone != "" {
-			phoneExists(w, db, phone)
+			PhoneExists(w, db, phone)
 		}
 
 		if email != "" {
-			emailExists(w, db, email)
+			EmailExists(w, db, email)
 		}
 	})
 }
 
-func captchaExists(w http.ResponseWriter, db *sql.DB, phone, code string) {
+func CaptchaExists(w http.ResponseWriter, db *sql.DB, phone, code string) {
 	captcha, _ := model.CaptchaByPhoneAndCode(db, phone, code)
-
 	if captcha != nil {
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode int    `json:"status_code"`
@@ -53,17 +52,8 @@ func captchaExists(w http.ResponseWriter, db *sql.DB, phone, code string) {
 	return
 }
 
-func phoneExists(w http.ResponseWriter, db *sql.DB, phone string) {
-	user, err := model.UserByPhone(db, phone)
-	if err != nil {
-		util.RespondWithJSON(w, http.StatusOK, struct {
-			StatusCode int    `json:"status_code"`
-			Message    string `json:"msg"`
-		}{
-			StatusCode: 200,
-			Message:    "手机号码没有被注册",
-		})
-	}
+func PhoneExists(w http.ResponseWriter, db *sql.DB, phone string) {
+	user, _ := model.UserByPhone(db, phone)
 	if user != nil {
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode string `json:"status_code"`
@@ -72,22 +62,20 @@ func phoneExists(w http.ResponseWriter, db *sql.DB, phone string) {
 			StatusCode: "202",
 			Message:    "手机号码已经被注册",
 		})
-	}
-	return
-}
-
-func emailExists(w http.ResponseWriter, db *sql.DB, email string) {
-	user, err := model.UserByEmail(db, email)
-	if err != nil {
+	} else {
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode int    `json:"status_code"`
 			Message    string `json:"msg"`
 		}{
-			StatusCode: http.StatusOK,
-			Message:    "邮箱没有被注册",
+			StatusCode: 200,
+			Message:    "手机号码没有被注册",
 		})
 	}
+	return
+}
 
+func EmailExists(w http.ResponseWriter, db *sql.DB, email string) {
+	user, _ := model.UserByEmail(db, email)
 	if user != nil {
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode string `json:"status_code"`
@@ -95,6 +83,14 @@ func emailExists(w http.ResponseWriter, db *sql.DB, email string) {
 		}{
 			StatusCode: "203",
 			Message:    "邮箱已经被注册",
+		})
+	} else {
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int    `json:"status_code"`
+			Message    string `json:"msg"`
+		}{
+			StatusCode: http.StatusOK,
+			Message:    "邮箱没有被注册",
 		})
 	}
 	return

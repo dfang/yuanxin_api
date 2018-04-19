@@ -7,19 +7,17 @@ import (
 
 	null "gopkg.in/guregu/null.v3"
 
-	. "github.com/dfang/yuanxin/model"
-	. "github.com/dfang/yuanxin/util"
+	"github.com/dfang/yuanxin/model"
+	"github.com/dfang/yuanxin/util"
 )
 
 func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// w.Write([]byte("not implemented"))
-
 		for k, v := range r.PostForm {
 			fmt.Printf("%s:%s\n", k, v)
 		}
 
-		user := User{
+		user := model.User{
 			Nickname: null.StringFrom(r.PostFormValue("nickname")),
 			Phone:    null.StringFrom(r.PostFormValue("phone")),
 			Email:    null.StringFrom(r.PostFormValue("email")),
@@ -35,26 +33,54 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 
 		fmt.Printf("%+v\n", user)
 
+		// EmailExists(w, db, user.Email.String)
+		u, _ := model.UserByEmail(db, user.Email.String)
+		if u != nil {
+			util.RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode string `json:"status_code"`
+				Message    string `json:"msg"`
+			}{
+				StatusCode: "203",
+				Message:    "邮箱已经被注册",
+			})
+			return
+		}
+
+		u2, _ := model.UserByPhone(db, user.Phone.String)
+		if u2 != nil {
+			util.RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode string `json:"status_code"`
+				Message    string `json:"msg"`
+			}{
+				StatusCode: "202",
+				Message:    "手机号码已经被注册",
+			})
+		}
+
+		// PhoneExists(w, db, user.Phone.String)
+
 		// insert into db
 		err := user.RegisterUser(db)
 		if err != nil {
 			// RespondWithError(w, http.StatusServiceUnavailable, err.Error())
-			RespondWithJSON(w, http.StatusOK, struct {
+			util.RespondWithJSON(w, http.StatusOK, struct {
 				StatusCode string `json:"status_code"`
 				Message    string `json:"msg"`
 			}{
 				StatusCode: "200",
 				Message:    "注册失败",
 			})
+			return
 		} else {
 			// RespondWithJSON(w, http.StatusOK, user)
-			RespondWithJSON(w, http.StatusOK, struct {
+			util.RespondWithJSON(w, http.StatusOK, struct {
 				StatusCode string `json:"status_code"`
 				Message    string `json:"msg"`
 			}{
 				StatusCode: "200",
 				Message:    "注册成功",
 			})
+			return
 		}
 	})
 }
