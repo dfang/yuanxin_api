@@ -55,6 +55,7 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 				StatusCode: "202",
 				Message:    "手机号码已经被注册",
 			})
+			return
 		}
 
 		// PhoneExists(w, db, user.Phone.String)
