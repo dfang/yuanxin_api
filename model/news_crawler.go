@@ -9,6 +9,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gocolly/colly"
+	"github.com/metakeule/fmtdate"
 	// "github.com/metakeule/fmtdate"
 )
 
@@ -39,17 +40,18 @@ func CrawNews() []NewsItem {
 		e.ForEach(".newsli", func(_ int, el *colly.HTMLElement) {
 			// t, err := time.Parse("2018/4/17 16:45:50", el.ChildText(".top-title .add-time"))
 			// s := strings.Replace(el.ChildText(".top-title .add-time"), "/", "-", -1)
+			// fmt.Println(s)
 			// t, err := fmtdate.Parse("YYYY-MM-DD hh:mm:ss", s)
+			t, err := fmtdate.Parse("YYYY/M/DD hh:mm:ss", "2018/4/17 16:45:50")
+			checkErr(err)
 
 			// null.TimeFrom()
 			// fmt.Println(t)
 
-			// checkErr(err)
-
 			item := NewsItem{
-				Title: null.StringFrom(el.ChildText(".top-title h3")),
-				Type:  null.StringFrom(el.ChildText(".top-title .info a")),
-				// UpdatedAt:   null.TimeFrom(t),
+				Title:       null.StringFrom(el.ChildText(".top-title h3")),
+				Type:        null.StringFrom(el.ChildText(".top-title .info a")),
+				UpdatedAt:   null.TimeFrom(t),
 				Source:      null.StringFrom(el.ChildText(".top-title .source")),
 				Description: null.StringFrom(el.ChildText("p")),
 				Link:        null.StringFrom(e.Request.AbsoluteURL(el.ChildAttr(".top-title h3 a", "href"))),
