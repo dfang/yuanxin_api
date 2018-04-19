@@ -1,17 +1,15 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
-
-	"database/sql"
+	"os"
 
 	"github.com/dfang/yuanxin/endpoints"
 	"github.com/dfang/yuanxin/model"
 	_ "github.com/go-sql-driver/mysql"
-
-	"os"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -49,12 +47,12 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/news", endpoints.ListNewsItemEndpoint(a.DB)).Methods("GET")
 	a.Router.HandleFunc("/news/{id:[0-9]+}", endpoints.GetNewsItemEndpoint(a.DB)).Methods("GET")
 
-	a.Router.HandleFunc("/captcha/send", endpoints.SendSMSEndpoint).Methods("POST")
-	a.Router.HandleFunc("/captcha/validate", endpoints.ValidateSMSEndpoint).Methods("POST")
+	a.Router.HandleFunc("/captcha/send", endpoints.SendSMSEndpoint(a.DB)).Methods("POST")
+	a.Router.HandleFunc("/captcha/validate", endpoints.ValidateSMSEndpoint(a.DB)).Methods("POST")
 
 	a.Router.HandleFunc("/registrations", endpoints.RegistrationEndpoint(a.DB)).Methods("POST")
 	a.Router.HandleFunc("/sessions", endpoints.SessionEndpoint(a.DB)).Methods("POST")
-	a.Router.HandleFunc("/passwords", endpoints.PasswordEndpoint).Methods("PUT")
+	a.Router.HandleFunc("/passwords", endpoints.PasswordEndpoint(a.DB)).Methods("PUT")
 
 	a.Router.HandleFunc("/exists", endpoints.ExistsEndpoint(a.DB)).Methods("POST")
 }

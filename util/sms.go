@@ -31,7 +31,7 @@ func NewSMSAccount() SMSData {
 		Report: true,
 	}
 }
-func (config SMSData) Send(phone, msg string) (*string, error) {
+func (config SMSData) Send(phone, code string) (*string, error) {
 	// sms.Account = "N9718791"
 	// sms.Password = "Gzcl888888"
 	// sms.Message = url.QueryEscape("【253云通讯】您好，您的验证码是999999")
@@ -41,7 +41,7 @@ func (config SMSData) Send(phone, msg string) (*string, error) {
 	params["password"] = config.Password
 	params["report"] = config.Report
 	params["phone"] = phone
-	params["msg"] = msg
+	params["msg"] = sms_captcha_template(code)
 
 	fmt.Println(params)
 
@@ -75,15 +75,15 @@ func (config SMSData) Send(phone, msg string) (*string, error) {
 	return str, err
 }
 
-func GenCaptcha() int {
-	return rangeIn(100000, 999999)
+func GenCaptcha() string {
+	return fmt.Sprintf("%d", rangeIn(100000, 999999))
 }
 
 func rangeIn(low, hi int) int {
 	return low + rand.Intn(hi-low)
 }
 
-func sms_captcha_template() string {
-	msg := fmt.Sprintf("【253云通讯】您好，您的验证码是%d", GenCaptcha())
+func sms_captcha_template(code string) string {
+	msg := fmt.Sprintf("【253云通讯】您好，您的验证码是%s", code)
 	return url.QueryEscape(msg)
 }

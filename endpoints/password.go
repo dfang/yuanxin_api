@@ -1,7 +1,12 @@
 package endpoints
 
-import "net/http"
+import (
+	"database/sql"
+	"net/http"
+)
 
-func PasswordEndpoint(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("not implemented"))
+func PasswordEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("not implemented"))
+	})
 }

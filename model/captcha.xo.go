@@ -5,6 +5,7 @@ package model
 
 import (
 	"errors"
+	"log"
 
 	null "gopkg.in/guregu/null.v3"
 )
@@ -32,6 +33,10 @@ func (c *Captcha) Deleted() bool {
 // Insert inserts the Captcha to the database.
 func (c *Captcha) Insert(db XODB) error {
 	var err error
+
+	log.Println(c)
+
+	// c, err = CaptchaByPhone(db, c.Phone.String)
 
 	// if already exist, bail
 	if c._exists {

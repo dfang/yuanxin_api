@@ -31,7 +31,7 @@ func ExistsEndpoint(db *sql.DB) http.HandlerFunc {
 }
 
 func captchaExists(w http.ResponseWriter, db *sql.DB, phone, code string) {
-	captcha, _ := model.CaptchaBy(db, phone, code)
+	captcha, _ := model.CaptchaByPhoneAndCode(db, phone, code)
 
 	if captcha != nil {
 		util.RespondWithJSON(w, http.StatusOK, struct {
