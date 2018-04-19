@@ -8,18 +8,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type Product struct {
-	Name                    string
-	Closing_price_yesterday string
-	Current_price           string
-	Lowest_price_in_a_day   string
-	Highest_price_in_a_day  string
-	Daily_change            string
-	Price_in_hk             string
-	Lowest_price_in_a_week  string
-	Highest_price_in_a_week string
-}
-
 func GetNews(db *sql.DB, start, count int, t NewsItemType) ([]NewsItem, error) {
 	statement := ""
 

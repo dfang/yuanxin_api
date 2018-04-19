@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/dfang/yuanxin/model"
 	_ "github.com/jpfuentes2/go-env/autoload"
 	"github.com/robfig/cron"
 )
@@ -26,7 +27,14 @@ func main() {
 	flag.Parse()
 
 	if flagVal {
-		// a.insertNewsItem()
+		items := model.CrawNews()
+
+		fmt.Println("vvvvvv")
+		fmt.Println(items)
+
+		for _, item := range items {
+			item.InsertNewsItem(a.DB)
+		}
 		fmt.Println("crawling data ....")
 	} else {
 		fmt.Println("Server listening on 0.0.0.0:9090")
