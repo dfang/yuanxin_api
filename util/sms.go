@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"net/url"
+	"time"
 	"unsafe"
 )
 
@@ -25,12 +26,13 @@ type Sendable interface {
 
 func NewSMSAccount() SMSData {
 	return SMSData{
-		Account:  "N9718791",
-		Password: "Gzcl888888",
+		Account:  "N3404255",
+		Password: "ReshIl6Umad0ef",
 		// Message:  url.QueryEscape("【253云通讯】您好，您的验证码是999999"),
 		Report: true,
 	}
 }
+
 func (config SMSData) Send(phone, code string) (*string, error) {
 	// sms.Account = "N9718791"
 	// sms.Password = "Gzcl888888"
@@ -76,14 +78,17 @@ func (config SMSData) Send(phone, code string) (*string, error) {
 }
 
 func GenCaptcha() string {
-	return fmt.Sprintf("%d", rangeIn(100000, 999999))
+	// rand.Seed(time.Now().UnixNano())
+	return fmt.Sprintf("%d", RangeIn(100000, 999999))
+	// return RangeIn(100000, 999999)
 }
 
-func rangeIn(low, hi int) int {
+func RangeIn(low, hi int) int {
+	rand.Seed(time.Now().UnixNano())
 	return low + rand.Intn(hi-low)
 }
 
 func sms_captcha_template(code string) string {
-	msg := fmt.Sprintf("【253云通讯】您好，您的验证码是%s", code)
+	msg := fmt.Sprintf("【源芯】尊敬的用户：您的校验码：%s，工作人员不会索取，请勿泄漏。", code)
 	return url.QueryEscape(msg)
 }

@@ -1,23 +1,23 @@
 package util
 
 import (
+	"log"
 	"testing"
+
+	"github.com/dfang/yuanxin/util"
 )
 
+// GOCACHE=off go test -v *.go
 func TestSendSms(t *testing.T) {
-	sms := SMSData{
-		//Account: "N9718791",
-		//Password: "Gzcl888888",
-		Phone: "17671757383",
-		//Message: url.QueryEscape("【253云通讯】您好，您的验证码是999999"),
-		//Report: true,
+	code := GenCaptcha()
+	// c := fmt.Sprintf("%d", rangeIn(100000, 999999))
+
+	t.Log(code)
+
+	result, err := util.NewSMSAccount().Send("13530605832", code)
+	if err != nil {
+		log.Fatal(err)
 	}
-	t.Logf("%#v", sms)
 
-	// result, err := SendSms(&sms)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// t.Log(*result)
+	t.Log(*result)
 }
