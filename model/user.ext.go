@@ -9,7 +9,10 @@ import (
 func (u *User) RegisterUser(db XODB) error {
 	var err error
 
-	u, err = UserByPhone(db, u.Phone.String)
+	XOLog("ssssljl;kj;lkjkl;j")
+	XOLog(u.Phone.String)
+
+	// u, err = UserByPhone(db, u.Phone.String)
 
 	// if already exist, bail
 	if u._exists {
