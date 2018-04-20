@@ -22,8 +22,15 @@ func UploadEndpoint(db *sql.DB) http.HandlerFunc {
 		defer file.Close()
 
 		bs, err := ioutil.ReadAll(file)
+		if err != nil {
+			// 统一返回服务器内部处理错误
+		}
 
-		hash := util.Upload(bs)
+		hash, err := util.UploadFile(bs)
+		if err != nil {
+			// 上传失败
+			// 统一返回服务器内部处理错误
+		}
 
 		// fmt.Fprintf(w, "%v", handler.Header)
 		// f, err := os.OpenFile("./test/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666) // 此处假设当前目录下已存在test目录

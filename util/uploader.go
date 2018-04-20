@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"os"
 
 	_ "github.com/jpfuentes2/go-env/autoload"
 	"github.com/qiniu/api.v7/auth/qbox"
@@ -13,16 +12,19 @@ import (
 )
 
 var (
-	accessKey = os.Getenv("QINIU_ACCESS_KEY")
-	secretKey = os.Getenv("QINIU_SECRET_KEY")
-	bucket    = os.Getenv("QINIU_TEST_BUCKET")
+	// accessKey = os.Getenv("QINIU_ACCESS_KEY")
+	// secretKey = os.Getenv("QINIU_SECRET_KEY")
+	// bucket    = os.Getenv("QINIU_TEST_BUCKET")
+	accessKey = "MkFws9gjO_CScK5pXrahfBEWf9viOD_khTomtL3f"
+	secretKey = "xVGWVTQTKFAlEEOFj6t4RRasJek5995UPlcMvv3M"
+	bucket    = "yuanxin"
 )
 
 func Upload(data []byte) string {
 	return uploadFile(data)
 }
 
-func uploadFile(data []byte) string {
+func UploadFile(data []byte) (string, error) {
 	mac := qbox.NewMac(accessKey, secretKey)
 	putPolicy := storage.PutPolicy{
 		Scope: bucket,
@@ -50,10 +52,10 @@ func uploadFile(data []byte) string {
 	err := formUploader.Put(context.Background(), &ret, upToken, genFilename(), bytes.NewReader(data), dataLen, &putExtra)
 	if err != nil {
 		fmt.Println(err)
-		return err.Error()
+		return "", err
 	}
 	// fmt.Println(ret.Key, ret.Hash)
-	return ret.Key
+	return ret.Key, nil
 }
 
 func genFilename() string {
