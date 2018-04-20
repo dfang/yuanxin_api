@@ -20,9 +20,9 @@ var (
 	bucket    = "yuanxin"
 )
 
-func Upload(data []byte) string {
-	return uploadFile(data)
-}
+// func Upload(data []byte) string {
+// 	return uploadFile(data)
+// }
 
 func UploadFile(data []byte) (string, error) {
 	mac := qbox.NewMac(accessKey, secretKey)
