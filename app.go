@@ -55,4 +55,6 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/passwords", endpoints.PasswordEndpoint(a.DB)).Methods("PUT")
 
 	a.Router.HandleFunc("/exists", endpoints.ExistsEndpoint(a.DB)).Methods("POST")
+
+	a.Router.HandleFunc("/upload", endpoints.UploadEndpoint(a.DB)).Methods("POST")
 }
