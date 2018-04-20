@@ -3,7 +3,9 @@ package endpoints
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
+	"strconv"
 
 	null "gopkg.in/guregu/null.v3"
 
@@ -83,5 +85,52 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 			})
 			return
 		}
+	})
+}
+
+func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// w.Write([]byte("not implemented"))
+		user_id, err := strconv.Atoi(r.PostFormValue("user_id"))
+		if err != nil {
+			log.Fatal(err)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		user, err := model.UserByID(db, user_id)
+		if err != nil {
+			log.Fatal(err)
+			w.Write([]byte("数据库查询出错"))
+			return
+		}
+
+		if user == nil {
+			w.Write([]byte("找不到此用户"))
+		}
+
+		// gender, _ := strconv.Atoi(r.PostFormValue("gender"))
+
+		user.Gender = null.IntFrom(1)
+		user.Phone = null.StringFrom(r.PostFormValue("phone"))
+		user.Avatar = null.StringFrom(r.PostFormValue("avatar"))
+		user.Nickname = null.StringFrom(r.PostFormValue("nickname"))
+
+		err = user.UpdateRegistrationInfo(db)
+		if err != nil {
+			w.Write([]byte("内部出错"))
+			return
+		}
+
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode string      `json:"status_code"`
+			Message    string      `json:"msg"`
+			User       *model.User `json:"user"`
+		}{
+			StatusCode: "200",
+			Message:    "更新成功",
+			User:       user,
+		})
+		return
 	})
 }

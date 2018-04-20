@@ -114,3 +114,28 @@ func UserByPhone(db XODB, phone string) (*User, error) {
 
 	return &u, nil
 }
+
+// Update updates the User in the database.
+func (u *User) UpdateRegistrationInfo(db XODB) error {
+	var err error
+
+	// if doesn't exist, bail
+	if !u._exists {
+		return errors.New("update failed: does not exist")
+	}
+
+	// if deleted, bail
+	if u._deleted {
+		return errors.New("update failed: marked for deletion")
+	}
+
+	// sql query
+	const sqlstr = `UPDATE news.user SET ` +
+		`nickname = ?, phone = ?, avatar = ?, gender = ?` +
+		` WHERE id = ?`
+
+	// run query
+	XOLog(sqlstr, u.Nickname, u.Phone, u.Avatar, u.Gender, u.ID)
+	_, err = db.Exec(sqlstr, u.Nickname, u.Phone, u.Avatar, u.Gender, u.ID)
+	return err
+}

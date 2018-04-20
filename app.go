@@ -57,4 +57,5 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/exists", endpoints.ExistsEndpoint(a.DB)).Methods("POST")
 
 	a.Router.HandleFunc("/upload", endpoints.UploadEndpoint(a.DB)).Methods("POST")
+	a.Router.HandleFunc("/registrations", endpoints.UpdateRegistrationInfo(a.DB)).Methods("PUT")
 }
