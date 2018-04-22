@@ -15,9 +15,9 @@ func ListNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 		// w.Write([]byte("not implemented"))
 		vars := mux.Vars(r)
 
-		count, err := strconv.Atoi(vars["count"])
-		start, err := strconv.Atoi(vars["start"])
-		t, err := strconv.Atoi(vars["type"])
+		count, _ := strconv.Atoi(vars["count"])
+		start, _ := strconv.Atoi(vars["start"])
+		t, _ := strconv.Atoi(vars["type"])
 
 		if count < 1 {
 			count = 10
