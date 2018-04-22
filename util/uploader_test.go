@@ -9,11 +9,11 @@ import (
 	"github.com/qiniu/api.v7/storage"
 )
 
-var (
-	accessKey = "MkFws9gjO_CScK5pXrahfBEWf9viOD_khTomtL3f"
-	secretKey = "xVGWVTQTKFAlEEOFj6t4RRasJek5995UPlcMvv3M"
-	bucket    = "yuanxin"
-)
+// var (
+// 	accessKey = "MkFws9gjO_CScK5pXrahfBEWf9viOD_khTomtL3f"
+// 	secretKey = "xVGWVTQTKFAlEEOFj6t4RRasJek5995UPlcMvv3M"
+// 	bucket    = "yuanxin"
+// )
 
 func TestUpload(t *testing.T) {
 

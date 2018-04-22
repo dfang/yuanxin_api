@@ -3,8 +3,6 @@ package util
 import (
 	"log"
 	"testing"
-
-	"github.com/dfang/yuanxin/util"
 )
 
 // GOCACHE=off go test -v *.go
@@ -14,7 +12,7 @@ func TestSendSms(t *testing.T) {
 
 	t.Log(code)
 
-	result, err := util.NewSMSAccount().Send("13530605832", code)
+	result, err := NewSMSAccount().Send("13530605832", code)
 	if err != nil {
 		log.Fatal(err)
 	}
