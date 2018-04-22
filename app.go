@@ -61,4 +61,9 @@ func (a *App) initializeRoutes() {
 
 	a.Router.HandleFunc("/suggestions", endpoints.SuggestionEndpoint(a.DB)).Methods("POST")
 
+	a.Router.HandleFunc("/apply/seller", endpoints.ApplySellerEndpoint(a.DB)).Methods("POST")
+	a.Router.HandleFunc("/apply/expert", endpoints.ApplyExpertEndpoint(a.DB)).Methods("POST")
+
+	a.Router.HandleFunc("/invitations/check", endpoints.CheckInvitationCodeEndpoint(a.DB)).Methods("POST")
+
 }
