@@ -5,6 +5,7 @@ package model
 
 import (
 	"errors"
+	"time"
 
 	null "gopkg.in/guregu/null.v3"
 )
@@ -18,6 +19,7 @@ type User struct {
 	Email     null.String `json:"email"`      // email
 	Avatar    null.String `json:"avatar"`     // avatar
 	Gender    null.Int    `json:"gender"`     // gender
+	Biography null.String `json:"biography"`  // biography
 	CreatedAt null.Time   `json:"created_at"` // created_at
 	LoginDate null.Time   `json:"login_date"` // login_date
 
@@ -46,14 +48,14 @@ func (u *User) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO news.user (` +
-		`nickname, pwd, phone, email, avatar, gender, created_at, login_date` +
+		`nickname, pwd, phone, email, created_at` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.Avatar, u.Gender, u.CreatedAt, u.LoginDate)
-	res, err := db.Exec(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.Avatar, u.Gender, u.CreatedAt, u.LoginDate)
+	XOLog(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.CreatedAt)
+	res, err := db.Exec(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, time.Now())
 	if err != nil {
 		return err
 	}
@@ -87,12 +89,12 @@ func (u *User) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE news.user SET ` +
-		`nickname = ?, pwd = ?, phone = ?, email = ?, avatar = ?, gender = ?, created_at = ?, login_date = ?` +
+		`nickname = ?, pwd = ?, phone = ?, email = ?, avatar = ?, gender = ?, biography = ?, created_at = ?, login_date = ?` +
 		` WHERE id = ?`
 
 	// run query
-	XOLog(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.Avatar, u.Gender, u.CreatedAt, u.LoginDate, u.ID)
-	_, err = db.Exec(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.Avatar, u.Gender, u.CreatedAt, u.LoginDate, u.ID)
+	XOLog(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.Avatar, u.Gender, u.Biography, u.CreatedAt, u.LoginDate, u.ID)
+	_, err = db.Exec(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.Avatar, u.Gender, u.Biography, u.CreatedAt, u.LoginDate, u.ID)
 	return err
 }
 
@@ -143,7 +145,7 @@ func UserByID(db XODB, id int) (*User, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`id, nickname, pwd, phone, email, avatar, gender, created_at, login_date ` +
+		`id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date ` +
 		`FROM news.user ` +
 		`WHERE id = ?`
 
@@ -153,7 +155,7 @@ func UserByID(db XODB, id int) (*User, error) {
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, id).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Avatar, &u.Gender, &u.CreatedAt, &u.LoginDate)
+	err = db.QueryRow(sqlstr, id).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Avatar, &u.Gender, &u.Biography, &u.CreatedAt, &u.LoginDate)
 	if err != nil {
 		return nil, err
 	}

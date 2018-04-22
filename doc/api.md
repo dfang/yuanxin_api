@@ -2,11 +2,7 @@
 
 ### 新闻列表
 
-<<<<<<< HEAD
-GET /news
-=======
 GET /news  
->>>>>>> develop
 
 参数   默认值
 start  0
@@ -16,11 +12,7 @@ type   0
 
 ### 新闻详情
 
-<<<<<<< HEAD
-GET /news/:id
-=======
 GET /news/:id  
->>>>>>> develop
 
 
 ### 短信验证码
@@ -58,10 +50,7 @@ POST /sessions
 ### 重置密码
 
 PUT /passwords
-<<<<<<< HEAD
-=======
 
 
 
 
->>>>>>> develop
