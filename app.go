@@ -58,4 +58,7 @@ func (a *App) initializeRoutes() {
 
 	a.Router.HandleFunc("/upload", endpoints.UploadEndpoint(a.DB)).Methods("POST")
 	a.Router.HandleFunc("/registrations", endpoints.UpdateRegistrationInfo(a.DB)).Methods("PUT")
+
+	a.Router.HandleFunc("/suggestions", endpoints.SuggestionEndpoint(a.DB)).Methods("POST")
+
 }

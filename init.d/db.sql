@@ -65,3 +65,10 @@ CREATE TABLE invitation(
     has_activated boolean 
 );
 
+CREATE TABLE suggestion(
+    id int PRIMARY KEY AUTO_INCREMENT,
+    user_id int,
+    content text
+)
+
+
