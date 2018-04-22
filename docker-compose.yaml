@@ -25,6 +25,7 @@ services:
   news:
     image: dfang/yuanxin:latest
     container_name: news
+    restart: on-failure
     environment:
       APP_DB_USER: root
       APP_DB_PASSWORD: OC#oc2018
