@@ -13,10 +13,11 @@ import (
 func ListNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// w.Write([]byte("not implemented"))
+		vars := mux.Vars(r)
 
-		count, _ := strconv.Atoi(r.FormValue("count"))
-		start, _ := strconv.Atoi(r.FormValue("start"))
-		t, _ := strconv.Atoi(r.FormValue("type"))
+		count, err := strconv.Atoi(vars["count"])
+		start, err := strconv.Atoi(vars["start"])
+		t, err := strconv.Atoi(vars["type"])
 
 		if count < 1 {
 			count = 10
