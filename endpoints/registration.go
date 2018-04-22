@@ -3,7 +3,6 @@ package endpoints
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -91,27 +90,45 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// w.Write([]byte("not implemented"))
+		// r.ParseForm() // Parses the request body
+		// user_id := r.Form.Get("user_id")
+
+		if r.PostFormValue("user_id") == "" {
+			str := fmt.Sprintf("参数%s缺失", "user_id")
+			w.Write([]byte(str))
+			return
+		}
+
 		user_id, err := strconv.Atoi(r.PostFormValue("user_id"))
 		if err != nil {
-			log.Fatal(err)
 			w.Write([]byte(err.Error()))
 			return
 		}
 
 		user, err := model.UserByID(db, user_id)
 		if err != nil {
-			log.Fatal(err)
-			w.Write([]byte("数据库查询出错"))
+			w.Write([]byte(err.Error()))
 			return
+			// panic(err)
 		}
 
 		if user == nil {
 			w.Write([]byte("找不到此用户"))
+			return
 		}
 
-		// gender, _ := strconv.Atoi(r.PostFormValue("gender"))
+		// gender, _ := strconv.Atoi()
+		var gender int = 1
+		g := r.PostFormValue("gender")
+		if g != "" {
+			gender, err = strconv.Atoi(g)
+			if err != nil {
+				w.Write([]byte(err.Error()))
+				return
+			}
+		}
 
-		user.Gender = null.IntFrom(1)
+		user.Gender = null.IntFrom(int64(gender))
 		user.Phone = null.StringFrom(r.PostFormValue("phone"))
 		user.Avatar = null.StringFrom(r.PostFormValue("avatar"))
 		user.Nickname = null.StringFrom(r.PostFormValue("nickname"))
@@ -119,7 +136,7 @@ func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
 
 		err = user.UpdateRegistrationInfo(db)
 		if err != nil {
-			w.Write([]byte("内部出错"))
+			w.Write([]byte(err.Error()))
 			return
 		}
 
