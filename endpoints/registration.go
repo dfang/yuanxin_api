@@ -12,6 +12,7 @@ import (
 	"github.com/dfang/yuanxin/util"
 )
 
+// 注册
 func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		for k, v := range r.PostForm {
@@ -87,6 +88,7 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 	})
 }
 
+// 更改个人信息
 func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// w.Write([]byte("not implemented"))

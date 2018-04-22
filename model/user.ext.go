@@ -116,7 +116,7 @@ func UserByPhone(db XODB, phone string) (*User, error) {
 	return &u, nil
 }
 
-// Update updates the User in the database.
+// 更改个人信息
 func (u *User) UpdateRegistrationInfo(db XODB) error {
 	var err error
 
@@ -138,5 +138,54 @@ func (u *User) UpdateRegistrationInfo(db XODB) error {
 	// run query
 	XOLog(sqlstr, u.Nickname, u.Phone, u.Avatar, u.Gender, u.ID)
 	_, err = db.Exec(sqlstr, u.Nickname, u.Phone, u.Avatar, u.Gender, u.ID)
+	return err
+}
+
+// 申请成为卖家
+func (u *User) ApplySeller(db XODB) error {
+	var err error
+	// if doesn't exist, bail
+	if !u._exists {
+		return errors.New("update failed: does not exist")
+	}
+
+	// if deleted, bail
+	if u._deleted {
+		return errors.New("update failed: marked for deletion")
+	}
+
+	// sql query
+	const sqlstr = `UPDATE news.user SET ` +
+		`real_name = ?, identity_card_num = ?, identity_card_front = ?, identity_card_back = ?, license = ?` +
+		` WHERE id = ?`
+
+	// run query
+	XOLog(sqlstr, u.RealName.String, u.IdentityCardNum.String, u.IdentityCardFront.String, u.IdentityCardBack.String, u.License.String, u.ID)
+	_, err = db.Exec(sqlstr, u.RealName.String, u.IdentityCardNum.String, u.IdentityCardFront.String, u.IdentityCardBack.String, u.License.String, u.ID)
+	return err
+}
+
+// 申请成为专家
+func (u *User) ApplyExpert(db XODB) error {
+	var err error
+
+	// if doesn't exist, bail
+	if !u._exists {
+		return errors.New("update failed: does not exist")
+	}
+
+	// if deleted, bail
+	if u._deleted {
+		return errors.New("update failed: marked for deletion")
+	}
+
+	// sql query
+	const sqlstr = `UPDATE news.user SET ` +
+		`real_name = ?, identity_card_num = ?, identity_card_front = ?, identity_card_back = ?, expertise = ?, resume = ?` +
+		` WHERE id = ?`
+
+	// run query
+	XOLog(sqlstr, u.RealName.String, u.IdentityCardNum.String, u.IdentityCardFront.String, u.IdentityCardBack.String, u.Expertise.String, u.Resume.String, u.ID)
+	_, err = db.Exec(sqlstr, u.RealName.String, u.IdentityCardNum.String, u.IdentityCardFront.String, u.IdentityCardBack.String, u.Expertise.String, u.Resume.String, u.ID)
 	return err
 }

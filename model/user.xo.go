@@ -5,23 +5,32 @@ package model
 
 import (
 	"errors"
-	"time"
 
 	null "gopkg.in/guregu/null.v3"
 )
 
 // User represents a row from 'news.user'.
 type User struct {
-	ID        int         `json:"id"`         // id
-	Nickname  null.String `json:"nickname"`   // nickname
-	Pwd       null.String `json:"pwd"`        // pwd
-	Phone     null.String `json:"phone"`      // phone
-	Email     null.String `json:"email"`      // email
-	Avatar    null.String `json:"avatar"`     // avatar
-	Gender    null.Int    `json:"gender"`     // gender
-	Biography null.String `json:"biography"`  // biography
-	CreatedAt null.Time   `json:"created_at"` // created_at
-	LoginDate null.Time   `json:"login_date"` // login_date
+	ID                int         `json:"id"`                  // id
+	Nickname          null.String `json:"nickname"`            // nickname
+	Pwd               null.String `json:"pwd"`                 // pwd
+	Phone             null.String `json:"phone"`               // phone
+	Email             null.String `json:"email"`               // email
+	Avatar            null.String `json:"avatar"`              // avatar
+	Gender            null.Int    `json:"gender"`              // gender
+	Biography         null.String `json:"biography"`           // biography
+	CreatedAt         null.Time   `json:"created_at"`          // created_at
+	LoginDate         null.Time   `json:"login_date"`          // login_date
+	RealName          null.String `json:"real_name"`           // real_name
+	IdentityCardNum   null.String `json:"identity_card_num"`   // identity_card_num
+	IdentityCardFront null.String `json:"identity_card_front"` // identity_card_front
+	IdentityCardBack  null.String `json:"identity_card_back"`  // identity_card_back
+	FromCode          null.String `json:"from_code"`           // from_code
+	License           null.String `json:"license"`             // license
+	Expertise         null.String `json:"expertise"`           // expertise
+	Resume            null.String `json:"resume"`              // resume
+	Role              null.Int    `json:"role"`                // role
+	IsVerified        null.Bool   `json:"is_verified"`         // is_verified
 
 	// xo fields
 	_exists, _deleted bool
@@ -48,14 +57,14 @@ func (u *User) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO news.user (` +
-		`nickname, pwd, phone, email, created_at` +
+		`nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.CreatedAt)
-	res, err := db.Exec(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, time.Now())
+	XOLog(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.Avatar, u.Gender, u.Biography, u.CreatedAt, u.LoginDate, u.RealName, u.IdentityCardNum, u.IdentityCardFront, u.IdentityCardBack, u.FromCode, u.License, u.Expertise, u.Resume, u.Role, u.IsVerified)
+	res, err := db.Exec(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.Avatar, u.Gender, u.Biography, u.CreatedAt, u.LoginDate, u.RealName, u.IdentityCardNum, u.IdentityCardFront, u.IdentityCardBack, u.FromCode, u.License, u.Expertise, u.Resume, u.Role, u.IsVerified)
 	if err != nil {
 		return err
 	}
@@ -89,12 +98,12 @@ func (u *User) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE news.user SET ` +
-		`nickname = ?, pwd = ?, phone = ?, email = ?, avatar = ?, gender = ?, biography = ?, created_at = ?, login_date = ?` +
+		`nickname = ?, pwd = ?, phone = ?, email = ?, avatar = ?, gender = ?, biography = ?, created_at = ?, login_date = ?, real_name = ?, identity_card_num = ?, identity_card_front = ?, identity_card_back = ?, from_code = ?, license = ?, expertise = ?, resume = ?, role = ?, is_verified = ?` +
 		` WHERE id = ?`
 
 	// run query
-	XOLog(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.Avatar, u.Gender, u.Biography, u.CreatedAt, u.LoginDate, u.ID)
-	_, err = db.Exec(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.Avatar, u.Gender, u.Biography, u.CreatedAt, u.LoginDate, u.ID)
+	XOLog(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.Avatar, u.Gender, u.Biography, u.CreatedAt, u.LoginDate, u.RealName, u.IdentityCardNum, u.IdentityCardFront, u.IdentityCardBack, u.FromCode, u.License, u.Expertise, u.Resume, u.Role, u.IsVerified, u.ID)
+	_, err = db.Exec(sqlstr, u.Nickname, u.Pwd, u.Phone, u.Email, u.Avatar, u.Gender, u.Biography, u.CreatedAt, u.LoginDate, u.RealName, u.IdentityCardNum, u.IdentityCardFront, u.IdentityCardBack, u.FromCode, u.License, u.Expertise, u.Resume, u.Role, u.IsVerified, u.ID)
 	return err
 }
 
@@ -145,7 +154,7 @@ func UserByID(db XODB, id int) (*User, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date ` +
+		`id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified ` +
 		`FROM news.user ` +
 		`WHERE id = ?`
 
@@ -155,7 +164,7 @@ func UserByID(db XODB, id int) (*User, error) {
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, id).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Avatar, &u.Gender, &u.Biography, &u.CreatedAt, &u.LoginDate)
+	err = db.QueryRow(sqlstr, id).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Avatar, &u.Gender, &u.Biography, &u.CreatedAt, &u.LoginDate, &u.RealName, &u.IdentityCardNum, &u.IdentityCardFront, &u.IdentityCardBack, &u.FromCode, &u.License, &u.Expertise, &u.Resume, &u.Role, &u.IsVerified)
 	if err != nil {
 		return nil, err
 	}

@@ -24,9 +24,19 @@ CREATE TABLE user(
     email varchar(128), 
     avatar varchar(255), 
     gender int, 
-    biography text,
+    biography text,  -- 个人简介
     created_at datetime, 
-    login_date datetime 
+    login_date datetime,
+    real_name varchar(20), 
+    identity_card_num varchar(19), 
+    identity_card_front varchar(256),
+    identity_card_back varchar(256),
+    from_code varchar(6), -- 专家从哪个邀请码注册的
+    license varchar(256), -- 卖家营业执照, 必填？
+    expertise varchar(256), -- 专家擅长领域, 必填？
+    resume varchar(512), -- 专家简历, 必填?
+    role int, -- 普通用户1，卖家2，专家3
+    is_verified boolean -- 审核通过
 );
 
 CREATE TABLE  authentication(
@@ -34,23 +44,6 @@ CREATE TABLE  authentication(
     user_id int, 
     uuid varchar(128), 
     token varchar(255)
-);
-
-CREATE TABLE user_role(
-    id int PRIMARY KEY AUTO_INCREMENT,
-    role_id int,
-    user_id int  
-);
-
-CREATE TABLE role(
-    id int PRIMARY KEY AUTO_INCREMENT,
-    real_name varchar(20), 
-    identity_card_num varchar(19), 
-    identity_card_front varchar(256),
-    identity_card_end varchar(256), 
-    license varchar(256),
-    expertise varchar(256),
-    vip_resume varchar(512)
 );
 
 CREATE TABLE captcha(
@@ -71,4 +64,5 @@ CREATE TABLE suggestion(
     content text
 )
 
-
+-- insert into invitation(invitation_code, has_activated) values("111111", false);
+-- insert into invitation(invitation_code, has_activated) values("222222", true);
