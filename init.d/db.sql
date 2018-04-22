@@ -66,3 +66,24 @@ CREATE TABLE suggestion(
 
 -- insert into invitation(invitation_code, has_activated) values("111111", false);
 -- insert into invitation(invitation_code, has_activated) values("222222", true);
+
+-- 求助
+CREATE TABLE HelpRequst(
+    id int PRIMARY KEY AUTO_INCREMENT,
+    user_id int,
+    title int,
+    content text,
+    amount int, -- 悬赏金额
+    created_at datetime
+)
+
+-- 求购
+CREATE TABLE BuyRequst(
+    id int PRIMARY KEY AUTO_INCREMENT,
+    user_id int,
+    title int,
+    content text,
+    amount int, -- 求购数量， -1表示不限
+    created_at datetime
+)
+
