@@ -45,7 +45,7 @@ func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
-			RespondWithError(w, http.StatusBadRequest, "Invalid user ID")
+			RespondWithError(w, http.StatusBadRequest, "Invalid ID")
 			return
 		}
 
@@ -53,7 +53,7 @@ func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 		if err := item.GetNewsItem(db); err != nil {
 			switch err {
 			case sql.ErrNoRows:
-				RespondWithError(w, http.StatusNotFound, "User not found")
+				RespondWithError(w, http.StatusNotFound, "NewsItem not found")
 			default:
 				RespondWithError(w, http.StatusInternalServerError, err.Error())
 			}
