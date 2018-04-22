@@ -3,3 +3,31 @@ xo mysql://root:@127.0.0.1/news -o model
 
 ### generate sql scans
 scaneo -p model *.xo.go
+
+// https://www.jianshu.com/p/e6fb18ebb7c8
+defer func() {
+  err := recover()
+  if err != nil {
+    fmt.Println("Internal error:", err)
+    var err_str string
+    var ok bool
+    if err_str, ok = err.(string); !ok {
+      err_str = "We encountered an internal error"
+    }
+    w.WriteHeader(http.StatusInternalServerError)
+    w.Write([]byte(err_str))
+  }
+}()
+
+panic(err)
+
+写法参考 endpoints/registration.go
+
+// 参数缺失
+panic("user_id参数缺失")
+
+// 参数转换失败
+panic("user_id必须为整数")
+
+// sql查询时出错，比如字段等
+panic("数据库操作出错")

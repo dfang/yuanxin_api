@@ -1,7 +1,6 @@
 package util
 
 import (
-	"log"
 	"testing"
 )
 
@@ -12,10 +11,10 @@ func TestSendSms(t *testing.T) {
 
 	t.Log(code)
 
-	result, err := NewSMSAccount().Send("13530605832", code)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// result, err := NewSMSAccount().Send("13530605832", code)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	t.Log(*result)
+	// t.Log(*result)
 }
