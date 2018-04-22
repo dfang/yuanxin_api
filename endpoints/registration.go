@@ -115,6 +115,7 @@ func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
 		user.Phone = null.StringFrom(r.PostFormValue("phone"))
 		user.Avatar = null.StringFrom(r.PostFormValue("avatar"))
 		user.Nickname = null.StringFrom(r.PostFormValue("nickname"))
+		user.Biography = null.StringFrom(r.PostFormValue("biography"))
 
 		err = user.UpdateRegistrationInfo(db)
 		if err != nil {
