@@ -1,5 +1,14 @@
 status_code:
 
+通用的 
+200 所有的操作成功
+
+400  http: Bad Request 
+400  http: 参数缺失
+400  http: 参数parseInt 失败
+
+
+
 200  注册成功
 201  昵称已存在
 202  手机号码已经被注册
@@ -29,3 +38,10 @@ status_code:
 222 邀请码已使用
 
 申请卖家失败
+
+
+
+
+约定:
+user.gender 1男 0女
+user.role 1专家 2卖家

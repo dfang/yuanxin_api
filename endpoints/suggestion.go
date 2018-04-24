@@ -2,9 +2,7 @@ package endpoints
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/dfang/yuanxin/model"
 	"github.com/dfang/yuanxin/util"
@@ -13,49 +11,23 @@ import (
 
 func SuggestionEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.PostFormValue("user_id") == "" {
-			str := fmt.Sprintf("参数%s缺失", "user_id")
-			w.Write([]byte(str))
-			return
-		}
+		defer RecoverEndpoint(w)
 
-		if r.PostFormValue("content") == "" {
-			str := fmt.Sprintf("参数%s缺失", "content")
-			w.Write([]byte(str))
-			return
-		}
+		CheckRequiredParameters(r, "user_id", "content")
 
-		user_id, err := strconv.Atoi(r.PostFormValue("user_id"))
-		if err != nil {
-			w.Write([]byte(err.Error()))
-			return
-		}
+		user_id := ParseParameterToInt(r, "user_id")
 
 		suggestion := model.Suggestion{
 			UserID:  null.IntFrom(int64(user_id)),
 			Content: null.StringFrom(r.PostFormValue("content")),
 		}
 
-		err = suggestion.Insert(db)
+		err := suggestion.Insert(db)
 		if err != nil {
-			util.RespondWithJSON(w, http.StatusOK, struct {
-				StatusCode string `json:"status_code"`
-				Message    string `json:"msg"`
-			}{
-				StatusCode: "220",
-				Message:    "提交失败",
-			})
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{220, "提交失败"})
 			return
 		}
 
-		util.RespondWithJSON(w, http.StatusOK, struct {
-			StatusCode string `json:"status_code"`
-			Message    string `json:"msg"`
-		}{
-			StatusCode: "200",
-			Message:    "提交成功",
-		})
-		return
-
+		util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, "提交成功"})
 	})
 }

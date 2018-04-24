@@ -2,9 +2,8 @@ package endpoints
 
 import (
 	"database/sql"
-	"fmt"
+	"errors"
 	"net/http"
-	"strconv"
 
 	"github.com/dfang/yuanxin/model"
 	"github.com/dfang/yuanxin/util"
@@ -14,188 +13,80 @@ import (
 // 申请成为卖家
 func ApplySellerEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.PostFormValue("user_id") == "" {
-			str := fmt.Sprintf("参数%s缺失", "user_id")
-			w.Write([]byte(str))
-			return
-		}
+		defer RecoverEndpoint(w)
 
-		if r.PostFormValue("real_name") == "" {
-			str := fmt.Sprintf("参数%s缺失", "real_name")
-			w.Write([]byte(str))
-			return
-		}
+		CheckRequiredParameters(r, "user_id", "real_name", "identity_card_num", "identity_card_front", "identity_card_back")
 
-		if r.PostFormValue("identity_card_num") == "" {
-			str := fmt.Sprintf("参数%s缺失", "identity_card_num")
-			w.Write([]byte(str))
-			return
-		}
-
-		if r.PostFormValue("identity_card_front") == "" {
-			str := fmt.Sprintf("参数%s缺失", "identity_card_front")
-			w.Write([]byte(str))
-			return
-		}
-
-		if r.PostFormValue("identity_card_back") == "" {
-			str := fmt.Sprintf("参数%s缺失", "identity_card_back")
-			w.Write([]byte(str))
-			return
-		}
-
-		if r.PostFormValue("license") == "" {
-			str := fmt.Sprintf("参数%s缺失", "license")
-			w.Write([]byte(str))
-			return
-		}
-
-		// 检查必须的参数
-		// Find
-
-		user_id, err := strconv.Atoi(r.PostFormValue("user_id"))
-		if err != nil {
-			w.Write([]byte(err.Error()))
-			return
-		}
+		user_id := ParseParameterToInt(r, "user_id")
 
 		user, err := model.UserByID(db, user_id)
-		if err != nil {
-			w.Write([]byte(err.Error()))
-			return
-			// panic(err)
-		}
-
+		PanicIfNotNil(err)
 		if user == nil {
-			w.Write([]byte("找不到此用户"))
-			return
+			panic(&RecordNotFound{
+				Error: errors.New("找不到用户"),
+			})
 		}
 
-		user.RealName = null.StringFrom(r.PostFormValue("real_name"))
-		user.License = null.StringFrom(r.PostFormValue("license"))
-		user.IdentityCardNum = null.StringFrom(r.PostFormValue("identity_card_num"))
-		user.IdentityCardFront = null.StringFrom(r.PostFormValue("identity_card_front"))
-		user.IdentityCardBack = null.StringFrom(r.PostFormValue("identity_card_back"))
+		if err = util.SchemaDecoder.Decode(&user, r.PostForm); err != nil {
+			PanicIfNotNil(err)
+		}
 
 		user.IsVerified = null.BoolFrom(true)
 		user.Role = null.IntFrom(2)
 
 		err = user.ApplySeller(db)
 		if err != nil {
-			util.RespondWithJSON(w, http.StatusOK, struct {
-				StatusCode string `json:"status_code"`
-				Message    string `json:"msg"`
-			}{
-				StatusCode: "220",
-				Message:    "申请失败",
-			})
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{StatusCode: 220, Message: "申请失败"})
 			return
 		}
 
-		util.RespondWithJSON(w, http.StatusOK, struct {
-			StatusCode string `json:"status_code"`
-			Message    string `json:"msg"`
-		}{
-			StatusCode: "200",
-			Message:    "申请成功，请等待审核",
-		})
-		return
-
+		util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{StatusCode: 200, Message: "申请成功，请等待审核"})
 	})
 }
 
 // 申请成为专家
 func ApplyExpertEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// w.Write([]byte("not implemented"))
 
-		if r.PostFormValue("user_id") == "" {
-			str := fmt.Sprintf("参数%s缺失", "user_id")
-			w.Write([]byte(str))
-			return
-		}
+		defer RecoverEndpoint(w)
 
-		if r.PostFormValue("real_name") == "" {
-			str := fmt.Sprintf("参数%s缺失", "real_name")
-			w.Write([]byte(str))
-			return
-		}
+		CheckRequiredParameters(r, "user_id", "real_name", "identity_card_num", "identity_card_front", "identity_card_back", "expertise", "resume")
 
-		if r.PostFormValue("identity_card_num") == "" {
-			str := fmt.Sprintf("参数%s缺失", "identity_card_num")
-			w.Write([]byte(str))
-			return
-		}
-
-		if r.PostFormValue("identity_card_front") == "" {
-			str := fmt.Sprintf("参数%s缺失", "identity_card_front")
-			w.Write([]byte(str))
-			return
-		}
-
-		if r.PostFormValue("identity_card_back") == "" {
-			str := fmt.Sprintf("参数%s缺失", "identity_card_back")
-			w.Write([]byte(str))
-			return
-		}
-
-		if r.PostFormValue("expertise") == "" {
-			str := fmt.Sprintf("参数%s缺失", "expertise")
-			w.Write([]byte(str))
-			return
-		}
-
-		if r.PostFormValue("resume") == "" {
-			str := fmt.Sprintf("参数%s缺失", "resume")
-			w.Write([]byte(str))
-			return
-		}
-
-		user_id, err := strconv.Atoi(r.PostFormValue("user_id"))
-		if err != nil {
-			w.Write([]byte(err.Error()))
-			return
-		}
+		user_id := ParseParameterToInt(r, "user_id")
 
 		user, err := model.UserByID(db, user_id)
-		if err != nil {
-			w.Write([]byte(err.Error()))
-			return
-			// panic(err)
-		}
-
+		PanicIfNotNil(err)
 		if user == nil {
-			w.Write([]byte("找不到此用户"))
-			return
+			panic(&RecordNotFound{
+				Error: errors.New("找不到用户"),
+			})
 		}
 
-		user.RealName = null.StringFrom(r.PostFormValue("real_name"))
-		user.IdentityCardNum = null.StringFrom(r.PostFormValue("identity_card_num"))
-		user.IdentityCardFront = null.StringFrom(r.PostFormValue("identity_card_front"))
-		user.IdentityCardBack = null.StringFrom(r.PostFormValue("identity_card_back"))
-		user.Expertise = null.StringFrom(r.PostFormValue("expertise"))
-		user.Resume = null.StringFrom(r.PostFormValue("resume"))
+		// user.RealName = null.StringFrom(r.PostFormValue("real_name"))
+		// user.IdentityCardNum = null.StringFrom(r.PostFormValue("identity_card_num"))
+		// user.IdentityCardFront = null.StringFrom(r.PostFormValue("identity_card_front"))
+		// user.IdentityCardBack = null.StringFrom(r.PostFormValue("identity_card_back"))
+		// user.Expertise = null.StringFrom(r.PostFormValue("expertise"))
+		// user.Resume = null.StringFrom(r.PostFormValue("resume"))
+
+		if err = util.SchemaDecoder.Decode(&user, r.PostForm); err != nil {
+			PanicIfNotNil(err)
+		}
 
 		user.IsVerified = null.BoolFrom(true)
 		user.Role = null.IntFrom(1)
 
 		err = user.ApplyExpert(db)
 		if err != nil {
-			util.RespondWithJSON(w, http.StatusOK, struct {
-				StatusCode string `json:"status_code"`
-				Message    string `json:"msg"`
-			}{
-				StatusCode: "220",
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{
+				StatusCode: 220,
 				Message:    "申请失败",
 			})
 			return
 		}
 
-		util.RespondWithJSON(w, http.StatusOK, struct {
-			StatusCode string `json:"status_code"`
-			Message    string `json:"msg"`
-		}{
-			StatusCode: "200",
+		util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{
+			StatusCode: 200,
 			Message:    "申请成功，请等待审核",
 		})
 		return

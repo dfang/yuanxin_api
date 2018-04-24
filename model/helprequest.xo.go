@@ -11,12 +11,12 @@ import (
 
 // HelpRequest represents a row from 'news.help_request'.
 type HelpRequest struct {
-	ID        int         `json:"id"`         // id
-	UserID    null.Int    `json:"user_id"`    // user_id
-	Title     null.String `json:"title"`      // title
-	Content   null.String `json:"content"`    // content
-	Amount    null.Int    `json:"amount"`     // amount
-	CreatedAt null.Time   `json:"created_at"` // created_at
+	ID        int         `json:"id"`                       // id
+	UserID    null.Int    `json:"user_id" schema:"user_id"` // user_id
+	Title     null.String `json:"title"`                    // title
+	Content   null.String `json:"content"`                  // content
+	Amount    null.Int    `json:"amount"`                   // amount
+	CreatedAt null.Time   `json:"created_at"`               // created_at
 
 	// xo fields
 	_exists, _deleted bool

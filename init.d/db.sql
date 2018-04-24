@@ -62,7 +62,7 @@ CREATE TABLE suggestion(
     id int PRIMARY KEY AUTO_INCREMENT,
     user_id int,
     content text
-)
+);
 
 -- insert into invitation(invitation_code, has_activated) values("111111", false);
 -- insert into invitation(invitation_code, has_activated) values("222222", true);
@@ -75,7 +75,7 @@ CREATE TABLE help_request(
     content text,
     amount int, -- 悬赏金额
     created_at datetime
-)
+);
 
 -- 求购
 CREATE TABLE buy_request(
@@ -85,5 +85,5 @@ CREATE TABLE buy_request(
     content text,
     amount int, -- 求购数量， -1表示不限
     created_at datetime
-)
+);
 

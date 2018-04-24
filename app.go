@@ -48,11 +48,13 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/news/{id:[0-9]+}", endpoints.GetNewsItemEndpoint(a.DB)).Methods("GET")
 
 	a.Router.HandleFunc("/users/{id:[0-9]+}", endpoints.GetUserEndpoint(a.DB)).Methods("GET")
+	a.Router.HandleFunc("/users", endpoints.GetUsersEndpoint(a.DB)).Methods("GET")
 
 	a.Router.HandleFunc("/captcha/send", endpoints.SendSMSEndpoint(a.DB)).Methods("POST")
 	a.Router.HandleFunc("/captcha/validate", endpoints.ValidateSMSEndpoint(a.DB)).Methods("POST")
 
 	a.Router.HandleFunc("/registrations", endpoints.RegistrationEndpoint(a.DB)).Methods("POST")
+
 	a.Router.HandleFunc("/sessions", endpoints.SessionEndpoint(a.DB)).Methods("POST")
 	a.Router.HandleFunc("/passwords", endpoints.PasswordEndpoint(a.DB)).Methods("PUT")
 
@@ -60,6 +62,8 @@ func (a *App) initializeRoutes() {
 
 	a.Router.HandleFunc("/upload", endpoints.UploadEndpoint(a.DB)).Methods("POST")
 	a.Router.HandleFunc("/registrations", endpoints.UpdateRegistrationInfo(a.DB)).Methods("PUT")
+
+	// a.Router.Handle("/registrations", endpoints.Logging(endpoints.RegistrationHandler)).Methods("PUT")
 
 	a.Router.HandleFunc("/suggestions", endpoints.SuggestionEndpoint(a.DB)).Methods("POST")
 

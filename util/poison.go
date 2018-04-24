@@ -3,10 +3,10 @@
 package util
 
 import (
-	"database/sql"
 	"reflect"
 
 	"github.com/gorilla/schema"
+	"github.com/guregu/null"
 )
 
 var SchemaDecoder = schema.NewDecoder()
@@ -18,7 +18,7 @@ func init() {
 }
 
 func SchemaRegisterSQLNulls(d *schema.Decoder) {
-	nullString, nullBool, nullInt64, nullFloat64 := sql.NullString{}, sql.NullBool{}, sql.NullInt64{}, sql.NullFloat64{}
+	nullString, nullBool, nullInt64, nullFloat64 := null.String{}, null.Bool{}, null.Int{}, null.Float{}
 
 	d.RegisterConverter(nullString, ConvertSQLNullString)
 	d.RegisterConverter(nullBool, ConvertSQLNullBool)
@@ -27,7 +27,7 @@ func SchemaRegisterSQLNulls(d *schema.Decoder) {
 }
 
 func ConvertSQLNullString(value string) reflect.Value {
-	v := sql.NullString{}
+	v := null.String{}
 	if err := v.Scan(value); err != nil {
 		return reflect.Value{}
 	}
@@ -36,7 +36,7 @@ func ConvertSQLNullString(value string) reflect.Value {
 }
 
 func ConvertSQLNullBool(value string) reflect.Value {
-	v := sql.NullBool{}
+	v := null.Bool{}
 	if err := v.Scan(value); err != nil {
 		return reflect.Value{}
 	}
@@ -45,7 +45,7 @@ func ConvertSQLNullBool(value string) reflect.Value {
 }
 
 func ConvertSQLNullInt64(value string) reflect.Value {
-	v := sql.NullInt64{}
+	v := null.Int{}
 	if err := v.Scan(value); err != nil {
 		return reflect.Value{}
 	}
@@ -54,7 +54,7 @@ func ConvertSQLNullInt64(value string) reflect.Value {
 }
 
 func ConvertSQLNullFloat64(value string) reflect.Value {
-	v := sql.NullFloat64{}
+	v := null.Float{}
 	if err := v.Scan(value); err != nil {
 		return reflect.Value{}
 	}
