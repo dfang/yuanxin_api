@@ -77,6 +77,9 @@ func ApplySellerEndpoint(db *sql.DB) http.HandlerFunc {
 		user.IdentityCardFront = null.StringFrom(r.PostFormValue("identity_card_front"))
 		user.IdentityCardBack = null.StringFrom(r.PostFormValue("identity_card_back"))
 
+		user.IsVerified = null.BoolFrom(true)
+		user.Role = null.IntFrom(2)
+
 		err = user.ApplySeller(db)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusOK, struct {
@@ -172,6 +175,9 @@ func ApplyExpertEndpoint(db *sql.DB) http.HandlerFunc {
 		user.IdentityCardBack = null.StringFrom(r.PostFormValue("identity_card_back"))
 		user.Expertise = null.StringFrom(r.PostFormValue("expertise"))
 		user.Resume = null.StringFrom(r.PostFormValue("resume"))
+
+		user.IsVerified = null.BoolFrom(true)
+		user.Role = null.IntFrom(1)
 
 		err = user.ApplyExpert(db)
 		if err != nil {
