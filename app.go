@@ -47,6 +47,8 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/news", endpoints.ListNewsItemEndpoint(a.DB)).Methods("GET")
 	a.Router.HandleFunc("/news/{id:[0-9]+}", endpoints.GetNewsItemEndpoint(a.DB)).Methods("GET")
 
+	a.Router.HandleFunc("/users/{id:[0-9]+}", endpoints.GetUserEndpoint(a.DB)).Methods("GET")
+
 	a.Router.HandleFunc("/captcha/send", endpoints.SendSMSEndpoint(a.DB)).Methods("POST")
 	a.Router.HandleFunc("/captcha/validate", endpoints.ValidateSMSEndpoint(a.DB)).Methods("POST")
 
