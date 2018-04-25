@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	. "github.com/dfang/yuanxin/model"
-	. "github.com/dfang/yuanxin/util"
+	"github.com/dfang/yuanxin/model"
+	"github.com/dfang/yuanxin/util"
 	"github.com/gorilla/mux"
 )
 
@@ -27,14 +27,21 @@ func ListNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 			start = 0
 		}
 
-		news, err := GetNews(db, start, count, NewsItemType(t))
+		news, err := model.GetNews(db, start, count, model.NewsItemType(t))
 		if err != nil {
-			// RespondWithError(w, http.StatusInternalServerError, err.Error())
+			util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
-		RespondWithJSON(w, http.StatusOK, news)
-
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int              `json:"status_code"`
+			Message    string           `json:"msg"`
+			Data       []model.NewsItem `json:"data"`
+		}{
+			StatusCode: 200,
+			Message:    "查询成功",
+			Data:       news,
+		})
 	})
 }
 
@@ -45,22 +52,39 @@ func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
-			// RespondWithError(w, http.StatusBadRequest, "Invalid ID")
+			util.RespondWithJSON(w, http.StatusBadRequest, "Invalid ID")
 			return
 		}
 
-		item := NewsItem{ID: id}
+		item := model.NewsItem{ID: id}
 		if err := item.GetNewsItem(db); err != nil {
 			switch err {
 			case sql.ErrNoRows:
-				// RespondWithError(w, http.StatusNotFound, "NewsItem not found")
+				// util.RespondWithJSON(w, http.StatusNotFound, "NewsItem not found")
+				util.RespondWithJSON(w, http.StatusOK, struct {
+					StatusCode int              `json:"status_code"`
+					Message    string           `json:"msg"`
+					Data       []model.NewsItem `json:"data"`
+				}{
+					StatusCode: 200,
+					Message:    "查询成功",
+					Data:       []model.NewsItem{},
+				})
 			default:
-				// RespondWithError(w, http.StatusInternalServerError, err.Error())
+				util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
 			}
 			return
 		}
 
-		RespondWithJSON(w, http.StatusOK, item)
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int            `json:"status_code"`
+			Message    string         `json:"msg"`
+			Data       model.NewsItem `json:"data"`
+		}{
+			StatusCode: 200,
+			Message:    "查询成功",
+			Data:       item,
+		})
 	}
 	return http.HandlerFunc(fn)
 }

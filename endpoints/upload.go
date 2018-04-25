@@ -44,11 +44,11 @@ func UploadEndpoint(db *sql.DB) http.HandlerFunc {
 		// w.Write([]byte(baseUrl + hash))
 
 		util.RespondWithJSON(w, http.StatusOK, struct {
-			StatusCode string `json:"status_code"`
+			StatusCode int    `json:"status_code"`
 			Message    string `json:"msg"`
 			Url        string `json:"url"`
 		}{
-			StatusCode: "200",
+			StatusCode: 200,
 			Message:    "上传成功",
 			Url:        baseUrl + hash,
 		})

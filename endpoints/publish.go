@@ -2,28 +2,14 @@ package endpoints
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"time"
 
-	"github.com/gorilla/mux"
 	null "gopkg.in/guregu/null.v3"
 
 	"github.com/dfang/yuanxin/model"
 	"github.com/dfang/yuanxin/util"
 )
-
-func ListHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		vars := mux.Vars(r)
-		if vars["user_id"] == "" {
-			str := fmt.Sprintf("参数%s缺失", "user_id")
-			w.Write([]byte(str))
-			return
-		}
-
-	})
-}
 
 // 发布求助
 func PublishHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
@@ -100,6 +86,7 @@ func PublishChipEndpoint(db *sql.DB) http.HandlerFunc {
 			panic("manufacture_date 不合法")
 		}
 		chip.ManufactureDate = null.TimeFrom(t)
+		chip.IsVerified = null.BoolFrom(true)
 
 		err = chip.Insert(db)
 		if err != nil {

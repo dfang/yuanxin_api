@@ -88,7 +88,7 @@ CREATE TABLE buy_request(
 );
 
 -- 芯片
-CREATE table chip (
+CREATE table chips (
     id int PRIMARY KEY AUTO_INCREMENT,
     serial_number varchar(100),
     vendor varchar(255),

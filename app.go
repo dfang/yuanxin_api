@@ -76,6 +76,7 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/buy_requests", endpoints.PublishBuyRequestEndpoint(a.DB)).Methods("POST")
 
 	a.Router.HandleFunc("/chips", endpoints.PublishChipEndpoint(a.DB)).Methods("POST")
+	a.Router.HandleFunc("/chips", endpoints.ListChipsEndpoint(a.DB)).Methods("GET")
 
 	a.Router.HandleFunc("/help_requests", endpoints.ListHelpRequestEndpoint(a.DB)).Methods("GET")
 

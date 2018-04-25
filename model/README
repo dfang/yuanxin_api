@@ -2,7 +2,7 @@
 xo mysql://root:@127.0.0.1/news -o model
 
 ### generate sql scans
-scaneo -p model *.xo.go
+scaneo -p model/*.xo.go
 
 // https://www.jianshu.com/p/e6fb18ebb7c8
 defer func() {

@@ -42,7 +42,7 @@ func (c *Chip) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO news.chip (` +
+	const sqlstr = `INSERT INTO news.chips (` +
 		`serial_number, vendor, amount, manufacture_date, unit_price, is_verified` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?` +
@@ -83,7 +83,7 @@ func (c *Chip) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE news.chip SET ` +
+	const sqlstr = `UPDATE news.chips SET ` +
 		`serial_number = ?, vendor = ?, amount = ?, manufacture_date = ?, unit_price = ?` +
 		` WHERE id = ?`
 
@@ -117,7 +117,7 @@ func (c *Chip) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM news.chip WHERE id = ?`
+	const sqlstr = `DELETE FROM news.chips WHERE id = ?`
 
 	// run query
 	XOLog(sqlstr, c.ID)
@@ -141,7 +141,7 @@ func ChipByID(db XODB, id int) (*Chip, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, serial_number, vendor, amount, manufacture_date, unit_price ` +
-		`FROM news.chip ` +
+		`FROM news.chips ` +
 		`WHERE id = ?`
 
 	// run query
