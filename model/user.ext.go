@@ -127,7 +127,7 @@ func (u *User) UpdateRegistrationInfo(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE news.user SET ` +
+	const sqlstr = `UPDATE news.users SET ` +
 		`nickname = ?, phone = ?, avatar = ?, gender = ?` +
 		` WHERE id = ?`
 

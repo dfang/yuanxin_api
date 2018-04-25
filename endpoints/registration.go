@@ -89,6 +89,14 @@ func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
 		err = user.UpdateRegistrationInfo(db)
 		PanicIfNotNil(err)
 
-		util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, "更新成功"})
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int         `json:"status_code"`
+			Message    string      `json:"msg"`
+			Data       *model.User `json:"data"`
+		}{
+			StatusCode: 200,
+			Message:    "查询成功",
+			Data:       user,
+		})
 	})
 }

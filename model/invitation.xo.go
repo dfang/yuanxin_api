@@ -8,7 +8,7 @@ import (
 	"errors"
 )
 
-// Invitation represents a row from 'news.invitation'.
+// Invitation represents a row from 'news.invitations'.
 type Invitation struct {
 	ID             int            `json:"id"`              // id
 	InvitationCode sql.NullString `json:"invitation_code"` // invitation_code
@@ -38,7 +38,7 @@ func (i *Invitation) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO news.invitation (` +
+	const sqlstr = `INSERT INTO news.invitations (` +
 		`invitation_code, has_activated` +
 		`) VALUES (` +
 		`?, ?` +
@@ -79,7 +79,7 @@ func (i *Invitation) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE news.invitation SET ` +
+	const sqlstr = `UPDATE news.invitations SET ` +
 		`invitation_code = ?, has_activated = ?` +
 		` WHERE id = ?`
 
@@ -113,7 +113,7 @@ func (i *Invitation) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM news.invitation WHERE id = ?`
+	const sqlstr = `DELETE FROM news.invitations WHERE id = ?`
 
 	// run query
 	XOLog(sqlstr, i.ID)
@@ -128,7 +128,7 @@ func (i *Invitation) Delete(db XODB) error {
 	return nil
 }
 
-// InvitationByID retrieves a row from 'news.invitation' as a Invitation.
+// InvitationByID retrieves a row from 'news.invitations' as a Invitation.
 //
 // Generated from index 'invitation_id_pkey'.
 func InvitationByID(db XODB, id int) (*Invitation, error) {
@@ -137,7 +137,7 @@ func InvitationByID(db XODB, id int) (*Invitation, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, invitation_code, has_activated ` +
-		`FROM news.invitation ` +
+		`FROM news.invitations ` +
 		`WHERE id = ?`
 
 	// run query

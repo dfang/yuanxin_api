@@ -52,7 +52,7 @@ CREATE TABLE captchas(
     code varchar(6)
 );
 
-CREATE TABLE invitation(
+CREATE TABLE invitations(
     id int PRIMARY KEY AUTO_INCREMENT,
     invitation_code varchar(6), 
     has_activated boolean 
