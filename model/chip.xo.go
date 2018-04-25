@@ -6,17 +6,17 @@ package model
 import (
 	"errors"
 
-	"github.com/guregu/null"
+	null "gopkg.in/guregu/null.v3"
 )
 
 // Chip represents a row from 'news.chip'.
 type Chip struct {
-	ID              int         `json:"id"`               // id
-	SerialNumber    null.String `json:"serial_number"`    // serial_number
-	Vendor          null.String `json:"vendor"`           // vendor
-	Amount          null.Int    `json:"amount"`           // amount
-	ManufactureDate null.Time   `json:"manufacture_date"` // manufacture_date
-	UnitPrice       null.Float  `json:"unit_price"`       // unit_price
+	ID              int         `json:"id"`                                         // id
+	SerialNumber    null.String `json:"serial_number" schema:"serial_number"`       // serial_number
+	Vendor          null.String `json:"vendor"`                                     // vendor
+	Amount          null.Int    `json:"amount"`                                     // amount
+	ManufactureDate null.Time   `json:"manufacture_date" schema:"manufacture_date"` // manufacture_date
+	UnitPrice       null.Float  `json:"unit_price" schema:"unit_price"`             // unit_price
 
 	// xo fields
 	_exists, _deleted bool
