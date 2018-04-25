@@ -17,7 +17,7 @@ type Chip struct {
 	Amount          null.Int    `json:"amount"`                                     // amount
 	ManufactureDate null.Time   `json:"manufacture_date" schema:"manufacture_date"` // manufacture_date
 	UnitPrice       null.Float  `json:"unit_price" schema:"unit_price"`             // unit_price
-
+	IsVerified      null.Bool   `json:"is_verified" schema:"unit_price"`            // is_verified
 	// xo fields
 	_exists, _deleted bool
 }
@@ -43,14 +43,14 @@ func (c *Chip) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO news.chip (` +
-		`serial_number, vendor, amount, manufacture_date, unit_price` +
+		`serial_number, vendor, amount, manufacture_date, unit_price, is_verified` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice)
-	res, err := db.Exec(sqlstr, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice)
+	XOLog(sqlstr, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.IsVerified)
+	res, err := db.Exec(sqlstr, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.IsVerified)
 	if err != nil {
 		return err
 	}
@@ -150,7 +150,7 @@ func ChipByID(db XODB, id int) (*Chip, error) {
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, id).Scan(&c.ID, &c.SerialNumber, &c.Vendor, &c.Amount, &c.ManufactureDate, &c.UnitPrice)
+	err = db.QueryRow(sqlstr, id).Scan(&c.ID, &c.SerialNumber, &c.Vendor, &c.Amount, &c.ManufactureDate, &c.UnitPrice, &c.IsVerified)
 	if err != nil {
 		return nil, err
 	}

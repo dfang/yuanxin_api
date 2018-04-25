@@ -94,14 +94,24 @@ CREATE table chip (
     vendor varchar(255),
     amount int,
     manufacture_date datetime, 
-    unit_price float
+    unit_price float,
+    is_verified boolean -- 审核通过
 );
 
 -- 收藏
-CREATE table collect (
+CREATE table favorites (
     id int PRIMARY KEY AUTO_INCREMENT,
-    type_id int,
-    article_title varchar(255),
-    article_summary varchar(255),
-    collect_at datetime
+    favorable_type varchar(20),
+    favorable_id int,
+    user_id int,
+    created_at datetime
+);
+
+-- 评论
+CREATE table comments (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    commentable_type varchar(20),
+    commentable_id int,
+    user_id int,
+    created_at datetime
 );
