@@ -48,7 +48,7 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 				Data       model.User `json:"data"`
 			}{
 				StatusCode: 200,
-				Message:    "查询成功",
+				Message:    "注册成功",
 				Data:       user,
 			})
 			return
@@ -95,7 +95,7 @@ func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
 			Data       *model.User `json:"data"`
 		}{
 			StatusCode: 200,
-			Message:    "查询成功",
+			Message:    "更新成功",
 			Data:       user,
 		})
 	})

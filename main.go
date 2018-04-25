@@ -28,9 +28,6 @@ func main() {
 	if flagVal {
 		items := model.CrawNews()
 
-		fmt.Println("vvvvvv")
-		fmt.Println(items)
-
 		for _, item := range items {
 			item.InsertNewsItem(a.DB)
 		}
