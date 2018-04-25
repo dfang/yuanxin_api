@@ -49,7 +49,7 @@ func (item *NewsItem) GetNewsItem(db *sql.DB) error {
 }
 
 func (item *NewsItem) InsertNewsItem(db *sql.DB) (sql.Result, error) {
-	insertSql := "INSERT INTO news.news.news_items (title, description, image, body, type, source, link, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+	insertSql := "INSERT INTO news.news_items (title, description, image, body, type, source, link, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 
 	selectSql := "select count(*) from news.news_items where title = ?"
 	var count int
