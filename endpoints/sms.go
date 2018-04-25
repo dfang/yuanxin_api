@@ -13,83 +13,49 @@ import (
 
 func SendSMSEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// w.Write([]byte("not implemented"))
-		phone := r.PostFormValue("phone")
-		// w.Write([]byte(phone))
+
+		CheckRequiredParameter(r, "phone")
+		// TODO: validate phone format
 
 		captcha := model.Captcha{
-			Phone: null.StringFrom(phone),
+			Phone: null.StringFrom(r.PostFormValue("phone")),
 			Code:  null.StringFrom(util.GenCaptcha()),
 		}
 
 		fmt.Println(captcha)
 
-		// err := captcha.Insert(db)
 		_, err := captcha.InsertOrUpdate(db, captcha.Phone.String, captcha.Code.String)
-		// if c != nil {
-		// 	c.Update(db)
-		// }
-
 		if err != nil {
-			util.RespondWithJSON(w, http.StatusOK, struct {
-				StatusCode string `json:"status_code"`
-				Message    string `json:"msg"`
-			}{
-				StatusCode: "500",
-				Message:    "发送失败",
-			})
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{500, "发送失败"})
 			return
-
 		}
 
 		_, err = util.NewSMSAccount().Send(captcha.Phone.String, captcha.Code.String)
 		if err != nil {
-			util.RespondWithJSON(w, http.StatusOK, struct {
-				StatusCode string `json:"status_code"`
-				Message    string `json:"msg"`
-			}{
-				StatusCode: "500",
-				Message:    "发送失败",
-			})
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{500, "发送失败"})
 			return
 		}
 
-		util.RespondWithJSON(w, http.StatusOK, struct {
-			StatusCode string `json:"status_code"`
-			Message    string `json:"msg"`
-		}{
-			StatusCode: "200",
-			Message:    "发送成功",
-		})
+		util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, "发送成功"})
 		return
-
 	})
 }
 
 func ValidateSMSEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// w.Write([]byte("not implemented"))
+		CheckRequiredParameters(r, "phone", "captcha")
+		// TODO: validate phone format
+
 		phone := r.PostFormValue("phone")
 		code := r.PostFormValue("captcha")
 
 		captcha, _ := model.CaptchaByPhoneAndCode(db, phone, code)
 
 		if captcha != nil {
-			util.RespondWithJSON(w, http.StatusOK, struct {
-				StatusCode int    `json:"status_code"`
-				Message    string `json:"msg"`
-			}{
-				StatusCode: 200,
-				Message:    "验证码有效",
-			})
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, "验证码有效"})
 		} else {
-			util.RespondWithJSON(w, http.StatusOK, struct {
-				StatusCode int    `json:"status_code"`
-				Message    string `json:"msg"`
-			}{
-				StatusCode: 204,
-				Message:    "验证码无效",
-			})
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{204, "验证码无效"})
 		}
 		return
 	})
