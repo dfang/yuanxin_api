@@ -87,3 +87,12 @@ CREATE TABLE buy_request(
     created_at datetime
 );
 
+-- 芯片
+CREATE table chip (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    serial_number varchar(100),
+    vendor varchar(255),
+    amount int,
+    manufacture_date datetime, 
+    unit_price float
+);
