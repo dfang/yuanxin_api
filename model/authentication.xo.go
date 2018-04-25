@@ -8,7 +8,7 @@ import (
 	"errors"
 )
 
-// Authentication represents a row from 'news.authentication'.
+// Authentication represents a row from 'news.authentications'.
 type Authentication struct {
 	ID     int            `json:"id"`      // id
 	UserID sql.NullInt64  `json:"user_id"` // user_id
@@ -39,7 +39,7 @@ func (a *Authentication) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO news.authentication (` +
+	const sqlstr = `INSERT INTO news.authentications (` +
 		`user_id, uuid, token` +
 		`) VALUES (` +
 		`?, ?, ?` +
@@ -80,7 +80,7 @@ func (a *Authentication) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE news.authentication SET ` +
+	const sqlstr = `UPDATE news.authentications SET ` +
 		`user_id = ?, uuid = ?, token = ?` +
 		` WHERE id = ?`
 
@@ -114,7 +114,7 @@ func (a *Authentication) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM news.authentication WHERE id = ?`
+	const sqlstr = `DELETE FROM news.authentications WHERE id = ?`
 
 	// run query
 	XOLog(sqlstr, a.ID)
@@ -129,7 +129,7 @@ func (a *Authentication) Delete(db XODB) error {
 	return nil
 }
 
-// AuthenticationByID retrieves a row from 'news.authentication' as a Authentication.
+// AuthenticationByID retrieves a row from 'news.authentications' as a Authentication.
 //
 // Generated from index 'authentication_id_pkey'.
 func AuthenticationByID(db XODB, id int) (*Authentication, error) {
@@ -138,7 +138,7 @@ func AuthenticationByID(db XODB, id int) (*Authentication, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, user_id, uuid, token ` +
-		`FROM news.authentication ` +
+		`FROM news.authentications ` +
 		`WHERE id = ?`
 
 	// run query

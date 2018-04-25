@@ -9,7 +9,7 @@ import (
 	null "gopkg.in/guregu/null.v3"
 )
 
-// BuyRequest represents a row from 'news.buy_request'.
+// BuyRequest represents a row from 'news.buy_requests'.
 type BuyRequest struct {
 	ID        int         `json:"id"`                       // id
 	UserID    null.Int    `json:"user_id" schema:"user_id"` // user_id
@@ -42,7 +42,7 @@ func (br *BuyRequest) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO news.buy_request (` +
+	const sqlstr = `INSERT INTO news.buy_requests (` +
 		`user_id, title, content, amount, created_at` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?` +
@@ -83,7 +83,7 @@ func (br *BuyRequest) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE news.buy_request SET ` +
+	const sqlstr = `UPDATE news.buy_requests SET ` +
 		`user_id = ?, title = ?, content = ?, amount = ?, created_at = ?` +
 		` WHERE id = ?`
 
@@ -117,7 +117,7 @@ func (br *BuyRequest) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM news.buy_request WHERE id = ?`
+	const sqlstr = `DELETE FROM news.buy_requests WHERE id = ?`
 
 	// run query
 	XOLog(sqlstr, br.ID)
@@ -132,7 +132,7 @@ func (br *BuyRequest) Delete(db XODB) error {
 	return nil
 }
 
-// BuyRequestByID retrieves a row from 'news.buy_request' as a BuyRequest.
+// BuyRequestByID retrieves a row from 'news.buy_requests' as a BuyRequest.
 //
 // Generated from index 'buy_request_id_pkey'.
 func BuyRequestByID(db XODB, id int) (*BuyRequest, error) {
@@ -141,7 +141,7 @@ func BuyRequestByID(db XODB, id int) (*BuyRequest, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, user_id, title, content, amount, created_at ` +
-		`FROM news.buy_request ` +
+		`FROM news.buy_requests ` +
 		`WHERE id = ?`
 
 	// run query

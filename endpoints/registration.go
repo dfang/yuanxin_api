@@ -42,7 +42,15 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, "注册失败"})
 			return
 		} else {
-			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, "注册成功"})
+			util.RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode int        `json:"status_code"`
+				Message    string     `json:"msg"`
+				Data       model.User `json:"data"`
+			}{
+				StatusCode: 200,
+				Message:    "查询成功",
+				Data:       user,
+			})
 			return
 		}
 	})

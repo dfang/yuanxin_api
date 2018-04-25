@@ -12,7 +12,7 @@ func InvitationByCode(db XODB, code string) (*Invitation, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, invitation_code, has_activated ` +
-		`FROM news.invitation ` +
+		`FROM news.invitations ` +
 		`WHERE invitation_code = ?`
 
 	// run query

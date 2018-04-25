@@ -12,6 +12,7 @@ import (
 // Chip represents a row from 'news.chip'.
 type Chip struct {
 	ID              int         `json:"id"`                                         // id
+	UserID          null.Int    `json:"user_id" schema:"user_id"`                   // user_id
 	SerialNumber    null.String `json:"serial_number" schema:"serial_number"`       // serial_number
 	Vendor          null.String `json:"vendor"`                                     // vendor
 	Amount          null.Int    `json:"amount"`                                     // amount
@@ -43,14 +44,14 @@ func (c *Chip) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO news.chips (` +
-		`serial_number, vendor, amount, manufacture_date, unit_price, is_verified` +
+		`user_id, serial_number, vendor, amount, manufacture_date, unit_price, is_verified` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.IsVerified)
-	res, err := db.Exec(sqlstr, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.IsVerified)
+	XOLog(sqlstr, c.UserID, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.IsVerified)
+	res, err := db.Exec(sqlstr, c.UserID, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.IsVerified)
 	if err != nil {
 		return err
 	}
@@ -84,12 +85,12 @@ func (c *Chip) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE news.chips SET ` +
-		`serial_number = ?, vendor = ?, amount = ?, manufacture_date = ?, unit_price = ?` +
+		`user_id = ?, serial_number = ?, vendor = ?, amount = ?, manufacture_date = ?, unit_price = ?` +
 		` WHERE id = ?`
 
 	// run query
-	XOLog(sqlstr, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.ID)
-	_, err = db.Exec(sqlstr, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.ID)
+	XOLog(sqlstr, c.UserID, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.ID)
+	_, err = db.Exec(sqlstr, c.UserID, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.ID)
 	return err
 }
 
@@ -140,7 +141,7 @@ func ChipByID(db XODB, id int) (*Chip, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`id, serial_number, vendor, amount, manufacture_date, unit_price ` +
+		`id, user_id, serial_number, vendor, amount, manufacture_date, unit_price ` +
 		`FROM news.chips ` +
 		`WHERE id = ?`
 
@@ -150,7 +151,7 @@ func ChipByID(db XODB, id int) (*Chip, error) {
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, id).Scan(&c.ID, &c.SerialNumber, &c.Vendor, &c.Amount, &c.ManufactureDate, &c.UnitPrice, &c.IsVerified)
+	err = db.QueryRow(sqlstr, id).Scan(&c.ID, &c.UserID, &c.SerialNumber, &c.Vendor, &c.Amount, &c.ManufactureDate, &c.UnitPrice, &c.IsVerified)
 	if err != nil {
 		return nil, err
 	}

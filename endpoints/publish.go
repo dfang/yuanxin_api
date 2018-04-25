@@ -71,7 +71,7 @@ func PublishChipEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer RecoverEndpoint(w)
 
-		CheckRequiredParameters(r, "serial_number", "vendor", "amount", "manufacture_date", "unit_price")
+		CheckRequiredParameters(r, "user_id", "serial_number", "vendor", "amount", "manufacture_date", "unit_price")
 		var chip model.Chip
 
 		manufacture_date := r.PostForm.Get("manufacture_date")

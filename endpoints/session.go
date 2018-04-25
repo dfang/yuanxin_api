@@ -23,7 +23,15 @@ func SessionEndpoint(db *sql.DB) http.HandlerFunc {
 		}
 
 		if user != nil {
-			RespondWithJSON(w, http.StatusOK, PayLoadFrom{StatusCode: 200, Message: "登录成功"})
+			RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode int    `json:"status_code"`
+				Message    string `json:"msg"`
+				Data       *User  `json:"data"`
+			}{
+				StatusCode: 200,
+				Message:    "查询成功",
+				Data:       user,
+			})
 			return
 		}
 	})

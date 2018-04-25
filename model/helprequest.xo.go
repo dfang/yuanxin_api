@@ -9,7 +9,7 @@ import (
 	null "gopkg.in/guregu/null.v3"
 )
 
-// HelpRequest represents a row from 'news.help_request'.
+// HelpRequest represents a row from 'news.help_requests'.
 type HelpRequest struct {
 	ID        int         `json:"id"`                       // id
 	UserID    null.Int    `json:"user_id" schema:"user_id"` // user_id
@@ -42,7 +42,7 @@ func (hr *HelpRequest) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO news.help_request (` +
+	const sqlstr = `INSERT INTO news.help_requests (` +
 		`user_id, title, content, amount, created_at` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?` +
@@ -83,7 +83,7 @@ func (hr *HelpRequest) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE news.help_request SET ` +
+	const sqlstr = `UPDATE news.help_requests SET ` +
 		`user_id = ?, title = ?, content = ?, amount = ?, created_at = ?` +
 		` WHERE id = ?`
 
@@ -117,7 +117,7 @@ func (hr *HelpRequest) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM news.help_request WHERE id = ?`
+	const sqlstr = `DELETE FROM news.help_requests WHERE id = ?`
 
 	// run query
 	XOLog(sqlstr, hr.ID)
@@ -132,7 +132,7 @@ func (hr *HelpRequest) Delete(db XODB) error {
 	return nil
 }
 
-// HelpRequestByID retrieves a row from 'news.help_request' as a HelpRequest.
+// HelpRequestByID retrieves a row from 'news.help_requests' as a HelpRequest.
 //
 // Generated from index 'help_request_id_pkey'.
 func HelpRequestByID(db XODB, id int) (*HelpRequest, error) {
@@ -141,7 +141,7 @@ func HelpRequestByID(db XODB, id int) (*HelpRequest, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, user_id, title, content, amount, created_at ` +
-		`FROM news.help_request ` +
+		`FROM news.help_requests ` +
 		`WHERE id = ?`
 
 	// run query

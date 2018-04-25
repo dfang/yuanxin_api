@@ -10,7 +10,7 @@ import (
 	null "gopkg.in/guregu/null.v3"
 )
 
-// Captcha represents a row from 'news.captcha'.
+// Captcha represents a row from 'news.captchas'.
 type Captcha struct {
 	ID    int         `json:"id"`    // id
 	Phone null.String `json:"phone"` // phone
@@ -44,7 +44,7 @@ func (c *Captcha) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO news.captcha (` +
+	const sqlstr = `INSERT INTO news.captchas (` +
 		`phone, code` +
 		`) VALUES (` +
 		`?, ?` +
@@ -85,7 +85,7 @@ func (c *Captcha) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE news.captcha SET ` +
+	const sqlstr = `UPDATE news.captchas SET ` +
 		`phone = ?, code = ?` +
 		` WHERE id = ?`
 
@@ -119,7 +119,7 @@ func (c *Captcha) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM news.captcha WHERE id = ?`
+	const sqlstr = `DELETE FROM news.captchas WHERE id = ?`
 
 	// run query
 	XOLog(sqlstr, c.ID)
@@ -134,7 +134,7 @@ func (c *Captcha) Delete(db XODB) error {
 	return nil
 }
 
-// CaptchaByID retrieves a row from 'news.captcha' as a Captcha.
+// CaptchaByID retrieves a row from 'news.captchas' as a Captcha.
 //
 // Generated from index 'captcha_id_pkey'.
 func CaptchaByID(db XODB, id int) (*Captcha, error) {
@@ -143,7 +143,7 @@ func CaptchaByID(db XODB, id int) (*Captcha, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, phone, code ` +
-		`FROM news.captcha ` +
+		`FROM news.captchas ` +
 		`WHERE id = ?`
 
 	// run query

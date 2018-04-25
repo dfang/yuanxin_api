@@ -9,7 +9,7 @@ import (
 	null "gopkg.in/guregu/null.v3"
 )
 
-// NewsItem represents a row from 'news.news_item'.
+// NewsItem represents a row from 'news.news_items'.
 type NewsItem struct {
 	ID          int         `json:"id"`          // id
 	Title       null.String `json:"title"`       // title
@@ -45,7 +45,7 @@ func (ni *NewsItem) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO news.news_item (` +
+	const sqlstr = `INSERT INTO news.news_items (` +
 		`title, description, body, type, link, image, source, updated_at` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?, ?, ?, ?` +
@@ -86,7 +86,7 @@ func (ni *NewsItem) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE news.news_item SET ` +
+	const sqlstr = `UPDATE news.news_items SET ` +
 		`title = ?, description = ?, body = ?, type = ?, link = ?, image = ?, source = ?, updated_at = ?` +
 		` WHERE id = ?`
 
@@ -120,7 +120,7 @@ func (ni *NewsItem) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM news.news_item WHERE id = ?`
+	const sqlstr = `DELETE FROM news.news_items WHERE id = ?`
 
 	// run query
 	XOLog(sqlstr, ni.ID)
@@ -135,7 +135,7 @@ func (ni *NewsItem) Delete(db XODB) error {
 	return nil
 }
 
-// NewsItemByID retrieves a row from 'news.news_item' as a NewsItem.
+// NewsItemByID retrieves a row from 'news.news_items' as a NewsItem.
 //
 // Generated from index 'news_item_id_pkey'.
 func NewsItemByID(db XODB, id int) (*NewsItem, error) {
@@ -144,7 +144,7 @@ func NewsItemByID(db XODB, id int) (*NewsItem, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, title, description, body, type, link, image, source, updated_at ` +
-		`FROM news.news_item ` +
+		`FROM news.news_items ` +
 		`WHERE id = ?`
 
 	// run query

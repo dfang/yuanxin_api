@@ -62,13 +62,13 @@ func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 			case sql.ErrNoRows:
 				// util.RespondWithJSON(w, http.StatusNotFound, "NewsItem not found")
 				util.RespondWithJSON(w, http.StatusOK, struct {
-					StatusCode int              `json:"status_code"`
-					Message    string           `json:"msg"`
-					Data       []model.NewsItem `json:"data"`
+					StatusCode int         `json:"status_code"`
+					Message    string      `json:"msg"`
+					Data       interface{} `json:"data"`
 				}{
 					StatusCode: 200,
 					Message:    "查询成功",
-					Data:       []model.NewsItem{},
+					Data:       struct{}{},
 				})
 			default:
 				util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())

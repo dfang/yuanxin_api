@@ -9,7 +9,7 @@ func CaptchaByPhoneAndCode(db XODB, phone, code string) (*Captcha, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, phone, code ` +
-		`FROM news.captcha ` +
+		`FROM news.captchas ` +
 		`WHERE phone = ? AND code = ?`
 
 	// run query
@@ -32,7 +32,7 @@ func CaptchaByPhone(db XODB, phone string) (*Captcha, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, phone, code ` +
-		`FROM news.captcha ` +
+		`FROM news.captchas ` +
 		`WHERE phone = ?`
 
 	// run query

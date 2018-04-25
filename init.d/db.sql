@@ -4,7 +4,7 @@ CREATE DATABASE news CHARACTER SET utf8;
 
 USE news;
 
-CREATE TABLE news_item(
+CREATE TABLE news_items(
     id int PRIMARY KEY AUTO_INCREMENT,
     title varchar(255),
     description varchar(255),
@@ -16,7 +16,7 @@ CREATE TABLE news_item(
     updated_at datetime
 );
 
-CREATE TABLE user(
+CREATE TABLE users(
     id int PRIMARY KEY AUTO_INCREMENT,
     nickname varchar(255),  
     pwd varchar(56),  
@@ -39,14 +39,14 @@ CREATE TABLE user(
     is_verified boolean -- 审核通过
 );
 
-CREATE TABLE  authentication(
+CREATE TABLE  authentications(
     id int PRIMARY KEY AUTO_INCREMENT,
     user_id int, 
     uuid varchar(128), 
     token varchar(255)
 );
 
-CREATE TABLE captcha(
+CREATE TABLE captchas(
     id int PRIMARY KEY AUTO_INCREMENT,
     phone varchar(11),
     code varchar(6)
@@ -58,7 +58,7 @@ CREATE TABLE invitation(
     has_activated boolean 
 );
 
-CREATE TABLE suggestion(
+CREATE TABLE suggestions(
     id int PRIMARY KEY AUTO_INCREMENT,
     user_id int,
     content text
@@ -68,7 +68,7 @@ CREATE TABLE suggestion(
 -- insert into invitation(invitation_code, has_activated) values("222222", true);
 
 -- 求助
-CREATE TABLE help_request(
+CREATE TABLE help_requests(
     id int PRIMARY KEY AUTO_INCREMENT,
     user_id int,
     title varchar(255),
@@ -78,7 +78,7 @@ CREATE TABLE help_request(
 );
 
 -- 求购
-CREATE TABLE buy_request(
+CREATE TABLE buy_requests(
     id int PRIMARY KEY AUTO_INCREMENT,
     user_id int,
     title varchar(255),
@@ -90,6 +90,7 @@ CREATE TABLE buy_request(
 -- 芯片
 CREATE table chips (
     id int PRIMARY KEY AUTO_INCREMENT,
+    user_id int,
     serial_number varchar(100),
     vendor varchar(255),
     amount int,
@@ -101,17 +102,17 @@ CREATE table chips (
 -- 收藏
 CREATE table favorites (
     id int PRIMARY KEY AUTO_INCREMENT,
+    user_id int,
     favorable_type varchar(20),
     favorable_id int,
-    user_id int,
     created_at datetime
 );
 
 -- 评论
 CREATE table comments (
     id int PRIMARY KEY AUTO_INCREMENT,
+    user_id int,
     commentable_type varchar(20),
     commentable_id int,
-    user_id int,
     created_at datetime
 );

@@ -11,18 +11,13 @@ import (
 func (u *User) RegisterUser(db XODB) error {
 	var err error
 
-	XOLog("ssssljl;kj;lkjkl;j")
-	XOLog(u.Phone.String)
-
-	// u, err = UserByPhone(db, u.Phone.String)
-
 	// if already exist, bail
 	if u._exists {
 		return errors.New("insert failed: already exists")
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO news.user (` +
+	const sqlstr = `INSERT INTO news.users (` +
 		`nickname, pwd, phone, email, created_at` +
 		`) VALUES (` +
 		`?, ?, ?, ?, ?` +
@@ -55,7 +50,7 @@ func SignInUser(db XODB, phone, pwd string) (*User, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, nickname, pwd, phone, email, avatar, gender, created_at, login_date ` +
-		`FROM news.user ` +
+		`FROM news.users ` +
 		`WHERE phone = ? AND pwd = ?`
 
 	// run query
@@ -77,7 +72,7 @@ func UserByEmail(db XODB, email string) (*User, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, nickname, pwd, phone, email, biography, avatar, gender, created_at, login_date ` +
-		`FROM news.user ` +
+		`FROM news.users ` +
 		`WHERE email = ?`
 
 	// run query
@@ -100,7 +95,7 @@ func UserByPhone(db XODB, phone string) (*User, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, nickname, pwd, phone, email, biography, avatar, gender, created_at, login_date ` +
-		`FROM news.user ` +
+		`FROM news.users ` +
 		`WHERE phone = ?`
 
 	// run query
@@ -192,7 +187,7 @@ func (u *User) ApplyExpert(db XODB) error {
 }
 
 func GetAllUsers(db *sql.DB, start, count int) ([]User, error) {
-	sqlstr := fmt.Sprintf("SELECT id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified FROM news.user LIMIT %d, %d", start, count)
+	sqlstr := fmt.Sprintf("SELECT id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified FROM news.users LIMIT %d, %d", start, count)
 
 	rows, err := db.Query(sqlstr)
 

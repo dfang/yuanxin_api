@@ -15,9 +15,9 @@ func GetNews(db *sql.DB, start, count int, t NewsItemType) ([]NewsItem, error) {
 	fmt.Println(int(t))
 
 	if t == Zero {
-		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item LIMIT %d, %d", start, count)
+		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news.news_items LIMIT %d, %d", start, count)
 	} else {
-		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news_item where type = '%s' LIMIT %d, %d", t, start, count)
+		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news.news_items where type = '%s' LIMIT %d, %d", t, start, count)
 	}
 
 	log.Println(statement)
@@ -44,14 +44,14 @@ func GetNews(db *sql.DB, start, count int, t NewsItemType) ([]NewsItem, error) {
 }
 
 func (item *NewsItem) GetNewsItem(db *sql.DB) error {
-	statement := fmt.Sprintf("SELECT title, link, type, image, description, body, source, updated_at FROM news_item WHERE id=%d", item.ID)
+	statement := fmt.Sprintf("SELECT title, link, type, image, description, body, source, updated_at FROM news.news_items WHERE id=%d", item.ID)
 	return db.QueryRow(statement).Scan(&item.Title, &item.Link, &item.Image, &item.Type, &item.Description, &item.Body, &item.Source, &item.UpdatedAt)
 }
 
 func (item *NewsItem) InsertNewsItem(db *sql.DB) (sql.Result, error) {
-	insertSql := "INSERT INTO news_item (title, description, image, body, type, source, link, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+	insertSql := "INSERT INTO news.news.news_items (title, description, image, body, type, source, link, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 
-	selectSql := "select count(*) from news_item where title = ?"
+	selectSql := "select count(*) from news.news_items where title = ?"
 	var count int
 	err := db.QueryRow(selectSql, item.Title).Scan(&count)
 

@@ -9,7 +9,7 @@ import (
 	null "gopkg.in/guregu/null.v3"
 )
 
-// Suggestion represents a row from 'news.suggestion'.
+// Suggestion represents a row from 'news.suggestions'.
 type Suggestion struct {
 	ID      int         `json:"id"`      // id
 	UserID  null.Int    `json:"user_id"` // user_id
@@ -39,7 +39,7 @@ func (s *Suggestion) Insert(db XODB) error {
 	}
 
 	// sql insert query, primary key provided by autoincrement
-	const sqlstr = `INSERT INTO news.suggestion (` +
+	const sqlstr = `INSERT INTO news.suggestions (` +
 		`user_id, content` +
 		`) VALUES (` +
 		`?, ?` +
@@ -80,7 +80,7 @@ func (s *Suggestion) Update(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE news.suggestion SET ` +
+	const sqlstr = `UPDATE news.suggestions SET ` +
 		`user_id = ?, content = ?` +
 		` WHERE id = ?`
 
@@ -114,7 +114,7 @@ func (s *Suggestion) Delete(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `DELETE FROM news.suggestion WHERE id = ?`
+	const sqlstr = `DELETE FROM news.suggestions WHERE id = ?`
 
 	// run query
 	XOLog(sqlstr, s.ID)
@@ -129,7 +129,7 @@ func (s *Suggestion) Delete(db XODB) error {
 	return nil
 }
 
-// SuggestionByID retrieves a row from 'news.suggestion' as a Suggestion.
+// SuggestionByID retrieves a row from 'news.suggestions' as a Suggestion.
 //
 // Generated from index 'suggestion_id_pkey'.
 func SuggestionByID(db XODB, id int) (*Suggestion, error) {
@@ -138,7 +138,7 @@ func SuggestionByID(db XODB, id int) (*Suggestion, error) {
 	// sql query
 	const sqlstr = `SELECT ` +
 		`id, user_id, content ` +
-		`FROM news.suggestion ` +
+		`FROM news.suggestions ` +
 		`WHERE id = ?`
 
 	// run query
