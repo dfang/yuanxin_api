@@ -96,3 +96,12 @@ CREATE table chip (
     manufacture_date datetime, 
     unit_price float
 );
+
+-- 收藏
+CREATE table collect (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    type_id int,
+    article_title varchar(255),
+    article_summary varchar(255),
+    collect_at datetime
+);
