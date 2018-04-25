@@ -42,7 +42,6 @@ func ListChipsEndpoint(db *sql.DB) http.HandlerFunc {
 		chips, err := model.GetChips(db, start, count)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{http.StatusInternalServerError, err.Error()})
-
 			return
 		}
 
