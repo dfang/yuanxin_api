@@ -3,9 +3,10 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/dfang/yuanxin/endpoints"
 	"github.com/dfang/yuanxin/model"
@@ -35,6 +36,16 @@ func (a *App) Initialize(user, password, host, dbName string) {
 		fmt.Printf("> SQL: %s -- params: %v\n", s, p)
 	}
 
+	// Log as JSON instead of the default ASCII formatter.
+	log.SetFormatter(&log.JSONFormatter{})
+
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+	log.SetOutput(os.Stdout)
+
+	// Only log the warning severity or above.
+	log.SetLevel(log.WarnLevel)
+
 	a.Router = mux.NewRouter()
 	a.initializeRoutes()
 }
@@ -48,7 +59,7 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/news/{id:[0-9]+}", endpoints.GetNewsItemEndpoint(a.DB)).Methods("GET")
 
 	a.Router.HandleFunc("/users/{id:[0-9]+}", endpoints.GetUserEndpoint(a.DB)).Methods("GET")
-	a.Router.HandleFunc("/users", endpoints.GetUsersEndpoint(a.DB)).Methods("GET")
+	a.Router.HandleFunc("/users", endpoints.ListUsersEndpoint(a.DB)).Methods("GET")
 
 	a.Router.HandleFunc("/captcha/send", endpoints.SendSMSEndpoint(a.DB)).Methods("POST")
 	a.Router.HandleFunc("/captcha/validate", endpoints.ValidateSMSEndpoint(a.DB)).Methods("POST")
@@ -79,5 +90,7 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/chips", endpoints.ListChipsEndpoint(a.DB)).Methods("GET")
 
 	a.Router.HandleFunc("/help_requests", endpoints.ListHelpRequestEndpoint(a.DB)).Methods("GET")
+
+	a.Router.HandleFunc("/invitations", endpoints.ListInvitationsEndpoint(a.DB)).Methods("GET")
 
 }

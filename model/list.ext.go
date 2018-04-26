@@ -7,6 +7,8 @@ import (
 
 func GetChips(db *sql.DB, start, count int) ([]Chip, error) {
 	statement := fmt.Sprintf("SELECT id, user_id, serial_number, vendor, amount, manufacture_date, unit_price, is_verified FROM chips ORDER BY manufacture_date DESC LIMIT %d, %d", start, count)
+	XOLog(statement)
+
 	rows, err := db.Query(statement)
 
 	if err != nil {

@@ -12,12 +12,11 @@ import (
 
 func ListNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// w.Write([]byte("not implemented"))
-		vars := mux.Vars(r)
 
-		count, _ := strconv.Atoi(vars["count"])
-		start, _ := strconv.Atoi(vars["start"])
-		t, _ := strconv.Atoi(vars["type"])
+		qs := r.URL.Query()
+		count, _ := strconv.Atoi(qs.Get("count"))
+		start, _ := strconv.Atoi(qs.Get("start"))
+		t, _ := strconv.Atoi(qs.Get("type"))
 
 		if count < 1 {
 			count = 10
@@ -46,10 +45,9 @@ func ListNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 }
 
 func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
-	fn := func(w http.ResponseWriter, r *http.Request) {
-		// w.Write([]byte("not implemented"))
-
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
+
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusBadRequest, "Invalid ID")
@@ -85,6 +83,5 @@ func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 			Message:    "查询成功",
 			Data:       item,
 		})
-	}
-	return http.HandlerFunc(fn)
+	})
 }

@@ -186,6 +186,7 @@ func (u *User) ApplyExpert(db XODB) error {
 	return err
 }
 
+// 用户列表
 func GetAllUsers(db *sql.DB, start, count int) ([]User, error) {
 	sqlstr := fmt.Sprintf("SELECT id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified FROM news.users LIMIT %d, %d", start, count)
 

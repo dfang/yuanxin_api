@@ -64,8 +64,8 @@ CREATE TABLE suggestions(
     content text
 );
 
--- insert into invitation(invitation_code, has_activated) values("111111", false);
--- insert into invitation(invitation_code, has_activated) values("222222", true);
+insert into invitations(invitation_code, has_activated) values("111111", false);
+insert into invitations(invitation_code, has_activated) values("222222", true);
 
 -- 求助
 CREATE TABLE help_requests(
