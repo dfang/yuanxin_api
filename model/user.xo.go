@@ -11,26 +11,26 @@ import (
 
 // User represents a row from 'news.users'.
 type User struct {
-	ID                int         `json:"id"`                  // id
-	Nickname          null.String `json:"nickname"`            // nickname
-	Pwd               null.String `json:"-" schema:"password"` // pwd
-	Phone             null.String `json:"phone"`               // phone
-	Email             null.String `json:"email"`               // email
-	Avatar            null.String `json:"avatar"`              // avatar
-	Gender            null.Int    `json:"gender"`              // gender
-	Biography         null.String `json:"biography"`           // biography
-	CreatedAt         null.Time   `json:"created_at"`          // created_at
-	LoginDate         null.Time   `json:"login_date"`          // login_date
-	RealName          null.String `json:"real_name"`           // real_name
-	IdentityCardNum   null.String `json:"identity_card_num"`   // identity_card_num
-	IdentityCardFront null.String `json:"identity_card_front"` // identity_card_front
-	IdentityCardBack  null.String `json:"identity_card_back"`  // identity_card_back
-	FromCode          null.String `json:"from_code"`           // from_code
-	License           null.String `json:"license"`             // license
-	Expertise         null.String `json:"expertise"`           // expertise
-	Resume            null.String `json:"resume"`              // resume
-	Role              null.Int    `json:"role"`                // role
-	IsVerified        null.Bool   `json:"is_verified"`         // is_verified
+	ID                int         `json:"id"`                                               // id
+	Nickname          null.String `json:"nickname"`                                         // nickname
+	Pwd               null.String `json:"-" schema:"password"`                              // pwd
+	Phone             null.String `json:"phone"`                                            // phone
+	Email             null.String `json:"email"`                                            // email
+	Avatar            null.String `json:"avatar"`                                           // avatar
+	Gender            null.Int    `json:"gender"`                                           // gender
+	Biography         null.String `json:"biography"`                                        // biography
+	CreatedAt         null.Time   `json:"created_at"`                                       // created_at
+	LoginDate         null.Time   `json:"login_date"`                                       // login_date
+	RealName          null.String `json:"real_name" schema:"real_name"`                     // real_name
+	IdentityCardNum   null.String `json:"identity_card_num" schema:"identity_card_num"`     // identity_card_num
+	IdentityCardFront null.String `json:"identity_card_front" schema:"identity_card_front"` // identity_card_front
+	IdentityCardBack  null.String `json:"identity_card_back" schema:"identity_card_back"`   // identity_card_back
+	FromCode          null.String `json:"from_code" schema:"from_code"`                     // from_code
+	License           null.String `json:"license"`                                          // license
+	Expertise         null.String `json:"expertise"`                                        // expertise
+	Resume            null.String `json:"resume"`                                           // resume
+	Role              null.Int    `json:"role"`                                             // role
+	IsVerified        null.Bool   `json:"is_verified" schema:"is_verified"`                 // is_verified
 
 	// xo fields
 	_exists, _deleted bool

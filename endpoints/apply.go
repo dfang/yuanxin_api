@@ -27,7 +27,8 @@ func ApplySellerEndpoint(db *sql.DB) http.HandlerFunc {
 			})
 		}
 
-		if err = util.SchemaDecoder.Decode(&user, r.PostForm); err != nil {
+		r.PostForm.Del("user_id")
+		if err = util.SchemaDecoder.Decode(user, r.PostForm); err != nil {
 			PanicIfNotNil(err)
 		}
 
@@ -36,7 +37,7 @@ func ApplySellerEndpoint(db *sql.DB) http.HandlerFunc {
 
 		err = user.ApplySeller(db)
 		if err != nil {
-			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{StatusCode: 220, Message: "申请失败"})
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{StatusCode: 220, Message: err.Error()})
 			return
 		}
 
@@ -68,8 +69,8 @@ func ApplyExpertEndpoint(db *sql.DB) http.HandlerFunc {
 		// user.IdentityCardBack = null.StringFrom(r.PostFormValue("identity_card_back"))
 		// user.Expertise = null.StringFrom(r.PostFormValue("expertise"))
 		// user.Resume = null.StringFrom(r.PostFormValue("resume"))
-
-		if err = util.SchemaDecoder.Decode(&user, r.PostForm); err != nil {
+		r.PostForm.Del("user_id")
+		if err = util.SchemaDecoder.Decode(user, r.PostForm); err != nil {
 			PanicIfNotNil(err)
 		}
 
@@ -80,7 +81,7 @@ func ApplyExpertEndpoint(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{
 				StatusCode: 220,
-				Message:    "申请失败",
+				Message:    err.Error(),
 			})
 			return
 		}

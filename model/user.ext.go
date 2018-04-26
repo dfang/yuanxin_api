@@ -151,7 +151,7 @@ func (u *User) ApplySeller(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE news.user SET ` +
+	const sqlstr = `UPDATE news.users SET ` +
 		`real_name = ?, identity_card_num = ?, identity_card_front = ?, identity_card_back = ?, license = ?` +
 		` WHERE id = ?`
 
@@ -176,7 +176,7 @@ func (u *User) ApplyExpert(db XODB) error {
 	}
 
 	// sql query
-	const sqlstr = `UPDATE news.user SET ` +
+	const sqlstr = `UPDATE news.users SET ` +
 		`real_name = ?, identity_card_num = ?, identity_card_front = ?, identity_card_back = ?, expertise = ?, resume = ?` +
 		` WHERE id = ?`
 
