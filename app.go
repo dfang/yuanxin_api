@@ -90,6 +90,7 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/chips", endpoints.ListChipsEndpoint(a.DB)).Methods("GET")
 
 	a.Router.HandleFunc("/help_requests", endpoints.ListHelpRequestEndpoint(a.DB)).Methods("GET")
+	a.Router.HandleFunc("/buy_requests", endpoints.ListBuyRequestEndpoint(a.DB)).Methods("GET")
 
 	a.Router.HandleFunc("/invitations", endpoints.ListInvitationsEndpoint(a.DB)).Methods("GET")
 
