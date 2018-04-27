@@ -3,6 +3,7 @@ package model
 import (
 	"database/sql"
 	"fmt"
+	"log"
 )
 
 func GetChips(db *sql.DB, start, count int) ([]Chip, error) {
@@ -74,4 +75,79 @@ func GetBuyRequests(db *sql.DB, start, count int) ([]BuyRequest, error) {
 	}
 
 	return brs, nil
+}
+
+func GetComments(db *sql.DB, start, count int, commentable_type string, commentable_id int) ([]Comment, error) {
+	statement := fmt.Sprintf("SELECT * FROM news.comments where commentable_type = '%s' AND commentable_id = '%d' LIMIT %d, %d", commentable_type, commentable_id, start, count)
+	log.Println(statement)
+
+	rows, err := db.Query(statement)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	items := []Comment{}
+
+	for rows.Next() {
+		var item Comment
+		if err := rows.Scan(&item.ID, &item.UserID, &item.CommentableType, &item.CommentableID, &item.Content, &item.IsPicked, &item.Likes, &item.CreatedAt); err != nil {
+			return nil, err
+		}
+		items = append(items, item)
+	}
+
+	return items, nil
+}
+
+func GetFavorites(db *sql.DB, start, count int, favorable_type string, favorable_id int) ([]Favorite, error) {
+	statement := fmt.Sprintf("SELECT * FROM news.favorites where favorable_type = '%s' AND favorable_id = '%d' LIMIT %d, %d", favorable_type, favorable_id, start, count)
+	log.Println(statement)
+
+	rows, err := db.Query(statement)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	items := []Favorite{}
+
+	for rows.Next() {
+		var item Favorite
+		if err := rows.Scan(&item.ID, &item.UserID, &item.FavorableType, &item.FavorableID, &item.CreatedAt); err != nil {
+			return nil, err
+		}
+		items = append(items, item)
+	}
+
+	return items, nil
+}
+
+func GetFavoriteBy(db *sql.DB, favorable_type string, favorable_id int64, user_id int64) (*Favorite, error) {
+
+	var err error
+
+	// sql query
+	// const sqlstr = `SELECT ` +
+	// 	`id, user_id, favorable_type, favorable_id, created_at ` +
+	// 	`FROM news.favorites ` +
+	// 	`WHERE id = ?`
+	sqlstr := fmt.Sprintf("SELECT * FROM news.favorites where favorable_type = '%s' AND favorable_id = '%d' AND user_id = '%d' ", favorable_type, favorable_id, user_id)
+
+	// run query
+	XOLog(sqlstr, favorable_type, favorable_id, user_id)
+	item := Favorite{
+		_exists: true,
+	}
+
+	err = db.QueryRow(sqlstr).Scan(&item.ID, &item.UserID, &item.FavorableType, &item.FavorableID, &item.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	return &item, nil
 }

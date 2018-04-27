@@ -31,6 +31,7 @@ func PublishHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 		if err := util.SchemaDecoder.Decode(&hr, r.PostForm); err != nil {
 			PanicIfNotNil(err)
 		}
+		hr.CreatedAt = null.TimeFrom(time.Now())
 
 		err := hr.Insert(db)
 		if err != nil {
