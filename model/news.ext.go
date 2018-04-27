@@ -15,9 +15,9 @@ func GetNews(db *sql.DB, start, count int, t NewsItemType) ([]NewsItem, error) {
 	fmt.Println(int(t))
 
 	if t == Zero {
-		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news.news_items LIMIT %d, %d", start, count)
+		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Body, '') as Body, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news.news_items LIMIT %d, %d", start, count)
 	} else {
-		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news.news_items where type = '%s' LIMIT %d, %d", t, start, count)
+		statement = fmt.Sprintf("SELECT ID, Title, Description, COALESCE(Body, '') as Body, COALESCE(Image, '') as Image, COALESCE(Type, '') as Type, COALESCE(Link, '') as Link, COALESCE(Source, '') as Source, Updated_At FROM news.news_items where type = '%s' LIMIT %d, %d", t, start, count)
 	}
 
 	log.Println(statement)
@@ -34,7 +34,7 @@ func GetNews(db *sql.DB, start, count int, t NewsItemType) ([]NewsItem, error) {
 
 	for rows.Next() {
 		var item NewsItem
-		if err := rows.Scan(&item.ID, &item.Title, &item.Description, &item.Image, &item.Type, &item.Link, &item.Source, &item.UpdatedAt); err != nil {
+		if err := rows.Scan(&item.ID, &item.Title, &item.Description, &item.Body, &item.Image, &item.Type, &item.Link, &item.Source, &item.UpdatedAt); err != nil {
 			return nil, err
 		}
 		news = append(news, item)

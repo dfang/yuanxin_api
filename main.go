@@ -26,12 +26,13 @@ func main() {
 	flag.Parse()
 
 	if flagVal {
+		fmt.Println("crawling data ....")
 		items := model.CrawNews()
+		fmt.Printf("%s", items[0].Body.String)
 
 		for _, item := range items {
 			item.InsertNewsItem(a.DB)
 		}
-		fmt.Println("crawling data ....")
 	} else {
 		fmt.Println("Server listening on 0.0.0.0:9090")
 		a.Run(":9090")
