@@ -91,7 +91,7 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/buy_requests/{id:[0-9]+}/comments", endpoints.ListBuyRequestCommentEndpoint(a.DB)).Methods("GET")
 	a.Router.HandleFunc("/help_requests/{id:[0-9]+}/comments", endpoints.ListHelpRequestCommentEndpoint(a.DB)).Methods("GET")
 	// 查询news/buy_requests/help_requests的所有评论
-	a.Router.HandleFunc("/comments", endpoints.ListCommentEndpoint(a.DB)).Methods("GET")
+	a.Router.HandleFunc("/comments", endpoints.ListCommentsEndpoint(a.DB)).Methods("GET")
 
 	a.Router.HandleFunc("/favorites", endpoints.ListFavoritesEndpoint(a.DB)).Methods("GET")
 	a.Router.HandleFunc("/favorites", endpoints.PubishFavoriteEndpoint(a.DB)).Methods("POST")

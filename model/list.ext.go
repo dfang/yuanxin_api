@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+
+	null "gopkg.in/guregu/null.v3"
 )
 
 func GetChips(db *sql.DB, start, count int) ([]Chip, error) {
@@ -77,8 +79,22 @@ func GetBuyRequests(db *sql.DB, start, count int) ([]BuyRequest, error) {
 	return brs, nil
 }
 
-func GetComments(db *sql.DB, start, count int, commentable_type string, commentable_id int) ([]Comment, error) {
-	statement := fmt.Sprintf("SELECT * FROM news.comments where commentable_type = '%s' AND commentable_id = '%d' LIMIT %d, %d", commentable_type, commentable_id, start, count)
+type CommentResult struct {
+	ID              int         `json:"id"`                                         // id
+	UserID          null.Int    `json:"user_id" schema:"user_id"`                   // user_id
+	CommentableType null.String `json:"commentable_type" schema:"commentable_type"` // commentable_type
+	CommentableID   null.Int    `json:"commentable_id" schema:"commentable_id"`     // commentable_id
+	Content         null.String `json:"content"`                                    // content
+	IsPicked        null.Bool   `json:"is_picked" schema:"is_picked"`               // is_picked
+	Likes           null.Int    `json:"likes"`                                      // likes
+	CreatedAt       null.Time   `json:"created_at"`                                 // created_at
+	IsLiked         null.Bool   `json:"is_liked" schema:"is_liked"`
+	Nickname        null.String `json:"nickname"`
+	Avatar          null.String `json:"avatar"`
+}
+
+func GetComments(db *sql.DB, start, count int, commentable_type string, commentable_id int) ([]CommentResult, error) {
+	statement := fmt.Sprintf("SELECT comments.*, users.nickname, users.avatar FROM news.comments LEFT JOIN users ON users.id = comments.user_id where commentable_type = '%s' AND commentable_id = '%d' LIMIT %d, %d", commentable_type, commentable_id, start, count)
 	log.Println(statement)
 
 	rows, err := db.Query(statement)
@@ -89,13 +105,17 @@ func GetComments(db *sql.DB, start, count int, commentable_type string, commenta
 
 	defer rows.Close()
 
-	items := []Comment{}
+	items := []CommentResult{}
 
 	for rows.Next() {
-		var item Comment
-		if err := rows.Scan(&item.ID, &item.UserID, &item.CommentableType, &item.CommentableID, &item.Content, &item.IsPicked, &item.Likes, &item.CreatedAt); err != nil {
+		var item CommentResult
+		if err := rows.Scan(&item.ID, &item.UserID, &item.CommentableType, &item.CommentableID, &item.Content, &item.IsPicked, &item.Likes, &item.CreatedAt, &item.Nickname, &item.Avatar); err != nil {
 			return nil, err
 		}
+
+		// 此处应该查询，而不是默认返回false
+		item.IsLiked = null.BoolFrom(false)
+
 		items = append(items, item)
 	}
 

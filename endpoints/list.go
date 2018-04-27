@@ -180,7 +180,7 @@ func ListInvitationsEndpoint(db *sql.DB) http.HandlerFunc {
 }
 
 // 新闻 求助 求购的评论
-func ListCommentEndpoint(db *sql.DB) http.HandlerFunc {
+func ListCommentsEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer RecoverEndpoint(w)
 
@@ -209,9 +209,9 @@ func ListCommentEndpoint(db *sql.DB) http.HandlerFunc {
 		}
 
 		util.RespondWithJSON(w, http.StatusOK, struct {
-			StatusCode int             `json:"status_code"`
-			Message    string          `json:"msg"`
-			Data       []model.Comment `json:"data"`
+			StatusCode int                   `json:"status_code"`
+			Message    string                `json:"msg"`
+			Data       []model.CommentResult `json:"data"`
 		}{
 			StatusCode: 200,
 			Message:    "查询成功",
