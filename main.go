@@ -21,15 +21,13 @@ func main() {
 	// You need to set your Username and Password here
 	a.Initialize(os.Getenv("APP_DB_USER"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_HOST"), os.Getenv("APP_DB_NAME"))
 
-	var flagVal bool
-	flag.BoolVar(&flagVal, "craw", false, "craw data ....")
+	var Craw bool
+	flag.BoolVar(&Craw, "craw", false, "craw data ....")
 	flag.Parse()
 
-	if flagVal {
+	if Craw {
 		fmt.Println("crawling data ....")
 		items := model.CrawNews()
-		fmt.Printf("%s", items[0].Body.String)
-
 		for _, item := range items {
 			item.InsertNewsItem(a.DB)
 		}

@@ -8,17 +8,6 @@ import (
 	"gopkg.in/guregu/null.v3"
 )
 
-// func (item *NewsItem) CollectBody(collector *colly.Collector) {
-// 	//&collector.
-// 	collector.OnHTML(".article-box", func(e *colly.HTMLElement) {
-// 		//log.Println(e)
-// 		// log.Println(e.Text)
-// 		item.Body.String = e.Text
-// 	})
-// 	collector.Visit(item.Link.String)
-// 	// return item
-// }
-
 func CrawNews() []NewsItem {
 	c := colly.NewCollector(
 	// Turn on asynchronous requests
@@ -53,7 +42,7 @@ func CrawNews() []NewsItem {
 				Link:        null.StringFrom(e.Request.AbsoluteURL(el.ChildAttr(".top-title h3 a", "href"))),
 			}
 
-			// &item.CollectBody(*detailCollector)
+			// collect body ......
 			detailCollector.OnHTML(".article-box", func(e *colly.HTMLElement) {
 				item.Body = null.StringFrom(e.Text)
 			})
@@ -69,16 +58,16 @@ func CrawNews() []NewsItem {
 
 	urls := []string{
 		"http://www.chinaflashmarket.com/News",
-		// "http://www.chinaflashmarket.com/News/Page-2",
-		// "http://www.chinaflashmarket.com/News/Page-3",
-		// "http://www.chinaflashmarket.com/News/Page-4",
-		// "http://www.chinaflashmarket.com/News/Page-5",
+		"http://www.chinaflashmarket.com/News/Page-2",
+		"http://www.chinaflashmarket.com/News/Page-3",
+		"http://www.chinaflashmarket.com/News/Page-4",
+		"http://www.chinaflashmarket.com/News/Page-5",
 
 		"http://www.chinaflashmarket.com/Industry",
-		// "http://www.chinaflashmarket.com/Industry/Page-2",
-		// "http://www.chinaflashmarket.com/Industry/Page-3",
-		// "http://www.chinaflashmarket.com/Industry/Page-4",
-		// "http://www.chinaflashmarket.com/Industry/Page-5",
+		"http://www.chinaflashmarket.com/Industry/Page-2",
+		"http://www.chinaflashmarket.com/Industry/Page-3",
+		"http://www.chinaflashmarket.com/Industry/Page-4",
+		"http://www.chinaflashmarket.com/Industry/Page-5",
 
 		//"http://www.chinaflashmarket.com/pricecenter/nandflash",
 		//"http://www.chinaflashmarket.com/pricecenter/ddr",
