@@ -114,5 +114,15 @@ CREATE table comments (
     user_id int,
     commentable_type varchar(20),
     commentable_id int,
+    content text,
+    is_picked boolean, -- 求助选择为正确答案可以获得赏金
+    likes int, -- 点赞数
     created_at datetime
 );
+
+-- 点赞 
+CREATE table likes (
+    id int PRIMARY KEY AUTO_INCREMENT,
+    user_id int,
+    comment_id int
+)

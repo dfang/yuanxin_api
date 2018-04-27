@@ -80,6 +80,21 @@ func CheckRequiredParameters(r *http.Request, params ...string) {
 	}
 }
 
+func CheckRequiredQueryString(r *http.Request, s string) {
+	qs := r.URL.Query()
+	if qs.Get(s) == "" {
+		panic(&MissParameterError{
+			Parameter: s,
+			Error:     errors.New(fmt.Sprintf("querystring %s 缺失", s)),
+		})
+	}
+}
+func CheckRequiredQueryStrings(r *http.Request, qs ...string) {
+	for _, num := range qs {
+		CheckRequiredQueryString(r, num)
+	}
+}
+
 func ParseParameterToInt(r *http.Request, s string) int {
 	i, err := strconv.Atoi(r.PostFormValue(s))
 	if err != nil {

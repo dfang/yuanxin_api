@@ -96,3 +96,28 @@ func PublishChipEndpoint(db *sql.DB) http.HandlerFunc {
 		util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, "发布成功"})
 	})
 }
+
+// 发布评论
+func PublishCommentEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		defer RecoverEndpoint(w)
+
+		CheckRequiredParameters(r, "user_id", "commentable_type", "commentable_id", "content")
+		var comment model.Comment
+
+		if err := util.SchemaDecoder.Decode(&comment, r.PostForm); err != nil {
+			PanicIfNotNil(err)
+		}
+
+		comment.CreatedAt = null.TimeFrom(time.Now())
+		comment.Likes = null.IntFrom(0)
+		comment.IsPicked = null.BoolFrom(false)
+
+		err := comment.Insert(db)
+		if err != nil {
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{220, err.Error()})
+			return
+		}
+		util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, "发布成功"})
+	})
+}

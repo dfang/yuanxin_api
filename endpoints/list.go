@@ -178,3 +178,59 @@ func ListInvitationsEndpoint(db *sql.DB) http.HandlerFunc {
 
 	})
 }
+
+// 新闻 求助 求购的评论
+func ListCommentEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		defer RecoverEndpoint(w)
+
+		qs := r.URL.Query()
+		CheckRequiredQueryStrings(r, "commentable_type", "commentable_id")
+
+		count, _ := strconv.Atoi(qs.Get("count"))
+		start, _ := strconv.Atoi(qs.Get("start"))
+		commentable_id, _ := strconv.Atoi(qs.Get("commentable_id"))
+		commentable_type := qs.Get("commentable_type")
+
+		// CheckRequiredParameters(r, "commentable_type", "commentable_id")
+
+		if count < 1 {
+			count = 10
+		}
+
+		if start < 0 {
+			start = 0
+		}
+
+		comments, err := model.GetComments(db, start, count, commentable_type, commentable_id)
+		if err != nil {
+			util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int             `json:"status_code"`
+			Message    string          `json:"msg"`
+			Data       []model.Comment `json:"data"`
+		}{
+			StatusCode: 200,
+			Message:    "查询成功",
+			Data:       comments,
+		})
+	})
+}
+
+func ListNewsCommentsEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	})
+}
+
+func ListBuyRequestCommentEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	})
+}
+
+func ListHelpRequestCommentEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	})
+}

@@ -86,6 +86,13 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/help_requests", endpoints.PublishHelpRequestEndpoint(a.DB)).Methods("POST")
 	a.Router.HandleFunc("/buy_requests", endpoints.PublishBuyRequestEndpoint(a.DB)).Methods("POST")
 
+	a.Router.HandleFunc("/comments", endpoints.PublishCommentEndpoint(a.DB)).Methods("POST")
+
+	a.Router.HandleFunc("/news/{id:[0-9]+}/comments", endpoints.ListNewsCommentsEndpoint(a.DB)).Methods("GET")
+	a.Router.HandleFunc("/buy_requests/{id:[0-9]+}/comments", endpoints.ListBuyRequestCommentEndpoint(a.DB)).Methods("GET")
+	a.Router.HandleFunc("/help_requests/{id:[0-9]+}/comments", endpoints.ListHelpRequestCommentEndpoint(a.DB)).Methods("GET")
+	a.Router.HandleFunc("/comments", endpoints.ListCommentEndpoint(a.DB)).Methods("GET")
+
 	a.Router.HandleFunc("/chips", endpoints.PublishChipEndpoint(a.DB)).Methods("POST")
 	a.Router.HandleFunc("/chips", endpoints.ListChipsEndpoint(a.DB)).Methods("GET")
 
