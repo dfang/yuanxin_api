@@ -21,6 +21,7 @@ type ChipDetailResult struct {
 	IsVerified      null.Bool   `json:"is_verified"`      // is_verified
 	NickName        null.String `json:"nickname"`
 	Avatar          null.String `json:"avatar"`
+	IsLiked         null.Bool   `json:"is_liked"`
 }
 
 type HelpRequestDetailResult struct {
@@ -32,6 +33,7 @@ type HelpRequestDetailResult struct {
 	CreatedAt null.Time   `json:"created_at"` // created_at
 	NickName  null.String `json:"nickname"`
 	Avatar    null.String `json:"avatar"`
+	IsLiked   null.Bool   `json:"is_liked"`
 }
 
 type BuyRequestDetailResult struct {
@@ -43,6 +45,7 @@ type BuyRequestDetailResult struct {
 	CreatedAt null.Time   `json:"created_at"` // created_at
 	NickName  null.String `json:"nickname"`
 	Avatar    null.String `json:"avatar"`
+	IsLiked   null.Bool   `json:"is_liked"`
 }
 
 func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
@@ -58,6 +61,8 @@ func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 		var result ChipDetailResult
 		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.SerialNumber, &result.Vendor, &result.Amount, &result.ManufactureDate, &result.UnitPrice, &result.IsVerified, &result.NickName, &result.Avatar)
 		PanicIfNotNil(err)
+
+		result.IsLiked = null.BoolFrom(false)
 
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode int              `json:"status_code"`
@@ -87,6 +92,8 @@ func GetHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.Title, &result.Content, &result.Amount, &result.CreatedAt, &result.NickName, &result.Avatar)
 		PanicIfNotNil(err)
 
+		result.IsLiked = null.BoolFrom(false)
+
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode int                     `json:"status_code"`
 			Message    string                  `json:"msg"`
@@ -113,6 +120,8 @@ func GetBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 
 		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.Title, &result.Content, &result.Amount, &result.CreatedAt, &result.NickName, &result.Avatar)
 		PanicIfNotNil(err)
+
+		result.IsLiked = null.BoolFrom(false)
 
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode int                    `json:"status_code"`
