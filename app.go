@@ -98,10 +98,14 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/favorites/{id:[0-9]+}", endpoints.DestroyFavoriteEndpoint(a.DB)).Methods("DELETE")
 
 	a.Router.HandleFunc("/chips", endpoints.PublishChipEndpoint(a.DB)).Methods("POST")
-	a.Router.HandleFunc("/chips", endpoints.ListChipsEndpoint(a.DB)).Methods("GET")
 
+	a.Router.HandleFunc("/chips", endpoints.ListChipsEndpoint(a.DB)).Methods("GET")
 	a.Router.HandleFunc("/help_requests", endpoints.ListHelpRequestEndpoint(a.DB)).Methods("GET")
 	a.Router.HandleFunc("/buy_requests", endpoints.ListBuyRequestEndpoint(a.DB)).Methods("GET")
+
+	a.Router.HandleFunc("/chips/{id:[0-9]+}", endpoints.GetChipEndpoint(a.DB)).Methods("GET")
+	a.Router.HandleFunc("/help_requests/{id:[0-9]+}", endpoints.GetHelpRequestEndpoint(a.DB)).Methods("GET")
+	a.Router.HandleFunc("/buy_requests/{id:[0-9]+}", endpoints.GetBuyRequestEndpoint(a.DB)).Methods("GET")
 
 	a.Router.HandleFunc("/invitations", endpoints.ListInvitationsEndpoint(a.DB)).Methods("GET")
 
