@@ -182,7 +182,6 @@ func ListInvitationsEndpoint(db *sql.DB) http.HandlerFunc {
 // 新闻 求助 求购的评论
 func ListCommentsEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer RecoverEndpoint(w)
 
 		qs := r.URL.Query()
 		CheckRequiredQueryStrings(r, "commentable_type", "commentable_id")
@@ -238,7 +237,6 @@ func ListHelpRequestCommentEndpoint(db *sql.DB) http.HandlerFunc {
 // 收藏
 func ListFavoritesEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer RecoverEndpoint(w)
 
 		qs := r.URL.Query()
 		CheckRequiredQueryStrings(r, "favorable_type", "favorable_id")

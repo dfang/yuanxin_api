@@ -17,7 +17,6 @@ import (
 // 收藏
 func PubishFavoriteEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer RecoverEndpoint(w)
 
 		CheckRequiredParameters(r, "user_id", "favorable_type", "favorable_id")
 		var item model.Favorite
@@ -44,7 +43,6 @@ func PubishFavoriteEndpoint(db *sql.DB) http.HandlerFunc {
 // 取消收藏
 func DestroyFavoriteEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer RecoverEndpoint(w)
 
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["id"])

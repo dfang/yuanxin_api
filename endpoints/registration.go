@@ -3,7 +3,6 @@ package endpoints
 import (
 	"database/sql"
 	"errors"
-	"log"
 	"net/http"
 
 	"github.com/dfang/yuanxin/model"
@@ -13,8 +12,6 @@ import (
 // 注册
 func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer RecoverEndpoint(w)
-
 		CheckRequiredParameters(r, "nickname", "phone", "email", "password")
 		// TODO Validate Email
 		// TODO Validate Phone
@@ -39,7 +36,7 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 
 		err := user.RegisterUser(db)
 		if err != nil {
-			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, "注册失败"})
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, err.Error()})
 			return
 		} else {
 			util.RespondWithJSON(w, http.StatusOK, struct {
@@ -56,18 +53,9 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 	})
 }
 
-func RegistrationHandler() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Before")
-		defer log.Println("After")
-	})
-}
-
 // 更改个人信息
 func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		defer RecoverEndpoint(w)
 
 		CheckRequiredParameter(r, "user_id")
 		user_id := ParseParameterToInt(r, "user_id")

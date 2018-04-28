@@ -14,7 +14,6 @@ import (
 // 发布求助
 func PublishHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer RecoverEndpoint(w)
 
 		CheckRequiredParameters(r, "user_id", "title", "content", "amount")
 		// user_id := ParseParameterToInt(r, "user_id")
@@ -47,7 +46,6 @@ func PublishHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 // 发布求购
 func PublishBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer RecoverEndpoint(w)
 
 		CheckRequiredParameters(r, "user_id", "title", "content", "amount")
 		var br model.BuyRequest
@@ -70,7 +68,6 @@ func PublishBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 // 发布芯片
 func PublishChipEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer RecoverEndpoint(w)
 
 		CheckRequiredParameters(r, "user_id", "serial_number", "vendor", "amount", "manufacture_date", "unit_price")
 		var chip model.Chip
@@ -101,7 +98,6 @@ func PublishChipEndpoint(db *sql.DB) http.HandlerFunc {
 // 发布评论
 func PublishCommentEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer RecoverEndpoint(w)
 
 		CheckRequiredParameters(r, "user_id", "commentable_type", "commentable_id", "content")
 		var comment model.Comment

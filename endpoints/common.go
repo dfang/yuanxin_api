@@ -4,63 +4,21 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
-
-	log "github.com/sirupsen/logrus"
-
-	"github.com/dfang/yuanxin/util"
 )
 
-func init() {
-	// Log as JSON instead of the default ASCII formatter.
-	log.SetFormatter(&log.JSONFormatter{})
-
-	// Output to stdout instead of the default stderr
-	// Can be any io.Writer, see below for File example
-	log.SetOutput(os.Stdout)
-
-	// Only log the warning severity or above.
-	log.SetLevel(log.WarnLevel)
-}
-
-func PanicIfNotNil(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
-type PayLoadFrom struct {
-	StatusCode int    `json:"status_code"`
-	Message    string `json:"msg"`
-}
-
-func (p PayLoadFrom) New(status int, msg string) PayLoadFrom {
-	return PayLoadFrom{
-		StatusCode: status,
-		Message:    msg,
-	}
-}
-
-type Adapter func(http.Handler) http.Handler
+// type Adapter func(http.Handler) http.Handler
 
 type MissParameterError struct {
 	Parameter string
 	Error     error
 }
 
-// func (p *MissParameterError) String() string {
-// 	return fmt.Sprintf("%s 参数缺失", p.Parameter)
-// }
-
 type ParseError struct {
 	Parameter string
 	Error     error
 }
 
-// func (e *ParseError) String() string {
-// 	return fmt.Sprintf("error parsing %q as int", e.Parameter)
-// }
 type RecordNotFound struct {
 	Error error
 }
@@ -106,47 +64,8 @@ func ParseParameterToInt(r *http.Request, s string) int {
 	return i
 }
 
-func RecoverEndpoint(w http.ResponseWriter) {
-	err := recover()
-	if err != nil {
-		switch v := err.(type) {
-		case *MissParameterError:
-			util.RespondWithError(w, http.StatusBadRequest, 400, v.Error.Error())
-		case *ParseError:
-			util.RespondWithError(w, http.StatusBadRequest, 400, v.Error.Error())
-		case *RecordNotFound:
-			util.RespondWithError(w, http.StatusBadRequest, 400, v.Error.Error())
-		case string:
-			util.RespondWithError(w, http.StatusBadRequest, 400, v)
-		case error:
-			util.RespondWithError(w, http.StatusBadRequest, 400, v.Error())
-		default:
-			util.RespondWithError(w, http.StatusBadRequest, 400, "Internal Error")
-		}
-	}
-	// if err != nil {
-	// 	fmt.Println("Internal error:", err)
-	// 	var err_str string
-	// 	var ok bool
-	// 	if err_str, ok = err.(string); !ok {
-	// 		err_str = "We encountered an internal error"
-	// 	}
-	// 	w.WriteHeader(http.StatusInternalServerError)
-	// 	w.Write([]byte(err_str))
-	// }
-}
-
-func MyHandlerFunc(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer RecoverEndpoint(w)
-
-		h.ServeHTTP(w, r)
-	})
-}
-
 func MustParams(h http.Handler, params ...string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		q := r.PostForm
 		for _, param := range params {
 			if len(q.Get(param)) == 0 {
@@ -158,28 +77,20 @@ func MustParams(h http.Handler, params ...string) http.Handler {
 	})
 }
 
-func Logging(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Println("Before")
-		defer log.Println("After")
-		h.ServeHTTP(w, r)
-	})
+func PanicIfNotNil(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
 
-func AutoRecover(h http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		err := recover()
-		if err != nil {
-			fmt.Println("Internal error:", err)
-			var err_str string
-			var ok bool
-			if err_str, ok = err.(string); !ok {
-				err_str = "We encountered an internal error"
-			}
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(err_str))
-			return
-		}
-		h.ServeHTTP(w, r)
-	})
+type PayLoadFrom struct {
+	StatusCode int    `json:"status_code"`
+	Message    string `json:"msg"`
+}
+
+func (p PayLoadFrom) New(status int, msg string) PayLoadFrom {
+	return PayLoadFrom{
+		StatusCode: status,
+		Message:    msg,
+	}
 }

@@ -2,9 +2,11 @@ package main
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 
@@ -12,8 +14,8 @@ import (
 	"github.com/dfang/yuanxin/model"
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/urfave/negroni"
 )
 
 type App struct {
@@ -51,12 +53,43 @@ func (a *App) Initialize(user, password, host, dbName string) {
 }
 
 func (a App) Run(addr string) {
-	http.ListenAndServe(addr, handlers.LoggingHandler(os.Stdout, a.Router))
+	// http.ListenAndServe(addr, handlers.LoggingHandler(os.Stdout, a.Router))
+
+	// n := negroni.Classic() // Includes some default middlewares
+	n := negroni.New()
+	n.Use(negroni.NewLogger())
+
+	// recovery := negroni.NewRecovery()
+	// recovery.PanicHandlerFunc = reportToSentry
+	// recovery.Formatter = &negroni.HTMLPanicFormatter{}
+
+	n.Use(negroni.HandlerFunc(endpoints.Recovery))
+
+	n.UseHandler(a.Router)
+	http.ListenAndServe(":9090", n)
+}
+
+func reportToSentry(info *negroni.PanicInformation) {
+}
+
+func loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Println(r.RequestURI)
+		start := time.Now()
+		defer func() { fmt.Println("timing: ", r.URL.Path, time.Since(start)) }()
+		next.ServeHTTP(w, r)
+	})
 }
 
 func (a *App) initializeRoutes() {
+	a.Router.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+		panic(errors.New("panic"))
+	})
+
 	a.Router.HandleFunc("/news", endpoints.ListNewsItemEndpoint(a.DB)).Methods("GET")
 	a.Router.HandleFunc("/news/{id:[0-9]+}", endpoints.GetNewsItemEndpoint(a.DB)).Methods("GET")
+
+	// a.Router.Use(loggingMiddleware)
 
 	a.Router.HandleFunc("/users/{id:[0-9]+}", endpoints.GetUserEndpoint(a.DB)).Methods("GET")
 	a.Router.HandleFunc("/users", endpoints.ListUsersEndpoint(a.DB)).Methods("GET")
@@ -76,7 +109,8 @@ func (a *App) initializeRoutes() {
 
 	// a.Router.Handle("/registrations", endpoints.Logging(endpoints.RegistrationHandler)).Methods("PUT")
 
-	a.Router.HandleFunc("/suggestions", endpoints.SuggestionEndpoint(a.DB)).Methods("POST")
+	// a.Router.HandleFunc("/suggestions", endpoints.SuggestionEndpoint(a.DB)).Methods("POST")
+	a.Router.Handle("/suggestions", loggingMiddleware(endpoints.SuggestionEndpoint(a.DB))).Methods("POST")
 
 	a.Router.HandleFunc("/apply/seller", endpoints.ApplySellerEndpoint(a.DB)).Methods("POST")
 	a.Router.HandleFunc("/apply/expert", endpoints.ApplyExpertEndpoint(a.DB)).Methods("POST")
@@ -108,5 +142,4 @@ func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/buy_requests/{id:[0-9]+}", endpoints.GetBuyRequestEndpoint(a.DB)).Methods("GET")
 
 	a.Router.HandleFunc("/invitations", endpoints.ListInvitationsEndpoint(a.DB)).Methods("GET")
-
 }

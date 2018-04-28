@@ -50,7 +50,7 @@ type BuyRequestDetailResult struct {
 
 func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer RecoverEndpoint(w)
+
 		sqlstr := "SELECT chips.*, users.nickname, users.avatar FROM chips JOIN users on users.id = chips.user_id where chips.id = ?;"
 
 		vars := mux.Vars(r)
@@ -79,7 +79,7 @@ func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 
 func GetHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer RecoverEndpoint(w)
+
 		sqlstr := "SELECT help_requests.*, users.nickname, users.avatar FROM help_requests JOIN users on users.id = help_requests.user_id where help_requests.id = ?;"
 
 		vars := mux.Vars(r)
@@ -108,7 +108,7 @@ func GetHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 
 func GetBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		defer RecoverEndpoint(w)
+
 		sqlstr := "SELECT buy_requests.*, users.nickname, users.avatar FROM buy_requests JOIN users on users.id = buy_requests.user_id where buy_requests.id = ?;"
 
 		vars := mux.Vars(r)
