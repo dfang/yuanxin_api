@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"time"
 
 	jwtmiddleware "github.com/auth0/go-jwt-middleware"
 	jwt "github.com/dgrijalva/jwt-go"
@@ -18,7 +17,7 @@ import (
 	"github.com/urfave/negroni"
 	"github.com/zbindenren/negroni-prometheus"
 
-	"github.com/dfang/yuanxin/endpoints"
+	. "github.com/dfang/yuanxin/endpoints"
 	"github.com/dfang/yuanxin/model"
 	_ "github.com/go-sql-driver/mysql"
 
@@ -29,6 +28,16 @@ type App struct {
 	Router *mux.Router
 	DB     *sql.DB
 }
+
+var jmw = jwtmiddleware.New(jwtmiddleware.Options{
+	ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+		return []byte("My Secret"), nil
+	},
+	// When set, the middleware verifies that tokens are signed with the specific signing algorithm
+	// If the signing method is not constant the ValidationKeyGetter callback can be used to implement additional checks
+	// Important to avoid security issues described here: https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries/
+	SigningMethod: jwt.SigningMethodHS256,
+})
 
 func (a *App) Initialize(user, password, host, dbName string) {
 	// why parseTime=true
@@ -53,39 +62,14 @@ func (a *App) Initialize(user, password, host, dbName string) {
 	log.SetLevel(log.WarnLevel)
 
 	a.Router = mux.NewRouter()
-
-	jmiddle := jwtmiddleware.New(jwtmiddleware.Options{
-		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-			return []byte("My Secret"), nil
-		},
-		// When set, the middleware verifies that tokens are signed with the specific signing algorithm
-		// If the signing method is not constant the ValidationKeyGetter callback can be used to implement additional checks
-		// Important to avoid security issues described here: https://auth0.com/blog/2015/03/31/critical-vulnerabilities-in-json-web-token-libraries/
-		SigningMethod: jwt.SigningMethodHS256,
-	})
-
-	a.initializeRoutes(jmiddle)
+	a.initializeRoutes(jmw)
 }
-
-var myHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	user := r.Context().Value("user")
-	fmt.Fprintf(w, "This is an authenticated request")
-	fmt.Fprintf(w, "Claim content:\n")
-	for k, v := range user.(*jwt.Token).Claims.(jwt.MapClaims) {
-		fmt.Fprintf(w, "%s :\t%#v\n", k, v)
-	}
-})
 
 func (a App) Run(addr string) {
 	// http.ListenAndServe(addr, handlers.LoggingHandler(os.Stdout, a.Router))
 
 	// n := negroni.Classic() // Includes some default middlewares
 	n := negroni.New()
-	// n := negroni.New(negroni.HandlerFunc(
-	// 	jwtMiddleware.HandlerWithNext),
-	// 	negroni.Wrap(myHandler),
-	// )
-
 	l := negroni.NewLogger()
 	m := negroniprometheus.NewMiddleware("serviceName")
 	s := stats.New()
@@ -104,22 +88,10 @@ func (a App) Run(addr string) {
 	// recovery.PanicHandlerFunc = reportToSentry
 	// recovery.Formatter = &negroni.HTMLPanicFormatter{}
 
-	n.Use(negroni.HandlerFunc(endpoints.Recovery))
+	n.Use(negroni.HandlerFunc(Recovery))
 
 	n.UseHandler(a.Router)
 	http.ListenAndServe(":9090", n)
-}
-
-// func reportToSentry(info *negroni.PanicInformation) {
-// }
-
-func loggingMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Println(r.RequestURI)
-		start := time.Now()
-		defer func() { fmt.Println("timing: ", r.URL.Path, time.Since(start)) }()
-		next.ServeHTTP(w, r)
-	})
 }
 
 func (a *App) initializeRoutes(jwtmiddleware *jwtmiddleware.JWTMiddleware) {
@@ -129,85 +101,72 @@ func (a *App) initializeRoutes(jwtmiddleware *jwtmiddleware.JWTMiddleware) {
 		panic(errors.New("panic"))
 	})
 
+	// prometheus metrics
 	r.Handle("/metrics", prometheus.Handler())
 
-	r.HandleFunc("/news", endpoints.ListNewsItemEndpoint(a.DB)).Methods("GET")
-	r.HandleFunc("/news/{id:[0-9]+}", endpoints.GetNewsItemEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/news", ListNewsItemEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/news/{id:[0-9]+}", GetNewsItemEndpoint(a.DB)).Methods("GET")
 
-	r.HandleFunc("/users/{id:[0-9]+}", endpoints.GetUserEndpoint(a.DB)).Methods("GET")
-	r.HandleFunc("/users", endpoints.ListUsersEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/users/{id:[0-9]+}", GetUserEndpoint(a.DB)).Methods("GET")
 
-	r.HandleFunc("/captcha/send", endpoints.SendSMSEndpoint(a.DB)).Methods("POST")
-	r.HandleFunc("/captcha/validate", endpoints.ValidateSMSEndpoint(a.DB)).Methods("POST")
+	r.HandleFunc("/captcha/send", SendSMSEndpoint(a.DB)).Methods("POST")
+	r.HandleFunc("/captcha/validate", ValidateSMSEndpoint(a.DB)).Methods("POST")
+	r.HandleFunc("/exists", ExistsEndpoint(a.DB)).Methods("POST")
 
-	r.HandleFunc("/registrations", endpoints.RegistrationEndpoint(a.DB)).Methods("POST")
+	r.HandleFunc("/registrations", RegistrationEndpoint(a.DB)).Methods("POST")
+	r.HandleFunc("/sessions", SessionEndpoint(a.DB)).Methods("POST")
+	r.Handle("/passwords", Protected(PasswordEndpoint(a.DB))).Methods("PUT")
 
-	r.HandleFunc("/sessions", endpoints.SessionEndpoint(a.DB)).Methods("POST")
-	r.HandleFunc("/passwords", endpoints.PasswordEndpoint(a.DB)).Methods("PUT")
+	r.Handle("/upload", Protected(UploadEndpoint(a.DB))).Methods("POST")
+	r.Handle("/registrations", Protected(UpdateRegistrationInfo(a.DB))).Methods("PUT")
+	r.Handle("/suggestions", Protected(SuggestionEndpoint(a.DB))).Methods("POST")
 
-	r.HandleFunc("/exists", endpoints.ExistsEndpoint(a.DB)).Methods("POST")
+	r.Handle("/apply/seller", Protected(ApplySellerEndpoint(a.DB))).Methods("POST")
+	r.Handle("/invitations/check", Protected(CheckInvitationCodeEndpoint(a.DB))).Methods("POST")
+	r.Handle("/apply/expert", Protected(ApplyExpertEndpoint(a.DB))).Methods("POST")
 
-	r.Handle("/upload",
-		negroni.New(
-			negroni.HandlerFunc(jwtmiddleware.HandlerWithNext),
-			negroni.Wrap(http.HandlerFunc(endpoints.UploadEndpoint(a.DB))),
-		)).Methods("POST")
+	r.Handle("/help_requests", Protected(PublishHelpRequestEndpoint(a.DB))).Methods("POST")
+	r.Handle("/buy_requests", Protected(PublishHelpRequestEndpoint(a.DB))).Methods(http.MethodPost)
 
-	r.HandleFunc("/registrations", endpoints.UpdateRegistrationInfo(a.DB)).Methods("PUT")
+	r.Handle("/comments", Protected(PublishCommentEndpoint(a.DB))).Methods("POST")
 
-	// r.Handle("/registrations", endpoints.Logging(endpoints.RegistrationHandler)).Methods("PUT")
-
-	// r.HandleFunc("/suggestions", endpoints.SuggestionEndpoint(a.DB)).Methods("POST")
-	r.Handle("/suggestions", loggingMiddleware(endpoints.SuggestionEndpoint(a.DB))).Methods("POST")
-
-	r.Handle("/apply/seller",
-		negroni.New(
-			negroni.HandlerFunc(jwtmiddleware.HandlerWithNext),
-			negroni.Wrap(http.HandlerFunc(endpoints.ApplySellerEndpoint(a.DB))),
-		)).Methods("POST")
-
-	r.Handle("/apply/expert",
-		negroni.New(
-			negroni.HandlerFunc(jwtmiddleware.HandlerWithNext),
-			negroni.Wrap(http.HandlerFunc(endpoints.ApplyExpertEndpoint(a.DB))),
-		)).Methods("POST")
-
-	r.HandleFunc("/invitations/check", endpoints.CheckInvitationCodeEndpoint(a.DB)).Methods("POST")
-
-	r.Handle("/help_requests",
-		negroni.New(
-			negroni.HandlerFunc(jwtmiddleware.HandlerWithNext),
-			negroni.Wrap(http.HandlerFunc(endpoints.PublishHelpRequestEndpoint(a.DB))),
-		)).Methods("POST")
-
-	r.Handle("/buy_requests",
-		negroni.New(
-			negroni.HandlerFunc(jwtmiddleware.HandlerWithNext),
-			negroni.Wrap(http.HandlerFunc(endpoints.PublishBuyRequestEndpoint(a.DB))),
-		)).Methods("POST")
-	// r.HandleFunc("/help_requests", endpoints.PublishHelpRequestEndpoint(a.DB)).Methods("POST")
-	// r.HandleFunc("/buy_requests", endpoints.PublishBuyRequestEndpoint(a.DB)).Methods("POST")
-
-	r.HandleFunc("/comments", endpoints.PublishCommentEndpoint(a.DB)).Methods("POST")
-	r.HandleFunc("/news/{id:[0-9]+}/comments", endpoints.ListNewsCommentsEndpoint(a.DB)).Methods("GET")
-	r.HandleFunc("/buy_requests/{id:[0-9]+}/comments", endpoints.ListBuyRequestCommentEndpoint(a.DB)).Methods("GET")
-	r.HandleFunc("/help_requests/{id:[0-9]+}/comments", endpoints.ListHelpRequestCommentEndpoint(a.DB)).Methods("GET")
 	// 查询news/buy_requests/help_requests的所有评论
-	r.HandleFunc("/comments", endpoints.ListCommentsEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/comments", ListCommentsEndpoint(a.DB)).Methods("GET")
 
-	r.HandleFunc("/favorites", endpoints.ListFavoritesEndpoint(a.DB)).Methods("GET")
-	r.HandleFunc("/favorites", endpoints.PubishFavoriteEndpoint(a.DB)).Methods("POST")
-	r.HandleFunc("/favorites/{id:[0-9]+}", endpoints.DestroyFavoriteEndpoint(a.DB)).Methods("DELETE")
+	r.Handle("/favorable", Protected(FavorableEndpoint(a.DB))).Methods("PUT")
+	r.Handle("/likable", Protected(LikableEndpoint(a.DB))).Methods("PUT")
 
-	r.HandleFunc("/chips", endpoints.PublishChipEndpoint(a.DB)).Methods("POST")
+	r.HandleFunc("/favorites", ListFavoritesEndpoint(a.DB)).Methods("GET")
 
-	r.HandleFunc("/chips", endpoints.ListChipsEndpoint(a.DB)).Methods("GET")
-	r.HandleFunc("/help_requests", endpoints.ListHelpRequestEndpoint(a.DB)).Methods("GET")
-	r.HandleFunc("/buy_requests", endpoints.ListBuyRequestEndpoint(a.DB)).Methods("GET")
+	r.Handle("/chips", Protected(PublishChipEndpoint(a.DB))).Methods("POST")
+	r.HandleFunc("/chips", ListChipsEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/help_requests", ListHelpRequestEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/buy_requests", ListBuyRequestEndpoint(a.DB)).Methods("GET")
 
-	r.HandleFunc("/chips/{id:[0-9]+}", endpoints.GetChipEndpoint(a.DB)).Methods("GET")
-	r.HandleFunc("/help_requests/{id:[0-9]+}", endpoints.GetHelpRequestEndpoint(a.DB)).Methods("GET")
-	r.HandleFunc("/buy_requests/{id:[0-9]+}", endpoints.GetBuyRequestEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/chips/{id:[0-9]+}", GetChipEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/help_requests/{id:[0-9]+}", GetHelpRequestEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/buy_requests/{id:[0-9]+}", GetBuyRequestEndpoint(a.DB)).Methods("GET")
 
-	r.HandleFunc("/invitations", endpoints.ListInvitationsEndpoint(a.DB)).Methods("GET")
+	// helpers
+	r.HandleFunc("/users", ListUsersEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/invitations", ListInvitationsEndpoint(a.DB)).Methods("GET")
+
+	r.HandleFunc("/news/{id:[0-9]+}/comments", ListNewsCommentsEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/buy_requests/{id:[0-9]+}/comments", ListBuyRequestCommentEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/help_requests/{id:[0-9]+}/comments", ListHelpRequestCommentEndpoint(a.DB)).Methods("GET")
+
+	// deprecated in favor of /favorable
+	r.HandleFunc("/favorites", PubishFavoriteEndpoint(a.DB)).Methods("POST")
+	r.HandleFunc("/favorites/{id:[0-9]+}", DestroyFavoriteEndpoint(a.DB)).Methods("DELETE")
+
 }
+
+// Just a wrapper
+func Protected(h http.HandlerFunc) http.Handler {
+	return negroni.New(
+		negroni.HandlerFunc(jmw.HandlerWithNext),
+		negroni.Wrap(http.HandlerFunc(h)),
+	)
+}
+
+// type dbHandler func(db *sql.DB) http.HandlerFunc

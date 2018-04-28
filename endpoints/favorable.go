@@ -14,13 +14,18 @@ import (
 	"github.com/dfang/yuanxin/util"
 )
 
-// 收藏
+// 收藏和取消收藏
+func FavorableEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("NOT IMPLEMENTED"))
+	})
+}
+
+// 收藏, 未使用
 func PubishFavoriteEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		CheckRequiredParameters(r, "user_id", "favorable_type", "favorable_id")
 		var item model.Favorite
-
 		if err := util.SchemaDecoder.Decode(&item, r.PostForm); err != nil {
 			PanicIfNotNil(err)
 		}
@@ -40,7 +45,7 @@ func PubishFavoriteEndpoint(db *sql.DB) http.HandlerFunc {
 	})
 }
 
-// 取消收藏
+// 取消收藏, 未使用
 func DestroyFavoriteEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 

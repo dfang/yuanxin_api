@@ -56,12 +56,10 @@ func Chain(f http.Handler, middlewares ...Middleware) http.Handler {
 	return f
 }
 
-func SuggestionEndpoint(db *sql.DB) http.Handler {
+func SuggestionEndpoint(db *sql.DB) http.HandlerFunc {
 	// return appHandler
 	// return Chain(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 	// }), Logging(), Auth())
-
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		CheckRequiredParameters(r, "user_id", "content")
