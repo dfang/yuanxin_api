@@ -94,3 +94,12 @@ func (p PayLoadFrom) New(status int, msg string) PayLoadFrom {
 		Message:    msg,
 	}
 }
+
+// func GetCurrentUser(r *http.Request) string {
+// 	claims := r.Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)
+// 	// var user
+// 	if u, ok := claims["user"].(string); !ok {
+// 		panic("got error when decode user from jwt token ")
+// 	}
+// 	return u
+// }

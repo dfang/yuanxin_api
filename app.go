@@ -31,7 +31,7 @@ type App struct {
 
 var jmw = jwtmiddleware.New(jwtmiddleware.Options{
 	ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-		return []byte("My Secret"), nil
+		return []byte(os.Getenv("JWT_SECRET")), nil
 	},
 	// When set, the middleware verifies that tokens are signed with the specific signing algorithm
 	// If the signing method is not constant the ValidationKeyGetter callback can be used to implement additional checks

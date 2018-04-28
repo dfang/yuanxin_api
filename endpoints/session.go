@@ -2,8 +2,8 @@ package endpoints
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -16,6 +16,7 @@ func SessionEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		CheckRequiredParameters(r, "phone", "password")
+		// TODO:  Validate phone format
 
 		phone := r.PostFormValue("phone")
 		password := r.PostFormValue("password")
@@ -28,14 +29,13 @@ func SessionEndpoint(db *sql.DB) http.HandlerFunc {
 
 		if user != nil {
 			token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-				"user":      user.ID,
-				"timestamp": time.Now(),
+				"uid":        user.ID,
+				"last_login": time.Now(),
 			})
 
 			// Sign and get the complete encoded token as a string using the secret
-			tokenString, err := token.SignedString([]byte("My Secret"))
+			tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 			if err != nil {
-				fmt.Println(err)
 				panic("jwt sign token failed")
 			}
 
