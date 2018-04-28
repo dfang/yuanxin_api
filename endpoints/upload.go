@@ -7,17 +7,35 @@ import (
 	"net/http"
 
 	"github.com/dfang/yuanxin/util"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 func UploadEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// w.Write([]byte("not implemented"))
+		// user := context.Get(r, "user")
 
-		fmt.Println("method:", r.Method) //获取请求的方法
+		// user := r.Context().Value("user")
+		// fmt.Fprintf(w, "This is an authenticated request\n")
+		// fmt.Fprintf(w, "Claim content:\n")
+		// for k, v := range user.(*jwt.Token).Claims.(jwt.MapClaims) {
+		// 	fmt.Fprintf(w, "%s :\t%#v\n", k, v)
+		// }
+		// user := r.Context().Value("user")
+
+		claims := r.Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)
+		// user.(*jwt.Token)
+		fmt.Println(claims["user"])
+
+		// for k, v := range context.GetAll(r) {
+		// 	fmt.Fprintf(w, "%s :\t%#v\n", k, v)
+		// }
+
+		// fmt.Println("method:", r.Method) //获取请求的方法
 		file, _, err := r.FormFile("file")
 		if err != nil {
-			fmt.Println(err)
-			return
+			panic(err)
+			// fmt.Println(err)
+			// return
 		}
 		defer file.Close()
 
