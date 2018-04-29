@@ -171,3 +171,24 @@ func GetFavoriteBy(db *sql.DB, favorable_type string, favorable_id int64, user_i
 
 	return &item, nil
 }
+
+func GetLikeBy(db *sql.DB, comment_id int64, user_id int64) (*Like, error) {
+
+	var err error
+
+	// sql query
+	sqlstr := fmt.Sprintf("SELECT * FROM news.likes where  comment_id = '%d' AND user_id = '%d' ", comment_id, user_id)
+
+	// run query
+	XOLog(sqlstr, comment_id, user_id)
+	item := Like{
+		_exists: true,
+	}
+
+	err = db.QueryRow(sqlstr).Scan(&item.ID, &item.UserID, &item.CommentID, &item.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	return &item, nil
+}

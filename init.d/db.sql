@@ -124,5 +124,10 @@ CREATE table comments (
 CREATE table likes (
     id int PRIMARY KEY AUTO_INCREMENT,
     user_id int,
-    comment_id int
+    comment_id int,
+    created_at datetime
 )
+
+-- CREATE TRIGGER sum_likes AFTER INSERT ON likes(
+  
+-- )
