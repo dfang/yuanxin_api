@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"golang.org/x/crypto/bcrypt"
 
 	. "github.com/dfang/yuanxin/model"
 	. "github.com/dfang/yuanxin/util"
@@ -15,19 +16,29 @@ import (
 func SessionEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		CheckRequiredParameters(r, "phone", "password")
+		CheckRequiredParameters(r, "password")
 		// TODO:  Validate phone format
 
 		phone := r.PostFormValue("phone")
+		email := r.PostFormValue("email")
 		password := r.PostFormValue("password")
 
-		user, err := SignInUser(db, phone, password)
+		// user, err := SignInUser(db, phone, hashedPassword)
+		user, err := UserByPhoneOrEmail(db, phone, email)
 		if err != nil || user == nil {
-			RespondWithJSON(w, http.StatusOK, PayLoadFrom{StatusCode: 205, Message: "手机号码或密码错误"})
+			RespondWithJSON(w, http.StatusOK, PayLoadFrom{StatusCode: 205, Message: "手机号或密码错误"})
 			return
 		}
 
 		if user != nil {
+			err := bcrypt.CompareHashAndPassword([]byte(user.Pwd), []byte(password))
+			if err != nil {
+				RespondWithJSON(w, http.StatusOK, PayLoadFrom{StatusCode: 205, Message: "手机号或密码错误"})
+				return
+			}
+
+			// TODO: Touch login_date after successful login
+
 			token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 				"uid":        user.ID,
 				"last_login": time.Now(),

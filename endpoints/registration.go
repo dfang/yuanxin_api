@@ -3,7 +3,10 @@ package endpoints
 import (
 	"database/sql"
 	"errors"
+	"log"
 	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/dfang/yuanxin/model"
 	"github.com/dfang/yuanxin/util"
@@ -34,6 +37,7 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
+		user.Pwd = hashAndSalt([]byte(user.Pwd))
 		err := user.RegisterUser(db)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, err.Error()})
@@ -87,4 +91,12 @@ func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
 			Data:       user,
 		})
 	})
+}
+
+func hashAndSalt(pwd []byte) string {
+	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
+	if err != nil {
+		log.Println(err)
+	}
+	return string(hash)
 }

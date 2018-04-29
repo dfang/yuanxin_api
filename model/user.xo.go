@@ -13,7 +13,7 @@ import (
 type User struct {
 	ID                int         `json:"id"`                                               // id
 	Nickname          null.String `json:"nickname"`                                         // nickname
-	Pwd               null.String `json:"-" schema:"password"`                              // pwd
+	Pwd               string      `json:"-" schema:"password"`                              // pwd
 	Phone             null.String `json:"phone"`                                            // phone
 	Email             null.String `json:"email"`                                            // email
 	Avatar            null.String `json:"avatar"`                                           // avatar

@@ -19,7 +19,7 @@ CREATE TABLE news_items(
 CREATE TABLE users(
     id int PRIMARY KEY AUTO_INCREMENT,
     nickname varchar(255),  
-    pwd varchar(56),  
+    pwd varchar(255),
     phone varchar(11), 
     email varchar(128), 
     avatar varchar(255), 

@@ -43,29 +43,6 @@ func (u *User) RegisterUser(db XODB) error {
 	return nil
 }
 
-// 登录
-func SignInUser(db XODB, phone, pwd string) (*User, error) {
-	var err error
-
-	// sql query
-	const sqlstr = `SELECT ` +
-		`id, nickname, pwd, phone, email, avatar, gender, created_at, login_date ` +
-		`FROM news.users ` +
-		`WHERE phone = ? AND pwd = ?`
-
-	// run query
-	XOLog(sqlstr, phone, pwd)
-	u := User{}
-
-	err = db.QueryRow(sqlstr, phone, pwd).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Avatar, &u.Gender, &u.CreatedAt, &u.LoginDate)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	return &u, nil
-}
-
 func UserByEmail(db XODB, email string) (*User, error) {
 	var err error
 
@@ -105,6 +82,29 @@ func UserByPhone(db XODB, phone string) (*User, error) {
 	}
 
 	err = db.QueryRow(sqlstr, phone).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Biography, &u.Avatar, &u.Gender, &u.CreatedAt, &u.LoginDate)
+	if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
+}
+
+func UserByPhoneOrEmail(db XODB, phone, email string) (*User, error) {
+	var err error
+
+	// sql query
+	const sqlstr = `SELECT ` +
+		`id, nickname, pwd, phone, email, biography, avatar, gender, created_at, login_date ` +
+		`FROM news.users ` +
+		`WHERE phone = ? OR email = ?`
+
+	// run query
+	XOLog(sqlstr, phone, email)
+	u := User{
+		_exists: true,
+	}
+
+	err = db.QueryRow(sqlstr, phone, email).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Biography, &u.Avatar, &u.Gender, &u.CreatedAt, &u.LoginDate)
 	if err != nil {
 		return nil, err
 	}
