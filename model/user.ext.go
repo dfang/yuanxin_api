@@ -177,12 +177,12 @@ func (u *User) ApplyExpert(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE news.users SET ` +
-		`real_name = ?, identity_card_num = ?, identity_card_front = ?, identity_card_back = ?, expertise = ?, resume = ?` +
+		`real_name = ?, identity_card_num = ?, identity_card_front = ?, identity_card_back = ?, expertise = ?, resume = ?, from_code = ?` +
 		` WHERE id = ?`
 
 	// run query
-	XOLog(sqlstr, u.RealName.String, u.IdentityCardNum.String, u.IdentityCardFront.String, u.IdentityCardBack.String, u.Expertise.String, u.Resume.String, u.ID)
-	_, err = db.Exec(sqlstr, u.RealName.String, u.IdentityCardNum.String, u.IdentityCardFront.String, u.IdentityCardBack.String, u.Expertise.String, u.Resume.String, u.ID)
+	XOLog(sqlstr, u.RealName.String, u.IdentityCardNum.String, u.IdentityCardFront.String, u.IdentityCardBack.String, u.Expertise.String, u.Resume.String, x.FromCode.String u.ID)
+	_, err = db.Exec(sqlstr, u.RealName.String, u.IdentityCardNum.String, u.IdentityCardFront.String, u.IdentityCardBack.String, u.Expertise.String, u.Resume.String, x.FromCode.String, u.ID)
 	return err
 }
 
