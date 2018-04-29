@@ -126,7 +126,7 @@ func (a *App) initializeRoutes(jwtmiddleware *jwtmiddleware.JWTMiddleware) {
 	r.Handle("/apply/expert", Protected(ApplyExpertEndpoint(a.DB))).Methods("POST")
 
 	r.Handle("/help_requests", Protected(PublishHelpRequestEndpoint(a.DB))).Methods("POST")
-	r.Handle("/buy_requests", Protected(PublishHelpRequestEndpoint(a.DB))).Methods(http.MethodPost)
+	r.Handle("/buy_requests", Protected(PublishBuyRequestEndpoint(a.DB))).Methods(http.MethodPost)
 
 	r.Handle("/comments", Protected(PublishCommentEndpoint(a.DB))).Methods("POST")
 
