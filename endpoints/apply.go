@@ -45,7 +45,7 @@ func ApplySellerEndpoint(db *sql.DB) http.HandlerFunc {
 func ApplyExpertEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		CheckRequiredParameters(r, "real_name", "identity_card_num", "identity_card_front", "identity_card_back", "expertise", "resume")
+		CheckRequiredParameters(r, "real_name", "identity_card_num", "identity_card_front", "identity_card_back", "expertise", "resume", "from_code")
 
 		userID := GetUIDFromContext(r)
 		user, err := model.UserByID(db, userID)
