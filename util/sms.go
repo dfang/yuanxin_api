@@ -43,7 +43,7 @@ func (config SMSData) Send(phone, code string) (*string, error) {
 	params["password"] = config.Password
 	params["report"] = config.Report
 	params["phone"] = phone
-	params["msg"] = sms_captcha_template(code)
+	params["msg"] = smsCaptchaTemplate(code)
 
 	fmt.Println(params)
 
@@ -88,7 +88,7 @@ func RangeIn(low, hi int) int {
 	return low + rand.Intn(hi-low)
 }
 
-func sms_captcha_template(code string) string {
+func smsCaptchaTemplate(code string) string {
 	msg := fmt.Sprintf("【源芯】尊敬的用户：您的校验码：%s，工作人员不会索取，请勿泄漏。", code)
 	return url.QueryEscape(msg)
 }

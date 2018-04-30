@@ -24,6 +24,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// App Main App
 type App struct {
 	Router *mux.Router
 	DB     *sql.DB
@@ -39,6 +40,7 @@ var jmw = jwtmiddleware.New(jwtmiddleware.Options{
 	SigningMethod: jwt.SigningMethodHS256,
 })
 
+// Initialize intialize database, routes
 func (a *App) Initialize(user, password, host, dbName string) {
 	// why parseTime=true
 	// error: "sql: Scan error on column index 7: null: cannot scan type []uint8 into null.Time: [50 48 49 56 45 48 52 45 49 52 32 49 51 58 52 56 58 48 52]"
@@ -65,6 +67,7 @@ func (a *App) Initialize(user, password, host, dbName string) {
 	a.initializeRoutes(jmw)
 }
 
+// Run run http server
 func (a App) Run(addr string) {
 	// http.ListenAndServe(addr, handlers.LoggingHandler(os.Stdout, a.Router))
 
@@ -156,12 +159,12 @@ func (a *App) initializeRoutes(jwtmiddleware *jwtmiddleware.JWTMiddleware) {
 	r.HandleFunc("/help_requests/{id:[0-9]+}/comments", ListHelpRequestCommentEndpoint(a.DB)).Methods("GET")
 
 	// deprecated in favor of /favorable
-	r.HandleFunc("/favorites", PubishFavoriteEndpoint(a.DB)).Methods("POST")
-	r.HandleFunc("/favorites/{id:[0-9]+}", DestroyFavoriteEndpoint(a.DB)).Methods("DELETE")
+	// r.HandleFunc("/favorites", PubishFavoriteEndpoint(a.DB)).Methods("POST")
+	// r.HandleFunc("/favorites/{id:[0-9]+}", DestroyFavoriteEndpoint(a.DB)).Methods("DELETE")
 
 }
 
-// Just a wrapper
+// Protected  Just a authentication wrapper
 func Protected(h http.HandlerFunc) http.Handler {
 	return negroni.New(
 		negroni.HandlerFunc(jmw.HandlerWithNext),

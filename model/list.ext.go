@@ -93,8 +93,8 @@ type CommentResult struct {
 	Avatar          null.String `json:"avatar"`
 }
 
-func GetComments(db *sql.DB, start, count int, commentable_type string, commentable_id int) ([]CommentResult, error) {
-	statement := fmt.Sprintf("SELECT comments.*, users.nickname, users.avatar FROM news.comments LEFT JOIN users ON users.id = comments.user_id where commentable_type = '%s' AND commentable_id = '%d' LIMIT %d, %d", commentable_type, commentable_id, start, count)
+func GetComments(db *sql.DB, start, count int, commentableType string, commentableID int) ([]CommentResult, error) {
+	statement := fmt.Sprintf("SELECT comments.*, users.nickname, users.avatar FROM news.comments LEFT JOIN users ON users.id = comments.user_id where commentable_type = '%s' AND commentable_id = '%d' LIMIT %d, %d", commentableType, commentableID, start, count)
 	log.Println(statement)
 
 	rows, err := db.Query(statement)
@@ -122,8 +122,8 @@ func GetComments(db *sql.DB, start, count int, commentable_type string, commenta
 	return items, nil
 }
 
-func GetFavorites(db *sql.DB, start, count int, favorable_type string, favorable_id int) ([]Favorite, error) {
-	statement := fmt.Sprintf("SELECT * FROM news.favorites where favorable_type = '%s' AND favorable_id = '%d' LIMIT %d, %d", favorable_type, favorable_id, start, count)
+func GetFavorites(db *sql.DB, start, count int, favorableType string, favorableID int) ([]Favorite, error) {
+	statement := fmt.Sprintf("SELECT * FROM news.favorites where favorable_type = '%s' AND favorable_id = '%d' LIMIT %d, %d", favorableType, favorableID, start, count)
 	log.Println(statement)
 
 	rows, err := db.Query(statement)
@@ -147,7 +147,7 @@ func GetFavorites(db *sql.DB, start, count int, favorable_type string, favorable
 	return items, nil
 }
 
-func GetFavoriteBy(db *sql.DB, favorable_type string, favorable_id int64, user_id int64) (*Favorite, error) {
+func GetFavoriteBy(db *sql.DB, favorableType string, favorableID int64, userID int64) (*Favorite, error) {
 
 	var err error
 
@@ -156,10 +156,10 @@ func GetFavoriteBy(db *sql.DB, favorable_type string, favorable_id int64, user_i
 	// 	`id, user_id, favorable_type, favorable_id, created_at ` +
 	// 	`FROM news.favorites ` +
 	// 	`WHERE id = ?`
-	sqlstr := fmt.Sprintf("SELECT * FROM news.favorites where favorable_type = '%s' AND favorable_id = '%d' AND user_id = '%d' ", favorable_type, favorable_id, user_id)
+	sqlstr := fmt.Sprintf("SELECT * FROM news.favorites where favorable_type = '%s' AND favorable_id = '%d' AND user_id = '%d' ", favorableType, favorableID, user_id)
 
 	// run query
-	XOLog(sqlstr, favorable_type, favorable_id, user_id)
+	XOLog(sqlstr, favorableType, favorableID, userID)
 	item := Favorite{
 		_exists: true,
 	}
@@ -172,15 +172,15 @@ func GetFavoriteBy(db *sql.DB, favorable_type string, favorable_id int64, user_i
 	return &item, nil
 }
 
-func GetLikeBy(db *sql.DB, comment_id int64, user_id int64) (*Like, error) {
+func GetLikeBy(db *sql.DB, commentID int64, userID int64) (*Like, error) {
 
 	var err error
 
 	// sql query
-	sqlstr := fmt.Sprintf("SELECT * FROM news.likes where  comment_id = '%d' AND user_id = '%d' ", comment_id, user_id)
+	sqlstr := fmt.Sprintf("SELECT * FROM news.likes where  comment_id = '%d' AND user_id = '%d' ", commentID, userID)
 
 	// run query
-	XOLog(sqlstr, comment_id, user_id)
+	XOLog(sqlstr, commentID, userID)
 	item := Like{
 		_exists: true,
 	}

@@ -5,13 +5,13 @@ import (
 	"net/http"
 )
 
-func RespondWithError(w http.ResponseWriter, http_status_code int, status_code int, message string) {
+func RespondWithError(w http.ResponseWriter, httpStatusCode int, statusCode int, message string) {
 	// RespondWithJSON(w, code, map[string]string{"error": message})
-	RespondWithJSON(w, http_status_code, struct {
+	RespondWithJSON(w, httpStatusCode, struct {
 		StatusCode int    `json:"status_code"`
 		Message    string `json:"msg"`
 	}{
-		StatusCode: status_code,
+		StatusCode: statusCode,
 		Message:    message,
 	})
 }

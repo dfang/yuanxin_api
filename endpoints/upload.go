@@ -58,17 +58,17 @@ func UploadEndpoint(db *sql.DB) http.HandlerFunc {
 		// }
 		// defer f.Close()
 		// io.Copy(f, file)
-		baseUrl := "http://p7ft1yl0b.bkt.clouddn.com/"
-		// w.Write([]byte(baseUrl + hash))
+		baseURL := "http://p7ft1yl0b.bkt.clouddn.com/"
+		// w.Write([]byte(baseURL + hash))
 
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode int    `json:"status_code"`
 			Message    string `json:"msg"`
-			Url        string `json:"url"`
+			URL        string `json:"url"`
 		}{
 			StatusCode: 200,
 			Message:    "上传成功",
-			Url:        baseUrl + hash,
+			URL:        baseURL + hash,
 		})
 		return
 	})

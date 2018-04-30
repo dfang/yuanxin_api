@@ -56,6 +56,7 @@ func Chain(f http.Handler, middlewares ...Middleware) http.Handler {
 	return f
 }
 
+// SuggestionEndpoint 投诉建议
 func SuggestionEndpoint(db *sql.DB) http.HandlerFunc {
 	// return appHandler
 	// return Chain(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -64,9 +65,9 @@ func SuggestionEndpoint(db *sql.DB) http.HandlerFunc {
 
 		CheckRequiredParameters(r, "user_id", "content")
 
-		user_id := ParseParameterToInt(r, "user_id")
+		userID := ParseParameterToInt(r, "user_id")
 		suggestion := model.Suggestion{
-			UserID:  null.IntFrom(int64(user_id)),
+			UserID:  null.IntFrom(int64(userID)),
 			Content: null.StringFrom(r.PostFormValue("content")),
 		}
 

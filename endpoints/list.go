@@ -26,7 +26,7 @@ func ListHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 			start = 0
 		}
 
-		help_requests, err := model.GetHelpRequests(db, start, count)
+		helpRequests, err := model.GetHelpRequests(db, start, count)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{http.StatusInternalServerError, err.Error()})
 			return
@@ -39,7 +39,7 @@ func ListHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 		}{
 			StatusCode: 200,
 			Message:    "查询成功",
-			Data:       help_requests,
+			Data:       helpRequests,
 		})
 	})
 }
@@ -60,7 +60,7 @@ func ListBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 			start = 0
 		}
 
-		buy_requests, err := model.GetBuyRequests(db, start, count)
+		buyRequests, err := model.GetBuyRequests(db, start, count)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{http.StatusInternalServerError, err.Error()})
 			return
@@ -73,7 +73,7 @@ func ListBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 		}{
 			StatusCode: 200,
 			Message:    "查询成功",
-			Data:       buy_requests,
+			Data:       buyRequests,
 		})
 	})
 }
@@ -188,8 +188,8 @@ func ListCommentsEndpoint(db *sql.DB) http.HandlerFunc {
 
 		count, _ := strconv.Atoi(qs.Get("count"))
 		start, _ := strconv.Atoi(qs.Get("start"))
-		commentable_id, _ := strconv.Atoi(qs.Get("commentable_id"))
-		commentable_type := qs.Get("commentable_type")
+		commentableID, _ := strconv.Atoi(qs.Get("commentable_id"))
+		commentableType := qs.Get("commentable_type")
 
 		// CheckRequiredParameters(r, "commentable_type", "commentable_id")
 
@@ -201,7 +201,7 @@ func ListCommentsEndpoint(db *sql.DB) http.HandlerFunc {
 			start = 0
 		}
 
-		comments, err := model.GetComments(db, start, count, commentable_type, commentable_id)
+		comments, err := model.GetComments(db, start, count, commentableType, commentableID)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
 			return
@@ -243,8 +243,8 @@ func ListFavoritesEndpoint(db *sql.DB) http.HandlerFunc {
 
 		count, _ := strconv.Atoi(qs.Get("count"))
 		start, _ := strconv.Atoi(qs.Get("start"))
-		favorable_id, _ := strconv.Atoi(qs.Get("favorable_id"))
-		favorable_type := qs.Get("favorable_type")
+		favorableID, _ := strconv.Atoi(qs.Get("favorable_id"))
+		favorableType := qs.Get("favorable_type")
 
 		if count < 1 {
 			count = 10
@@ -254,7 +254,7 @@ func ListFavoritesEndpoint(db *sql.DB) http.HandlerFunc {
 			start = 0
 		}
 
-		favorites, err := model.GetFavorites(db, start, count, favorable_type, favorable_id)
+		favorites, err := model.GetFavorites(db, start, count, favorableType, favorableID)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
 			return

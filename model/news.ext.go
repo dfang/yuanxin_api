@@ -49,11 +49,11 @@ func (item *NewsItem) GetNewsItem(db *sql.DB) error {
 }
 
 func (item *NewsItem) InsertNewsItem(db *sql.DB) (sql.Result, error) {
-	insertSql := "INSERT INTO news.news_items (title, description, image, body, type, source, link, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+	insertSQL := "INSERT INTO news.news_items (title, description, image, body, type, source, link, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 
-	selectSql := "select count(*) from news.news_items where title = ?"
+	selectSQL := "select count(*) from news.news_items where title = ?"
 	var count int
-	err := db.QueryRow(selectSql, item.Title).Scan(&count)
+	err := db.QueryRow(selectSQL, item.Title).Scan(&count)
 
 	switch {
 	case err == sql.ErrNoRows:
@@ -64,7 +64,7 @@ func (item *NewsItem) InsertNewsItem(db *sql.DB) (sql.Result, error) {
 		return nil, err
 	default:
 		if count == 0 {
-			return db.Exec(insertSql, item.Title, item.Description, item.Image, item.Body, item.Type, item.Source, item.Link, time.Now())
+			return db.Exec(insertSQL, item.Title, item.Description, item.Image, item.Body, item.Type, item.Source, item.Link, time.Now())
 		}
 		return nil, err
 	}

@@ -42,18 +42,17 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, err.Error()})
 			return
-		} else {
-			util.RespondWithJSON(w, http.StatusOK, struct {
-				StatusCode int        `json:"status_code"`
-				Message    string     `json:"msg"`
-				Data       model.User `json:"data"`
-			}{
-				StatusCode: 200,
-				Message:    "注册成功",
-				Data:       user,
-			})
-			return
 		}
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int        `json:"status_code"`
+			Message    string     `json:"msg"`
+			Data       model.User `json:"data"`
+		}{
+			StatusCode: 200,
+			Message:    "注册成功",
+			Data:       user,
+		})
+		return
 	})
 }
 
@@ -62,9 +61,9 @@ func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		CheckRequiredParameter(r, "user_id")
-		user_id := ParseParameterToInt(r, "user_id")
+		useID := ParseParameterToInt(r, "user_id")
 
-		user, err := model.UserByID(db, user_id)
+		user, err := model.UserByID(db, useID)
 		PanicIfNotNil(err)
 
 		if user == nil {

@@ -70,14 +70,14 @@ func PublishChipEndpoint(db *sql.DB) http.HandlerFunc {
 		CheckRequiredParameters(r, "user_id", "serial_number", "vendor", "amount", "manufacture_date", "unit_price")
 		var chip model.Chip
 
-		manufacture_date := r.PostForm.Get("manufacture_date")
+		manufactureDate := r.PostForm.Get("manufacture_date")
 		r.PostForm.Del("manufacture_date")
 		if err := util.SchemaDecoder.Decode(&chip, r.PostForm); err != nil {
 			PanicIfNotNil(err)
 		}
 
 		// 临时hack
-		t, err := time.Parse("2006-01", manufacture_date)
+		t, err := time.Parse("2006-01", manufactureDate)
 		if err != nil {
 			panic("manufacture_date 不合法")
 		}

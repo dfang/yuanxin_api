@@ -10,13 +10,13 @@ import (
 	null "gopkg.in/guregu/null.v3"
 )
 
-// 申请成为卖家
+// ApplySellerEndpoint 申请成为卖家
 func ApplySellerEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		CheckRequiredParameters(r, "user_id", "real_name", "identity_card_num", "identity_card_front", "identity_card_back", "from_code")
-		user_id := ParseParameterToInt(r, "user_id")
+		userID := ParseParameterToInt(r, "user_id")
 
-		user, err := model.UserByID(db, user_id)
+		user, err := model.UserByID(db, userID)
 		PanicIfNotNil(err)
 		if user == nil {
 			panic(&RecordNotFound{
@@ -42,15 +42,15 @@ func ApplySellerEndpoint(db *sql.DB) http.HandlerFunc {
 	})
 }
 
-// 申请成为专家
+// ApplyExpertEndpoint 申请成为专家
 func ApplyExpertEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		CheckRequiredParameters(r, "user_id", "real_name", "identity_card_num", "identity_card_front", "identity_card_back", "expertise", "resume")
 
-		user_id := ParseParameterToInt(r, "user_id")
+		userID := ParseParameterToInt(r, "user_id")
 
-		user, err := model.UserByID(db, user_id)
+		user, err := model.UserByID(db, userID)
 		PanicIfNotNil(err)
 		if user == nil {
 			panic(&RecordNotFound{

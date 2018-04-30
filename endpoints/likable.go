@@ -52,24 +52,24 @@ func LikableEndpoint(db *sql.DB) http.HandlerFunc {
 				},
 			})
 			return
-		} else {
-			err = like.Delete(db)
-			PanicIfNotNil(err)
-			util.RespondWithJSON(w, http.StatusOK, struct {
-				StatusCode int        `json:"status_code"`
-				Message    string     `json:"msg"`
-				Like       LikeResult `json:"like"`
-			}{
-				StatusCode: 200,
-				Message:    "取消赞成功",
-				Like: LikeResult{
-					CommentID:  item.CommentID,
-					UserID:     item.UserID,
-					CreatedAt:  item.CreatedAt,
-					LikesCount: 0,
-				},
-			})
-			return
 		}
+
+		err = like.Delete(db)
+		PanicIfNotNil(err)
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int        `json:"status_code"`
+			Message    string     `json:"msg"`
+			Like       LikeResult `json:"like"`
+		}{
+			StatusCode: 200,
+			Message:    "取消赞成功",
+			Like: LikeResult{
+				CommentID:  item.CommentID,
+				UserID:     item.UserID,
+				CreatedAt:  item.CreatedAt,
+				LikesCount: 0,
+			},
+		})
+		return
 	})
 }

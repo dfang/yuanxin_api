@@ -10,7 +10,7 @@ import (
 	"github.com/guregu/null"
 )
 
-type ChipDetailResult struct {
+type chipDetailResult struct {
 	ID              int         `json:"id"`               // id
 	UserID          null.Int    `json:"user_id"`          // user_id
 	SerialNumber    null.String `json:"serial_number"`    // serial_number
@@ -24,7 +24,7 @@ type ChipDetailResult struct {
 	IsLiked         null.Bool   `json:"is_liked"`
 }
 
-type HelpRequestDetailResult struct {
+type helpRequestDetailResult struct {
 	ID        int         `json:"id"`         // id
 	UserID    null.Int    `json:"user_id"`    // user_id
 	Title     null.String `json:"title"`      // title
@@ -36,7 +36,7 @@ type HelpRequestDetailResult struct {
 	IsLiked   null.Bool   `json:"is_liked"`
 }
 
-type BuyRequestDetailResult struct {
+type buyRequestDetailResult struct {
 	ID        int         `json:"id"`         // id
 	UserID    null.Int    `json:"user_id" `   // user_id
 	Title     null.String `json:"title"`      // title
@@ -48,6 +48,7 @@ type BuyRequestDetailResult struct {
 	IsLiked   null.Bool   `json:"is_liked"`
 }
 
+// GetChipEndpoint Get chip detail
 func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -58,7 +59,7 @@ func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			panic("convertion error")
 		}
-		var result ChipDetailResult
+		var result chipDetailResult
 		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.SerialNumber, &result.Vendor, &result.Amount, &result.ManufactureDate, &result.UnitPrice, &result.IsVerified, &result.NickName, &result.Avatar)
 		PanicIfNotNil(err)
 
@@ -67,7 +68,7 @@ func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode int              `json:"status_code"`
 			Message    string           `json:"msg"`
-			Data       ChipDetailResult `json:"data"`
+			Data       chipDetailResult `json:"data"`
 		}{
 			StatusCode: 200,
 			Message:    "查询成功",
@@ -77,6 +78,7 @@ func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 	})
 }
 
+// GetHelpRequestEndpoint Get help_request detail
 func GetHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -87,7 +89,7 @@ func GetHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			panic("convertion error")
 		}
-		var result HelpRequestDetailResult
+		var result helpRequestDetailResult
 
 		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.Title, &result.Content, &result.Amount, &result.CreatedAt, &result.NickName, &result.Avatar)
 		PanicIfNotNil(err)
@@ -97,7 +99,7 @@ func GetHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode int                     `json:"status_code"`
 			Message    string                  `json:"msg"`
-			Data       HelpRequestDetailResult `json:"data"`
+			Data       helpRequestDetailResult `json:"data"`
 		}{
 			StatusCode: 200,
 			Message:    "查询成功",
@@ -106,6 +108,7 @@ func GetHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 	})
 }
 
+// GetBuyRequestEndpoint Get buy_request detail
 func GetBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -116,7 +119,7 @@ func GetBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			panic("convertion error")
 		}
-		var result BuyRequestDetailResult
+		var result buyRequestDetailResult
 
 		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.Title, &result.Content, &result.Amount, &result.CreatedAt, &result.NickName, &result.Avatar)
 		PanicIfNotNil(err)
@@ -126,7 +129,7 @@ func GetBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode int                    `json:"status_code"`
 			Message    string                 `json:"msg"`
-			Data       BuyRequestDetailResult `json:"data"`
+			Data       buyRequestDetailResult `json:"data"`
 		}{
 			StatusCode: 200,
 			Message:    "查询成功",
