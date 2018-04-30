@@ -128,12 +128,12 @@ func (u *User) UpdateRegistrationInfo(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE news.users SET ` +
-		`nickname = ?, phone = ?, avatar = ?, gender = ?` +
+		`nickname = ?, phone = ?, avatar = ?, gender = ?, biography = ?` +
 		` WHERE id = ?`
 
 	// run query
-	XOLog(sqlstr, u.Nickname, u.Phone, u.Avatar, u.Gender, u.ID)
-	_, err = db.Exec(sqlstr, u.Nickname, u.Phone, u.Avatar, u.Gender, u.ID)
+	XOLog(sqlstr, u.Nickname, u.Phone, u.Avatar, u.Gender, u.Biography, u.ID)
+	_, err = db.Exec(sqlstr, u.Nickname, u.Phone, u.Avatar, u.Gender, u.Biography, u.ID)
 	return err
 }
 

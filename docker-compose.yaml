@@ -36,3 +36,15 @@ services:
     ports:
       - 9090:9090
 
+
+  elasticsearch:
+    image: elasticsearch
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  kibana:
+    image: kibana
+    ports:
+      - 5601:5601
+

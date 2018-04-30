@@ -38,7 +38,6 @@ func SessionEndpoint(db *sql.DB) http.HandlerFunc {
 			}
 
 			// TODO: Touch login_date after successful login
-
 			token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 				"uid":        user.ID,
 				"last_login": time.Now(),

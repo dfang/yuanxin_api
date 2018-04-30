@@ -61,7 +61,6 @@ func PublishBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, "发布成功"})
-
 	})
 }
 
@@ -115,6 +114,14 @@ func PublishCommentEndpoint(db *sql.DB) http.HandlerFunc {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{220, err.Error()})
 			return
 		}
-		util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, "发布成功"})
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int           `json:"status_code"`
+			Message    string        `json:"msg"`
+			Data       model.Comment `json:"data"`
+		}{
+			StatusCode: 200,
+			Message:    "评论成功",
+			Data:       comment,
+		})
 	})
 }
