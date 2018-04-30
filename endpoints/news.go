@@ -2,6 +2,7 @@ package endpoints
 
 import (
 	"database/sql"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -54,8 +55,10 @@ func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		item := model.NewsItem{ID: id}
-		if err := item.GetNewsItem(db); err != nil {
+		// item := model.NewsItem{ID: id}
+		// if err := item.GetNewsItem(db); err != nil {
+		if ni, err := model.NewsItemByID(db, id); err != nil {
+			log.Println(ni)
 			switch err {
 			case sql.ErrNoRows:
 				// util.RespondWithJSON(w, http.StatusNotFound, "NewsItem not found")
@@ -72,16 +75,18 @@ func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 				util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
 			}
 			return
+		} else {
+
+			util.RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode int             `json:"status_code"`
+				Message    string          `json:"msg"`
+				Data       *model.NewsItem `json:"data"`
+			}{
+				StatusCode: 200,
+				Message:    "查询成功",
+				Data:       ni,
+			})
 		}
 
-		util.RespondWithJSON(w, http.StatusOK, struct {
-			StatusCode int            `json:"status_code"`
-			Message    string         `json:"msg"`
-			Data       model.NewsItem `json:"data"`
-		}{
-			StatusCode: 200,
-			Message:    "查询成功",
-			Data:       item,
-		})
 	})
 }
