@@ -13,7 +13,7 @@ import (
 // ApplySellerEndpoint 申请成为卖家
 func ApplySellerEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		CheckRequiredParameters(r, "real_name", "identity_card_num", "identity_card_front", "identity_card_back", "from_code")
+		CheckRequiredParameters(r, "real_name", "identity_card_num", "identity_card_front", "identity_card_back")
 
 		userID := GetUIDFromContext(r)
 		user, err := model.UserByID(db, userID)
