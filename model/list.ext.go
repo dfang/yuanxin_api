@@ -156,7 +156,7 @@ func GetFavoriteBy(db *sql.DB, favorableType string, favorableID int64, userID i
 	// 	`id, user_id, favorable_type, favorable_id, created_at ` +
 	// 	`FROM news.favorites ` +
 	// 	`WHERE id = ?`
-	sqlstr := fmt.Sprintf("SELECT * FROM news.favorites where favorable_type = '%s' AND favorable_id = '%d' AND user_id = '%d' ", favorableType, favorableID, user_id)
+	sqlstr := fmt.Sprintf("SELECT * FROM news.favorites where favorable_type = '%s' AND favorable_id = '%d' AND user_id = '%d' ", favorableType, favorableID, userID)
 
 	// run query
 	XOLog(sqlstr, favorableType, favorableID, userID)

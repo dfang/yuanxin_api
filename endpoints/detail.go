@@ -51,9 +51,7 @@ type buyRequestDetailResult struct {
 // GetChipEndpoint Get chip detail
 func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		sqlstr := "SELECT chips.*, users.nickname, users.avatar FROM chips JOIN users on users.id = chips.user_id where chips.id = ?;"
-
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
