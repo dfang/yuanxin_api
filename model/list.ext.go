@@ -192,3 +192,51 @@ func GetLikeBy(db *sql.DB, commentID int64, userID int64) (*Like, error) {
 
 	return &item, nil
 }
+
+// SearchChips  芯片详情页面
+func SearchChips(db *sql.DB, q string, start, count int) ([]Chip, error) {
+	statement := fmt.Sprintf("select * from chips where serial_number like '%%%s%%' LIMIT %d, %d", q, start, count)
+	XOLog(statement)
+
+	rows, err := db.Query(statement)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	chips := []Chip{}
+
+	for rows.Next() {
+		var chip Chip
+		if err := rows.Scan(&chip.ID, &chip.UserID, &chip.SerialNumber, &chip.Vendor, &chip.Amount, &chip.ManufactureDate, &chip.UnitPrice, &chip.IsVerified); err != nil {
+			return nil, err
+		}
+		chips = append(chips, chip)
+	}
+
+	return chips, nil
+}
+
+// SearchChipsInBuyRequests 芯片详情页面
+func SearchChipsInBuyRequests(db *sql.DB, q string, start, count int) ([]BuyRequest, error) {
+	statement := fmt.Sprintf("select * from news.buy_requests where title like '%%%s%%' OR content like '%%%s%%' LIMIT %d, %d", q, q, start, count)
+	XOLog(statement)
+
+	rows, err := db.Query(statement)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	brs := []BuyRequest{}
+
+	for rows.Next() {
+		var br BuyRequest
+		if err := rows.Scan(&br.ID, &br.UserID, &br.Title, &br.Content, &br.Amount, &br.CreatedAt); err != nil {
+			return nil, err
+		}
+		brs = append(brs, br)
+	}
+	return brs, nil
+}
