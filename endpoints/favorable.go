@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/gorilla/mux"
 	null "gopkg.in/guregu/null.v3"
@@ -27,7 +26,7 @@ func FavorableEndpoint(db *sql.DB) http.HandlerFunc {
 
 		favorite, err := model.GetFavoriteBy(db, item.FavorableType.String, item.FavorableID.Int64, item.UserID.Int64)
 		if favorite == nil || err != nil {
-			item.CreatedAt = null.TimeFrom(time.Now())
+			item.CreatedAt = null.TimeFrom(utcTimeWithNanos())
 			err := item.Insert(db)
 			PanicIfNotNil(err)
 			util.RespondWithJSON(w, http.StatusOK, struct {
@@ -58,8 +57,7 @@ func PubishFavoriteEndpoint(db *sql.DB) http.HandlerFunc {
 		if err := util.SchemaDecoder.Decode(&item, r.PostForm); err != nil {
 			PanicIfNotNil(err)
 		}
-		item.CreatedAt = null.TimeFrom(time.Now())
-
+		item.CreatedAt = null.TimeFrom(utcTimeWithNanos())
 		favorite, err := model.GetFavoriteBy(db, item.FavorableType.String, item.FavorableID.Int64, item.UserID.Int64)
 		// PanicIfNotNil(err)
 		if favorite == nil || err != nil {

@@ -3,7 +3,6 @@ package endpoints
 import (
 	"database/sql"
 	"net/http"
-	"time"
 
 	null "gopkg.in/guregu/null.v3"
 
@@ -35,7 +34,7 @@ func LikableEndpoint(db *sql.DB) http.HandlerFunc {
 
 		like, err := model.GetLikeBy(db, item.CommentID.Int64, item.UserID.Int64)
 		if like == nil || err != nil {
-			item.CreatedAt = null.TimeFrom(time.Now())
+			item.CreatedAt = null.TimeFrom(utcTimeWithNanos())
 			err := item.Insert(db)
 			PanicIfNotNil(err)
 			util.RespondWithJSON(w, http.StatusOK, struct {
