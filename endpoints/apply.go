@@ -13,9 +13,9 @@ import (
 // ApplySellerEndpoint 申请成为卖家
 func ApplySellerEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		CheckRequiredParameters(r, "user_id", "real_name", "identity_card_num", "identity_card_front", "identity_card_back", "from_code")
-		userID := ParseParameterToInt(r, "user_id")
+		CheckRequiredParameters(r, "real_name", "identity_card_num", "identity_card_front", "identity_card_back", "from_code")
 
+		userID := GetUIDFromContext(r)
 		user, err := model.UserByID(db, userID)
 		PanicIfNotNil(err)
 		if user == nil {
@@ -24,7 +24,6 @@ func ApplySellerEndpoint(db *sql.DB) http.HandlerFunc {
 			})
 		}
 
-		r.PostForm.Del("user_id")
 		if err = util.SchemaDecoder.Decode(user, r.PostForm); err != nil {
 			PanicIfNotNil(err)
 		}
@@ -46,10 +45,9 @@ func ApplySellerEndpoint(db *sql.DB) http.HandlerFunc {
 func ApplyExpertEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		CheckRequiredParameters(r, "user_id", "real_name", "identity_card_num", "identity_card_front", "identity_card_back", "expertise", "resume")
+		CheckRequiredParameters(r, "real_name", "identity_card_num", "identity_card_front", "identity_card_back", "expertise", "resume")
 
-		userID := ParseParameterToInt(r, "user_id")
-
+		userID := GetUIDFromContext(r)
 		user, err := model.UserByID(db, userID)
 		PanicIfNotNil(err)
 		if user == nil {
@@ -58,18 +56,13 @@ func ApplyExpertEndpoint(db *sql.DB) http.HandlerFunc {
 			})
 		}
 
-		// user.RealName = null.StringFrom(r.PostFormValue("real_name"))
-		// user.IdentityCardNum = null.StringFrom(r.PostFormValue("identity_card_num"))
-		// user.IdentityCardFront = null.StringFrom(r.PostFormValue("identity_card_front"))
-		// user.IdentityCardBack = null.StringFrom(r.PostFormValue("identity_card_back"))
-		// user.Expertise = null.StringFrom(r.PostFormValue("expertise"))
-		// user.Resume = null.StringFrom(r.PostFormValue("resume"))
-		r.PostForm.Del("user_id")
 		if err = util.SchemaDecoder.Decode(user, r.PostForm); err != nil {
 			PanicIfNotNil(err)
 		}
 
+		// TODO
 		user.IsVerified = null.BoolFrom(true)
+		// TODO
 		user.Role = null.IntFrom(1)
 
 		err = user.ApplyExpert(db)

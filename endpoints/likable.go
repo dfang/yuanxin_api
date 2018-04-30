@@ -26,7 +26,7 @@ func LikableEndpoint(db *sql.DB) http.HandlerFunc {
 		// user := r.Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)
 		// fmt.Println(user.Valid())
 		// fmt.Fprintf(w, "%v", user)
-		CheckRequiredParameters(r, "user_id", "comment_id")
+		CheckRequiredParameters(r, "comment_id")
 		var item model.Like
 		if err := util.SchemaDecoder.Decode(&item, r.PostForm); err != nil {
 			PanicIfNotNil(err)
@@ -34,7 +34,10 @@ func LikableEndpoint(db *sql.DB) http.HandlerFunc {
 
 		like, err := model.GetLikeBy(db, item.CommentID.Int64, item.UserID.Int64)
 		if like == nil || err != nil {
+			userID := GetUIDFromContext(r)
+			item.UserID = null.IntFrom(int64(userID))
 			item.CreatedAt = null.TimeFrom(utcTimeWithNanos())
+
 			err := item.Insert(db)
 			PanicIfNotNil(err)
 			util.RespondWithJSON(w, http.StatusOK, struct {

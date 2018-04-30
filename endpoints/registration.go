@@ -12,7 +12,7 @@ import (
 	"github.com/dfang/yuanxin/util"
 )
 
-// 注册
+// RegistrationEndpoint 注册
 func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		CheckRequiredParameters(r, "nickname", "phone", "email", "password")
@@ -56,14 +56,11 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 	})
 }
 
-// 更改个人信息
+// UpdateRegistrationInfo 更改个人信息
 func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		CheckRequiredParameter(r, "user_id")
-		useID := ParseParameterToInt(r, "user_id")
-
-		user, err := model.UserByID(db, useID)
+		userID := GetUIDFromContext(r)
+		user, err := model.UserByID(db, int(userID))
 		PanicIfNotNil(err)
 
 		if user == nil {
@@ -72,7 +69,6 @@ func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
 			})
 		}
 
-		r.PostForm.Del("user_id")
 		if err = util.SchemaDecoder.Decode(user, r.PostForm); err != nil {
 			PanicIfNotNil(err)
 		}

@@ -18,7 +18,7 @@ func FavorableEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// w.Write([]byte("NOT IMPLEMENTED"))
 
-		CheckRequiredParameters(r, "user_id", "favorable_type", "favorable_id")
+		CheckRequiredParameters(r, "favorable_type", "favorable_id")
 		var item model.Favorite
 		if err := util.SchemaDecoder.Decode(&item, r.PostForm); err != nil {
 			PanicIfNotNil(err)
@@ -26,6 +26,8 @@ func FavorableEndpoint(db *sql.DB) http.HandlerFunc {
 
 		favorite, err := model.GetFavoriteBy(db, item.FavorableType.String, item.FavorableID.Int64, item.UserID.Int64)
 		if favorite == nil || err != nil {
+			userID := GetUIDFromContext(r)
+			item.UserID = null.IntFrom(int64(userID))
 			item.CreatedAt = null.TimeFrom(utcTimeWithNanos())
 			err := item.Insert(db)
 			PanicIfNotNil(err)
@@ -51,11 +53,13 @@ func FavorableEndpoint(db *sql.DB) http.HandlerFunc {
 // 收藏, 未使用
 func PubishFavoriteEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		CheckRequiredParameters(r, "user_id", "favorable_type", "favorable_id")
+		CheckRequiredParameters(r, "favorable_type", "favorable_id")
 		var item model.Favorite
 		if err := util.SchemaDecoder.Decode(&item, r.PostForm); err != nil {
 			PanicIfNotNil(err)
 		}
+		userID := GetUIDFromContext(r)
+		item.UserID = null.IntFrom(int64(userID))
 		item.CreatedAt = null.TimeFrom(utcTimeWithNanos())
 		favorite, err := model.GetFavoriteBy(db, item.FavorableType.String, item.FavorableID.Int64, item.UserID.Int64)
 		// PanicIfNotNil(err)

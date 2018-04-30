@@ -63,9 +63,9 @@ func SuggestionEndpoint(db *sql.DB) http.HandlerFunc {
 	// }), Logging(), Auth())
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		CheckRequiredParameters(r, "user_id", "content")
+		CheckRequiredParameters(r, "content")
 
-		userID := ParseParameterToInt(r, "user_id")
+		userID := GetUIDFromContext(r)
 		suggestion := model.Suggestion{
 			UserID:  null.IntFrom(int64(userID)),
 			Content: null.StringFrom(r.PostFormValue("content")),

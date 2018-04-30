@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 // type Adapter func(http.Handler) http.Handler
@@ -106,11 +108,10 @@ func (p PayLoadFrom) New(status int, msg string) PayLoadFrom {
 	}
 }
 
-// func GetCurrentUser(r *http.Request) string {
-// 	claims := r.Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)
-// 	// var user
-// 	if u, ok := claims["user"].(string); !ok {
-// 		panic("got error when decode user from jwt token ")
-// 	}
-// 	return u
-// }
+// GetUIDFromContext get uid from decoded jwt in context(set by jwt middleware)
+func GetUIDFromContext(r *http.Request) int {
+	claims := r.Context().Value("user").(*jwt.Token).Claims.(jwt.MapClaims)
+	var u float64
+	u = claims["uid"].(float64)
+	return int(u)
+}
