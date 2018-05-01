@@ -122,7 +122,7 @@ func (a *App) initializeRoutes(jwtmiddleware *jwtmiddleware.JWTMiddleware) {
 	r.Handle("/passwords", Protected(PasswordEndpoint(a.DB))).Methods("PUT")
 
 	r.Handle("/upload", Protected(UploadEndpoint(a.DB))).Methods("POST")
-	r.Handle("/registrations", Protected(UpdateRegistrationInfo(a.DB))).Methods("PUT")
+	r.Handle("/registrations", UpdateRegistrationInfo(a.DB)).Methods("PUT")
 	r.Handle("/suggestions", Protected(SuggestionEndpoint(a.DB))).Methods("POST")
 
 	r.Handle("/apply/seller", Protected(ApplySellerEndpoint(a.DB))).Methods("POST")
