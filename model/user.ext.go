@@ -137,6 +137,20 @@ func (u *User) UpdateRegistrationInfo(db XODB) error {
 	return err
 }
 
+// UpdatePassword reset password
+func (u *User) UpdatePassword(db XODB) error {
+	var err error
+	// sql query
+	const sqlstr = `UPDATE news.users SET ` +
+		` pwd= ?` +
+		` WHERE id = ?`
+
+	// run query
+	XOLog(sqlstr, u.Pwd, u.ID)
+	_, err = db.Exec(sqlstr, u.Pwd, u.ID)
+	return err
+}
+
 // 申请成为卖家
 func (u *User) ApplySeller(db XODB) error {
 	var err error
