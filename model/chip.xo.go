@@ -18,6 +18,7 @@ type Chip struct {
 	Amount          null.Int    `json:"amount"`                                     // amount
 	ManufactureDate null.Time   `json:"manufacture_date" schema:"manufacture_date"` // manufacture_date
 	UnitPrice       null.Float  `json:"unit_price" schema:"unit_price"`             // unit_price
+	Specification   null.String `json:"specification"`                              //specification
 	IsVerified      null.Bool   `json:"is_verified" schema:"unit_price"`            // is_verified
 	// xo fields
 	_exists, _deleted bool
@@ -44,14 +45,14 @@ func (c *Chip) Insert(db XODB) error {
 
 	// sql insert query, primary key provided by autoincrement
 	const sqlstr = `INSERT INTO news.chips (` +
-		`user_id, serial_number, vendor, amount, manufacture_date, unit_price, is_verified` +
+		`user_id, serial_number, vendor, amount, manufacture_date, unit_price, specification, is_verified` +
 		`) VALUES (` +
-		`?, ?, ?, ?, ?, ?, ?` +
+		`?, ?, ?, ?, ?, ?, ?, ?` +
 		`)`
 
 	// run query
-	XOLog(sqlstr, c.UserID, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.IsVerified)
-	res, err := db.Exec(sqlstr, c.UserID, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.IsVerified)
+	XOLog(sqlstr, c.UserID, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.Specification, c.IsVerified)
+	res, err := db.Exec(sqlstr, c.UserID, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.Specification, c.IsVerified)
 	if err != nil {
 		return err
 	}
@@ -85,12 +86,12 @@ func (c *Chip) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE news.chips SET ` +
-		`user_id = ?, serial_number = ?, vendor = ?, amount = ?, manufacture_date = ?, unit_price = ?` +
+		`user_id = ?, serial_number = ?, vendor = ?, amount = ?, manufacture_date = ?, unit_price = ?, specification = ?` +
 		` WHERE id = ?`
 
 	// run query
-	XOLog(sqlstr, c.UserID, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.ID)
-	_, err = db.Exec(sqlstr, c.UserID, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.ID)
+	XOLog(sqlstr, c.UserID, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.Specification, c.ID)
+	_, err = db.Exec(sqlstr, c.UserID, c.SerialNumber, c.Vendor, c.Amount, c.ManufactureDate, c.UnitPrice, c.Specification, c.ID)
 	return err
 }
 
@@ -141,7 +142,7 @@ func ChipByID(db XODB, id int) (*Chip, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`id, user_id, serial_number, vendor, amount, manufacture_date, unit_price ` +
+		`id, user_id, serial_number, vendor, amount, manufacture_date, unit_price, specification, is_verified ` +
 		`FROM news.chips ` +
 		`WHERE id = ?`
 
@@ -151,7 +152,7 @@ func ChipByID(db XODB, id int) (*Chip, error) {
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, id).Scan(&c.ID, &c.UserID, &c.SerialNumber, &c.Vendor, &c.Amount, &c.ManufactureDate, &c.UnitPrice, &c.IsVerified)
+	err = db.QueryRow(sqlstr, id).Scan(&c.ID, &c.UserID, &c.SerialNumber, &c.Vendor, &c.Amount, &c.ManufactureDate, &c.UnitPrice, &c.Specification, &c.IsVerified)
 	if err != nil {
 		return nil, err
 	}
