@@ -27,6 +27,10 @@ func LikableEndpoint(db *sql.DB) http.HandlerFunc {
 		// fmt.Println(user.Valid())
 		// fmt.Fprintf(w, "%v", user)
 		CheckRequiredParameters(r, "comment_id")
+
+		err := r.ParseForm()
+		PanicIfNotNil(err)
+
 		var item model.Like
 		if err := util.SchemaDecoder.Decode(&item, r.PostForm); err != nil {
 			PanicIfNotNil(err)

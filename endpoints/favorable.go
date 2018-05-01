@@ -19,6 +19,9 @@ func FavorableEndpoint(db *sql.DB) http.HandlerFunc {
 		// w.Write([]byte("NOT IMPLEMENTED"))
 
 		CheckRequiredParameters(r, "favorable_type", "favorable_id")
+		err := r.ParseForm()
+		PanicIfNotNil(err)
+
 		var item model.Favorite
 		if err := util.SchemaDecoder.Decode(&item, r.PostForm); err != nil {
 			PanicIfNotNil(err)
@@ -54,6 +57,10 @@ func FavorableEndpoint(db *sql.DB) http.HandlerFunc {
 func PubishFavoriteEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		CheckRequiredParameters(r, "favorable_type", "favorable_id")
+
+		err := r.ParseForm()
+		PanicIfNotNil(err)
+
 		var item model.Favorite
 		if err := util.SchemaDecoder.Decode(&item, r.PostForm); err != nil {
 			PanicIfNotNil(err)

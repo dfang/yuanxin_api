@@ -18,6 +18,8 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 		CheckRequiredParameters(r, "nickname", "phone", "email", "password")
 		// TODO Validate Email
 		// TODO Validate Phone
+		err := r.ParseForm()
+		PanicIfNotNil(err)
 
 		var user model.User
 		// use gorilla scheme to decode form values to user, that's called data binding in rails/asp.net mvc
@@ -38,7 +40,7 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 		}
 
 		user.Pwd = hashAndSalt([]byte(user.Pwd))
-		err := user.RegisterUser(db)
+		err = user.RegisterUser(db)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, err.Error()})
 			return
@@ -59,6 +61,11 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 // UpdateRegistrationInfo 更改个人信息
 func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		CheckRequiredParameters(r, "nickname", "phone", "gender", "avatar", "biography")
+
+		err := r.ParseForm()
+		PanicIfNotNil(err)
+
 		userID := GetUIDFromContext(r)
 		user, err := model.UserByID(db, int(userID))
 		PanicIfNotNil(err)

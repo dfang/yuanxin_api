@@ -14,8 +14,10 @@ import (
 // 发布求助
 func PublishHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		CheckRequiredParameters(r, "title", "content", "amount")
+
+		err := r.ParseForm()
+		PanicIfNotNil(err)
 
 		var hr model.HelpRequest
 		userID := GetUIDFromContext(r)
@@ -27,7 +29,7 @@ func PublishHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 		hr.UserID = null.IntFrom(int64(userID))
 		hr.CreatedAt = null.TimeFrom(utcTimeWithNanos())
 
-		err := hr.Insert(db)
+		err = hr.Insert(db)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{220, err.Error()})
 			return
@@ -41,8 +43,11 @@ func PublishHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 // 发布求购
 func PublishBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		CheckRequiredParameters(r, "title", "content", "amount")
+
+		err := r.ParseForm()
+		PanicIfNotNil(err)
+
 		var br model.BuyRequest
 		userID := GetUIDFromContext(r)
 
@@ -52,7 +57,7 @@ func PublishBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 
 		br.UserID = null.IntFrom(int64(userID))
 		br.CreatedAt = null.TimeFrom(utcTimeWithNanos())
-		err := br.Insert(db)
+		err = br.Insert(db)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{220, err.Error()})
 			return
@@ -64,8 +69,11 @@ func PublishBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 // 发布芯片
 func PublishChipEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		CheckRequiredParameters(r, "serial_number", "vendor", "amount", "manufacture_date", "unit_price")
+
+		err := r.ParseForm()
+		PanicIfNotNil(err)
+
 		var chip model.Chip
 
 		manufactureDate := r.PostForm.Get("manufacture_date")
@@ -96,8 +104,10 @@ func PublishChipEndpoint(db *sql.DB) http.HandlerFunc {
 // 发布评论
 func PublishCommentEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		CheckRequiredParameters(r, "commentable_type", "commentable_id", "content")
+		err := r.ParseForm()
+		PanicIfNotNil(err)
+
 		var comment model.Comment
 
 		if err := util.SchemaDecoder.Decode(&comment, r.PostForm); err != nil {
@@ -110,7 +120,7 @@ func PublishCommentEndpoint(db *sql.DB) http.HandlerFunc {
 		comment.Likes = null.IntFrom(0)
 		comment.IsPicked = null.BoolFrom(false)
 
-		err := comment.Insert(db)
+		err = comment.Insert(db)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{220, err.Error()})
 			return
