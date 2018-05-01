@@ -8,7 +8,10 @@ install:
 	go get .
 
 test:
-	go test .
+	go test ./...
+
+vet:
+	go vet ./...
 
 build: install
 	go build -ldflags "-X main.version=$(TAG)" -o news .
@@ -32,6 +35,7 @@ pack:
 	docker tag dfang/yuanxin:$(TAG) dfang/yuanxin:latest
 
 upload:
+	git push
 	docker push dfang/yuanxin:$(TAG)
 	docker push dfang/yuanxin:latest
 
