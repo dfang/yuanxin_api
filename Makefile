@@ -47,8 +47,9 @@ make pull:
 	make pull_image
 
 deploy:
-	envsubst < k8s/deployment.yml | kubectl apply -f -
+	# envsubst < k8s/deployment.yml | kubectl apply -f -
+	ssh root@39.108.66.107 "cd /root/yuanxin_api; make pull; docker-compose up -d"
 
 
-ship: test pack upload clean
+ship: test pack upload clean deploy
 
