@@ -242,7 +242,7 @@ func SearchChipsInBuyRequests(db *sql.DB, q string, start, count int) ([]BuyRequ
 }
 
 func ChipsByUserID(db *sql.DB, userID, start, count int) ([]Chip, error) {
-	statement := fmt.Sprintf("SELECT id, user_id, serial_number, vendor, amount, manufacture_date, unit_price, is_verified FROM chips  WHERE user_id = %d ORDER BY manufacture_date DESC LIMIT %d, %d", userID, start, count)
+	statement := fmt.Sprintf("SELECT id, user_id, serial_number, vendor, amount, manufacture_date, unit_price, specification, is_verified FROM chips WHERE user_id = %d ORDER BY manufacture_date DESC LIMIT %d, %d", userID, start, count)
 	XOLog(statement)
 
 	rows, err := db.Query(statement)
