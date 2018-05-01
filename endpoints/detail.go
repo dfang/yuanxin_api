@@ -19,6 +19,7 @@ type chipDetailResult struct {
 	Amount          null.Int           `json:"amount"`           // amount
 	ManufactureDate null.Time          `json:"manufacture_date"` // manufacture_date
 	UnitPrice       null.Float         `json:"unit_price"`       // unit_price
+	Specification   null.String        `json:"specification"`    // specification
 	IsVerified      null.Bool          `json:"is_verified"`      // is_verified
 	NickName        null.String        `json:"nickname"`
 	Avatar          null.String        `json:"avatar"`
@@ -61,7 +62,7 @@ func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 			panic("convertion error")
 		}
 		var result chipDetailResult
-		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.SerialNumber, &result.Vendor, &result.Amount, &result.ManufactureDate, &result.UnitPrice, &result.IsVerified, &result.NickName, &result.Avatar)
+		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.SerialNumber, &result.Vendor, &result.Amount, &result.ManufactureDate, &result.UnitPrice, &result.Specification, &result.IsVerified, &result.NickName, &result.Avatar)
 		PanicIfNotNil(err)
 
 		// TODO need to query db
