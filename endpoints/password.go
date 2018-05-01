@@ -18,6 +18,7 @@ func PasswordEndpoint(db *sql.DB) http.HandlerFunc {
 
 		u2, _ := model.UserByPhone(db, r.PostFormValue("phone"))
 		if u2 != nil && u2.ID == userID {
+			// TODO: // 此处校验了手机号, 还需校验验证码
 			// update password
 			u2.Pwd = hashAndSalt([]byte(r.PostFormValue("password")))
 			err := u2.UpdatePassword(db)
