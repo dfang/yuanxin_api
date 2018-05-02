@@ -61,7 +61,8 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 // UpdateRegistrationInfo 更改个人信息
 func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		CheckRequiredParameters(r, "nickname", "phone", "gender", "avatar", "biography")
+		CheckRequiredParameters(r, "nickname", "phone", "gender", "avatar")
+		// TODO: validate phone
 
 		err := r.ParseForm()
 		PanicIfNotNil(err)
