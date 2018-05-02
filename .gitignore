@@ -4,3 +4,4 @@ yuanxin
 .DS_Store
 .idea
 .env.local
+db/
