@@ -46,8 +46,15 @@ func (a *App) Initialize(user, password, host, dbName string) {
 	// error: "sql: Scan error on column index 7: null: cannot scan type []uint8 into null.Time: [50 48 49 56 45 48 52 45 49 52 32 49 51 58 52 56 58 48 52]"
 	// https://github.com/xo/xo/issues/19
 	connectionString := fmt.Sprintf("%s:%s@%s/%s?parseTime=true", user, password, host, dbName)
+	fmt.Printf("connectionString is %s\n", connectionString)
+
 	var err error
 	a.DB, err = sql.Open("mysql", connectionString)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = a.DB.Ping()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -172,5 +179,3 @@ func Protected(h http.HandlerFunc) http.Handler {
 		negroni.Wrap(http.HandlerFunc(h)),
 	)
 }
-
-// type dbHandler func(db *sql.DB) http.HandlerFunc
