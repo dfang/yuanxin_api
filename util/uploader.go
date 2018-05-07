@@ -59,6 +59,6 @@ func UploadFile(data []byte) (string, error) {
 }
 
 func genFilename() string {
-	u1 := uuid.Must(uuid.NewV4())
+	u1 := uuid.NewV4()
 	return u1.String()
 }
