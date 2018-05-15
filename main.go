@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/dfang/yuanxin/model"
+	"github.com/dfang/yuanxin_api/model"
 	_ "github.com/jpfuentes2/go-env/autoload"
 	"github.com/robfig/cron"
 )

@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/dfang/yuanxin/util"
+	"github.com/dfang/yuanxin_api/util"
 	jwt "github.com/dgrijalva/jwt-go"
 )
 

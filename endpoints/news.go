@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/dfang/yuanxin/model"
-	"github.com/dfang/yuanxin/util"
+	"github.com/dfang/yuanxin_api/model"
+	"github.com/dfang/yuanxin_api/util"
 	"github.com/gorilla/mux"
 )
 

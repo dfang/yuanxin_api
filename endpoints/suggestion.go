@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/dfang/yuanxin/model"
-	"github.com/dfang/yuanxin/util"
+	"github.com/dfang/yuanxin_api/model"
+	"github.com/dfang/yuanxin_api/util"
 	null "gopkg.in/guregu/null.v3"
 )
 

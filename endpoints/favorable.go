@@ -9,8 +9,8 @@ import (
 	"github.com/gorilla/mux"
 	null "gopkg.in/guregu/null.v3"
 
-	"github.com/dfang/yuanxin/model"
-	"github.com/dfang/yuanxin/util"
+	"github.com/dfang/yuanxin_api/model"
+	"github.com/dfang/yuanxin_api/util"
 )
 
 // FavorableEndpoint 收藏和取消收藏

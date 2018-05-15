@@ -43,7 +43,7 @@ schema:
     - .realize
     - vendor
 - name: util
-  path: /Users/mj/go/src/github.com/dfang/yuanxin/util
+  path: /Users/mj/go/src/github.com/dfang/yuanxin_api/util
   commands: 
     vet:
       status: true
@@ -63,7 +63,7 @@ schema:
     - .realize
     - vendor
 - name: model
-  path: /Users/mj/go/src/github.com/dfang/yuanxin/model/
+  path: /Users/mj/go/src/github.com/dfang/yuanxin_api/model/
   commands: 
     vet:
       status: true

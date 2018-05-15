@@ -7,8 +7,8 @@ import (
 
 	"gopkg.in/guregu/null.v3"
 
-	"github.com/dfang/yuanxin/model"
-	"github.com/dfang/yuanxin/util"
+	"github.com/dfang/yuanxin_api/model"
+	"github.com/dfang/yuanxin_api/util"
 )
 
 func SendSMSEndpoint(db *sql.DB) http.HandlerFunc {

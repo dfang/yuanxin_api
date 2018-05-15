@@ -8,8 +8,8 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/dfang/yuanxin/model"
-	"github.com/dfang/yuanxin/util"
+	"github.com/dfang/yuanxin_api/model"
+	"github.com/dfang/yuanxin_api/util"
 )
 
 // RegistrationEndpoint 注册

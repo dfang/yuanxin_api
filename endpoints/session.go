@@ -9,8 +9,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 
-	. "github.com/dfang/yuanxin/model"
-	. "github.com/dfang/yuanxin/util"
+	. "github.com/dfang/yuanxin_api/model"
+	. "github.com/dfang/yuanxin_api/util"
 )
 
 func SessionEndpoint(db *sql.DB) http.HandlerFunc {
