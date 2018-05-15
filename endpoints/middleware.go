@@ -3,7 +3,7 @@ package endpoints
 import (
 	"net/http"
 
-	"github.com/dfang/yuanxin/util"
+	"github.com/dfang/yuanxin_api/util"
 )
 
 // recovery middleware, compitable with negroni

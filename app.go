@@ -17,8 +17,8 @@ import (
 	"github.com/urfave/negroni"
 	"github.com/zbindenren/negroni-prometheus"
 
-	. "github.com/dfang/yuanxin/endpoints"
-	"github.com/dfang/yuanxin/model"
+	"github.com/dfang/yuanxin_api/model"
+	. "github.com/dfang/yuanxin_api/endpoints"
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/gorilla/mux"
