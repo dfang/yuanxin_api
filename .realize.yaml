@@ -2,78 +2,10 @@ settings:
   legacy:
     force: false
     interval: 0s
-server:
-  status: false
-  open: false
-  port: 5002
-  host: localhost
 schema:
-- name: yuanxin
-  path: /Users/mj/go/src/github.com/dfang/yuanxin
-  commands:
-    clean:
-      status: true
-    vet:
-      status: true
-    fmt:
-      args:
-      - -s
-      - -w
-      status: true
-    test:
-      status: true
-    generate:
-      status: true
-    install:
-      status: true
-    build:
-      args:
-      - -o news
-      status: true
-    run:
-      status: true
-  watcher:
-    extensions:
-    - go
-    paths:
-    - ./
-    ignored_paths:
-    - .idea
-    - .git
-    - .realize
-    - vendor
-- name: util
-  path: /Users/mj/go/src/github.com/dfang/yuanxin_api/util
-  commands: 
-    vet:
-      status: true
-    fmt:
-      status: true
-    test:
-      status: true
-    clean:
-      status: true
-  watcher:
-    extensions:
-    - go
-    paths:
-    - ./
-    ignored_paths:
-    - .git
-    - .realize
-    - vendor
-- name: model
-  path: /Users/mj/go/src/github.com/dfang/yuanxin_api/model/
-  commands: 
-    vet:
-      status: true
-    fmt:
-      args:
-      - -s
-      - -w
-      status: true
-    test:
-      status: true
+- name: yuanxin_api
+  path: .
+  commands: {}
   watcher:
     extensions:
     - go

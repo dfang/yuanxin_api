@@ -59,8 +59,7 @@ CREATE TABLE suggestions(
 );
 
 INSERT INTO invitations (invitation_code, has_activated) VALUES ('111111', false) RETURNING id;
-
-INSERT INTO invitations(invitation_code, has_activated) VALUES('222222', true) RETURNING id;
+INSERT INTO invitations (invitation_code, has_activated) VALUES ('222222', true) RETURNING id;
 
 -- 求助
 CREATE TABLE help_requests(
