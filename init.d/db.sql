@@ -36,7 +36,9 @@ CREATE TABLE users(
     expertise varchar(256), -- 专家擅长领域, 必填？
     resume varchar(512), -- 专家简历, 必填?
     role int, -- 普通用户1，卖家2，专家3
-    is_verified boolean -- 审核通过
+    is_verified boolean, -- 审核通过
+    easemob_id varchar(100), -- 环信用户名
+    easemob_pwd varchar(100) -- 环信密码
 );
 
 CREATE TABLE  authentications(

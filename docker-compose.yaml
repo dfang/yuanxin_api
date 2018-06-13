@@ -30,7 +30,7 @@ services:
     restart: on-failure
     environment:
       APP_DB_USER: root
-      APP_DB_PASSWORD: 
+      APP_DB_PASSWORD:
       APP_DB_HOST: tcp(db:3306)
       APP_DB_NAME: news
     links:
@@ -44,26 +44,28 @@ services:
     restart: on-failure
     environment:
       RAILS_MASTER_KEY: 609ced37432b8493776e9969bd0dae25
-  
-  # gme:
-  #   image: dfang/go-mysql-elasticsearch
-  #   links:
-  #     - elasticsearch:es
-  #   depends_on:
-  #     - db
-  #     - elasticsearch
-  #   volumes:
-  #     # - ./config/river.toml:/go/src/github.com/siddontang/go-mysql-elasticsearch/river/etc/river.toml
-  #     - ./config/river.toml:/go/etc/river.toml
+      DATABASE_URL: mysql2://root:@db/news
+    ports:
+      - 3000:3000
 
-  # elasticsearch:
-  #   image: elasticsearch
-  #   ports:
-  #     - 9200:9200
-  #     - 9300:9300
+  elasticsearch:
+    image: elasticsearch
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  gme:
+    image: dfang/go-mysql-elasticsearch
+    links:
+      - elasticsearch:es
+    depends_on:
+      - db
+      - elasticsearch
+    volumes:
+      # - ./config/river.toml:/go/src/github.com/siddontang/go-mysql-elasticsearch/river/etc/river.toml
+      - ./config/river.toml:/go/etc/river.toml
 
   # kibana:
   #   image: kibana
   #   ports:
   #     - 5601:5601
-
