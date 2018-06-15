@@ -209,7 +209,7 @@ func SearchChips(db *sql.DB, q string, start, count int) ([]Chip, error) {
 
 	for rows.Next() {
 		var chip Chip
-		if err := rows.Scan(&chip.ID, &chip.UserID, &chip.SerialNumber, &chip.Vendor, &chip.Amount, &chip.ManufactureDate, &chip.UnitPrice, &chip.Specification, &chip.IsVerified); err != nil {
+		if err := rows.Scan(&chip.ID, &chip.UserID, &chip.SerialNumber, &chip.Vendor, &chip.Amount, &chip.ManufactureDate, &chip.UnitPrice, &chip.Specification, &chip.IsVerified, &chip.Version, &chip.Volume); err != nil {
 			return nil, err
 		}
 		chips = append(chips, chip)
@@ -242,7 +242,7 @@ func SearchChipsInBuyRequests(db *sql.DB, q string, start, count int) ([]BuyRequ
 }
 
 func ChipsByUserID(db *sql.DB, userID, start, count int) ([]Chip, error) {
-	statement := fmt.Sprintf("SELECT id, user_id, serial_number, vendor, amount, manufacture_date, unit_price, specification, is_verified FROM chips WHERE user_id = %d ORDER BY manufacture_date DESC LIMIT %d, %d", userID, start, count)
+	statement := fmt.Sprintf("SELECT id, user_id, serial_number, vendor, amount, manufacture_date, unit_price, specification, is_verified, version, volume FROM chips WHERE user_id = %d ORDER BY manufacture_date DESC LIMIT %d, %d", userID, start, count)
 	XOLog(statement)
 
 	rows, err := db.Query(statement)
@@ -256,7 +256,7 @@ func ChipsByUserID(db *sql.DB, userID, start, count int) ([]Chip, error) {
 
 	for rows.Next() {
 		var chip Chip
-		if err := rows.Scan(&chip.ID, &chip.UserID, &chip.SerialNumber, &chip.Vendor, &chip.Amount, &chip.ManufactureDate, &chip.UnitPrice, &chip.Specification, &chip.IsVerified); err != nil {
+		if err := rows.Scan(&chip.ID, &chip.UserID, &chip.SerialNumber, &chip.Vendor, &chip.Amount, &chip.ManufactureDate, &chip.UnitPrice, &chip.Specification, &chip.IsVerified, &chip.Version, &chip.Volume); err != nil {
 			return nil, err
 		}
 		chips = append(chips, chip)

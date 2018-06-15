@@ -99,7 +99,9 @@ CREATE table chips (
     manufacture_date datetime, 
     unit_price float,
     specification varchar(255),
-    is_verified boolean -- 审核通过
+    is_verified boolean, -- 审核通过
+    version varchar(255),
+    volume int
 );
 
 -- 收藏
