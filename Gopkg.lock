@@ -224,6 +224,18 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/smartwalle/ngx"
+  packages = ["."]
+  revision = "d9c16e6f628157f57de772d3caeda7f780e56d45"
+
+[[projects]]
+  name = "github.com/smartwalle/taobao"
+  packages = ["."]
+  revision = "7bd5c91657d4d1ec06163c37e1f10018fa5ccd13"
+  version = "v1"
+
+[[projects]]
+  branch = "master"
   name = "github.com/temoto/robotstxt"
   packages = ["."]
   revision = "9e4646fa705336d5b2fa9dddfafbe0a1a965acd7"
@@ -326,6 +338,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "bd18cc611b5949a3a4f4140c2f4ac7f828ab25838de49a56fa34d21fb0a8da4c"
+  inputs-digest = "e30a9aeb17abcc2cffbe0053e18d98e734d6eb8a0627c7c1981ecbfc589ba0c4"
   solver-name = "gps-cdcl"
   solver-version = 1
