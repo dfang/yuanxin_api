@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
+	null "gopkg.in/guregu/null.v3"
 
 	"github.com/dfang/yuanxin_api/model"
 	"github.com/dfang/yuanxin_api/util"
@@ -40,6 +41,8 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 		}
 
 		user.Pwd = hashAndSalt([]byte(user.Pwd))
+		user.Role = null.IntFrom(1)
+
 		err = user.RegisterUser(db)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, err.Error()})
