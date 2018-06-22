@@ -30,7 +30,7 @@ func ApplySellerEndpoint(db *sql.DB) http.HandlerFunc {
 			PanicIfNotNil(err)
 		}
 
-		user.IsVerified = null.BoolFrom(true)
+		// user.IsVerified = null.BoolFrom(true)
 		user.Role = null.IntFrom(2)
 
 		err = user.ApplySeller(db)
@@ -65,9 +65,9 @@ func ApplyExpertEndpoint(db *sql.DB) http.HandlerFunc {
 		}
 
 		// TODO
-		user.IsVerified = null.BoolFrom(true)
+		// user.IsVerified = null.BoolFrom(true)
 		// TODO
-		user.Role = null.IntFrom(1)
+		user.Role = null.IntFrom(3)
 
 		err = user.ApplyExpert(db)
 		if err != nil {
