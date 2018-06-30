@@ -69,7 +69,7 @@ func PublishBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 // 发布芯片
 func PublishChipEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		CheckRequiredParameters(r, "serial_number", "vendor", "amount", "manufacture_date", "unit_price")
+		CheckRequiredParameters(r, "serial_number", "version", "volume", "amount", "unit_price")
 
 		err := r.ParseForm()
 		PanicIfNotNil(err)
