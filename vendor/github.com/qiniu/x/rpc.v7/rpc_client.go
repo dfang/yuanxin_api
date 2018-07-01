@@ -341,3 +341,4 @@ func getRequestCanceler(tp http.RoundTripper) (rc requestCanceler, ok bool) {
 }
 
 // --------------------------------------------------------------------
+

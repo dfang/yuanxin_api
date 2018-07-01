@@ -22,12 +22,17 @@ func FavorableEndpoint(db *sql.DB) http.HandlerFunc {
 		err := r.ParseForm()
 		PanicIfNotNil(err)
 
+		userID := GetUIDFromContext(r)
+
 		var item model.Favorite
 		if err := util.SchemaDecoder.Decode(&item, r.PostForm); err != nil {
 			PanicIfNotNil(err)
 		}
 
-		favorite, err := model.GetFavoriteBy(db, item.FavorableType.String, item.FavorableID.Int64, item.UserID.Int64)
+		favorite, err := model.GetFavoriteBy(db, item.FavorableType.String, item.FavorableID.Int64, int64(userID))
+		fmt.Println("lallallalal")
+		fmt.Println(favorite)
+
 		if favorite == nil || err != nil {
 			userID := GetUIDFromContext(r)
 			item.UserID = null.IntFrom(int64(userID))

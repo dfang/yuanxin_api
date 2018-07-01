@@ -192,7 +192,7 @@ func main() {
 }
 ```
 If no address is provided, the `PORT` environment variable is used instead.
-If the `PORT` environment variable is not defined, the default address will be used.
+If the `PORT` environment variable is not defined, the default address will be used. 
 See [Run](https://godoc.org/github.com/urfave/negroni#Negroni.Run) for a complete description.
 
 In general, you will want to use `net/http` methods and pass `negroni` as a
@@ -525,7 +525,7 @@ linking your middleware if you have built one:
 [mooseware](https://github.com/xyproto/mooseware), a skeleton for writing a
 Negroni middleware handler.
 
-[Prasanga Siripala](https://github.com/pjebs) created an effective skeleton structure for web-based Go/Negroni projects: [Go-Skeleton](https://github.com/pjebs/go-skeleton)
+[Prasanga Siripala](https://github.com/pjebs) created an effective skeleton structure for web-based Go/Negroni projects: [Go-Skeleton](https://github.com/pjebs/go-skeleton) 
 
 ## Live code reload?
 

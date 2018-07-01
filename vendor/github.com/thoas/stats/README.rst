@@ -118,8 +118,8 @@ HTTPRouter
 If you are using HTTPRouter_ you need to call the middleware with the handler itself:
 
 .. code-block:: go
-
-    package main
+    
+    package main                                                                          
 
     import (
             "encoding/json"
@@ -127,7 +127,7 @@ If you are using HTTPRouter_ you need to call the middleware with the handler it
             "github.com/thoas/stats"
             "net/http"
     )
-
+    
     func main() {
             router := httprouter.New()
             s := stats.New()
@@ -141,8 +141,8 @@ If you are using HTTPRouter_ you need to call the middleware with the handler it
             })
             http.ListenAndServe(":8080", s.Handler(router))
     }
-
-
+    
+    
 Martini
 .......
 

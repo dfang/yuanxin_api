@@ -5,7 +5,7 @@ xmlquery
 [![GoDoc](https://godoc.org/github.com/antchfx/xmlquery?status.svg)](https://godoc.org/github.com/antchfx/xmlquery)
 [![Go Report Card](https://goreportcard.com/badge/github.com/antchfx/xmlquery)](https://goreportcard.com/report/github.com/antchfx/xmlquery)
 
-xmlquery is an XML parser thats builds a read/modified DOM and supports XPath feature to extract data
+xmlquery is an XML parser thats builds a read/modified DOM and supports XPath feature to extract data 
 from XML documents using XPath expression.
 
 Its depend on [xpath](https://github.com/antchfx/xpath) package.
@@ -58,5 +58,5 @@ expr, err := xpath.Compile("sum(//book/price)")
 if err != nil {
 	panic(err)
 }
-fmt.Printf("total price: %f\n", expr.Evaluate(xmlquery.CreateXPathNavigator(doc)).(float64))
+fmt.Printf("total price: %f\n", expr.Evaluate(xmlquery.CreateXPathNavigator(doc)).(float64))	
 ```

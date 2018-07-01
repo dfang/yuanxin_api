@@ -5,7 +5,7 @@ htmlquery
 [![GoDoc](https://godoc.org/github.com/antchfx/htmlquery?status.svg)](https://godoc.org/github.com/antchfx/htmlquery)
 [![Go Report Card](https://goreportcard.com/badge/github.com/antchfx/htmlquery)](https://goreportcard.com/report/github.com/antchfx/htmlquery)
 
-htmlquery, lets you extract data from HTML documents using XPath expression, depend on
+htmlquery, lets you extract data from HTML documents using XPath expression, depend on 
 [html](https://golang.org/x/net/html) and [xpath](https://github.com/antchfx/xpath) packages.
 
 Installation

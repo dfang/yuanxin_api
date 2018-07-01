@@ -5,14 +5,14 @@ fmtdate
 
 100% test coverage (that was easy :-))
 
-`fmtdate` provides a date formatter and parser using the syntax of Microsoft Excel (TM).
+`fmtdate` provides a date formatter and parser using the syntax of Microsoft Excel (TM). 
 
 Additionally it offers default conversions for date time and datetime.
 
 Why?
 ----
 
-Microsoft Excel (TM) has a well known syntax for date formatting, that more
+Microsoft Excel (TM) has a well known syntax for date formatting, that more 
 memorable than the syntax chosen in the time package in the go library.
 
 Usage
@@ -53,19 +53,19 @@ Placeholders
     hh   - hours (15)
 	mm   - minutes (04)
 	ss   - seconds (05)
-
+    
 	AM/PM hours: 'h' followed by optional 'mm' and 'ss' followed by 'pm', e.g.
-
+    
     hpm        - hours (03PM)
     h:mmpm     - hours:minutes (03:04PM)
     h:mm:sspm  - hours:minutes:seconds (03:04:05PM)
-
+    
     Time zones: a time format followed by 'ZZZZ', 'ZZZ' or 'ZZ', e.g.
-
+    
     hh:mm:ss ZZZZ (16:05:06 +0100)
     hh:mm:ss ZZZ  (16:05:06 CET)
 	hh:mm:ss ZZ   (16:05:06 +01:00)
-
+  
 
 Documentation
 -------------

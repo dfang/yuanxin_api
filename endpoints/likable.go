@@ -31,12 +31,13 @@ func LikableEndpoint(db *sql.DB) http.HandlerFunc {
 		err := r.ParseForm()
 		PanicIfNotNil(err)
 
+		userID := GetUIDFromContext(r)
 		var item model.Like
 		if err := util.SchemaDecoder.Decode(&item, r.PostForm); err != nil {
 			PanicIfNotNil(err)
 		}
 
-		like, err := model.GetLikeBy(db, item.CommentID.Int64, item.UserID.Int64)
+		like, err := model.GetLikeBy(db, item.CommentID.Int64, int64(userID))
 		if like == nil || err != nil {
 			userID := GetUIDFromContext(r)
 			item.UserID = null.IntFrom(int64(userID))

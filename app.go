@@ -17,8 +17,8 @@ import (
 	"github.com/urfave/negroni"
 	"github.com/zbindenren/negroni-prometheus"
 
-	"github.com/dfang/yuanxin_api/model"
 	. "github.com/dfang/yuanxin_api/endpoints"
+	"github.com/dfang/yuanxin_api/model"
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/gorilla/mux"
@@ -147,12 +147,18 @@ func (a *App) initializeRoutes(jwtmiddleware *jwtmiddleware.JWTMiddleware) {
 	r.Handle("/favorable", Protected(FavorableEndpoint(a.DB))).Methods("PUT")
 	r.Handle("/likable", Protected(LikableEndpoint(a.DB))).Methods("PUT")
 
-	r.HandleFunc("/favorites", ListFavoritesEndpoint(a.DB)).Methods("GET")
-
 	r.Handle("/chips", Protected(PublishChipEndpoint(a.DB))).Methods("POST")
-	r.HandleFunc("/chips", ListChipsEndpoint(a.DB)).Methods("GET")
-	r.HandleFunc("/help_requests", ListHelpRequestEndpoint(a.DB)).Methods("GET")
-	r.HandleFunc("/buy_requests", ListBuyRequestEndpoint(a.DB)).Methods("GET")
+	// 这些都需要登录才能看到
+	r.Handle("/chips", Protected(ListChipsEndpoint(a.DB))).Methods("GET")
+	r.Handle("/help_requests", Protected(ListHelpRequestEndpoint(a.DB))).Methods("GET")
+	r.Handle("/buy_requests", Protected(ListBuyRequestEndpoint(a.DB))).Methods("GET")
+
+	// 我的
+	r.Handle("/my/buy_requests", Protected(ListMyBuyRequestEndpoint(a.DB))).Methods("GET")
+	r.Handle("/my/help_requests", Protected(ListMyHelpRequestEndpoint(a.DB))).Methods("GET")
+	r.Handle("/my/chips", Protected(ListMyChipsEndpoint(a.DB))).Methods("GET")
+
+	r.Handle("/my/favorites", Protected(ListFavoritesEndpoint(a.DB))).Methods("GET")
 
 	r.HandleFunc("/chips/{id:[0-9]+}", GetChipEndpoint(a.DB)).Methods("GET")
 	r.HandleFunc("/help_requests/{id:[0-9]+}", GetHelpRequestEndpoint(a.DB)).Methods("GET")
