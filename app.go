@@ -68,7 +68,7 @@ func (a *App) Initialize(user, password, host, dbName string) {
 	// Can be any io.Writer, see below for File example
 	log.SetOutput(os.Stdout)
 	// Only log the warning severity or above.
-	log.SetLevel(log.WarnLevel)
+	log.SetLevel(log.DebugLevel)
 
 	a.Router = mux.NewRouter()
 	a.initializeRoutes(jmw)
@@ -152,6 +152,10 @@ func (a *App) initializeRoutes(jwtmiddleware *jwtmiddleware.JWTMiddleware) {
 	r.Handle("/chips", Protected(ListChipsEndpoint(a.DB))).Methods("GET")
 	r.Handle("/help_requests", Protected(ListHelpRequestEndpoint(a.DB))).Methods("GET")
 	r.Handle("/buy_requests", Protected(ListBuyRequestEndpoint(a.DB))).Methods("GET")
+
+	r.Handle("/help_requests/{id:[0-9]+}", Protected(DeleteHelpRequestEndpoint(a.DB))).Methods("DELETE")
+	r.Handle("/buy_requests/{id:[0-9]+}", Protected(DeleteBuyRequestEndpoint(a.DB))).Methods("DELETE")
+	r.Handle("/chips/{id:[0-9]+}", Protected(DeleteChipEndpoint(a.DB))).Methods("DELETE")
 
 	// 我的
 	r.Handle("/my/buy_requests", Protected(ListMyBuyRequestEndpoint(a.DB))).Methods("GET")
