@@ -114,3 +114,41 @@ func DestroyFavoriteEndpoint(db *sql.DB) http.HandlerFunc {
 		util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, "操作成功"})
 	})
 }
+
+// 收藏
+func ListFavoritesEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		qs := r.URL.Query()
+		CheckRequiredQueryStrings(r, "favorable_type", "favorable_id")
+
+		count, _ := strconv.Atoi(qs.Get("count"))
+		start, _ := strconv.Atoi(qs.Get("start"))
+		favorableID, _ := strconv.Atoi(qs.Get("favorable_id"))
+		favorableType := qs.Get("favorable_type")
+
+		if count < 1 {
+			count = 10
+		}
+
+		if start < 0 {
+			start = 0
+		}
+
+		favorites, err := model.GetFavorites(db, start, count, favorableType, favorableID)
+		if err != nil {
+			util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int              `json:"status_code"`
+			Message    string           `json:"msg"`
+			Data       []model.Favorite `json:"data"`
+		}{
+			StatusCode: 200,
+			Message:    "查询成功",
+			Data:       favorites,
+		})
+	})
+}

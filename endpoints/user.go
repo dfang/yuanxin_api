@@ -2,14 +2,168 @@ package endpoints
 
 import (
 	"database/sql"
+	"errors"
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/dfang/yuanxin_api/model"
 	"github.com/dfang/yuanxin_api/util"
+	"golang.org/x/crypto/bcrypt"
+	null "gopkg.in/guregu/null.v3"
 
 	"github.com/gorilla/mux"
 )
+
+// RegistrationEndpoint 注册
+func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		CheckRequiredParameters(r, "nickname", "phone", "email", "password")
+		// TODO Validate Email
+		// TODO Validate Phone
+		err := r.ParseForm()
+		PanicIfNotNil(err)
+
+		var user model.User
+		// use gorilla scheme to decode form values to user, that's called data binding in rails/asp.net mvc
+		if err := util.SchemaDecoder.Decode(&user, r.PostForm); err != nil {
+			PanicIfNotNil(err)
+		}
+
+		u, _ := model.UserByEmail(db, user.Email.String)
+		if u != nil {
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{StatusCode: 203, Message: "邮箱已经被注册"})
+			return
+		}
+
+		u2, _ := model.UserByPhone(db, user.Phone.String)
+		if u2 != nil {
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{StatusCode: 202, Message: "手机号码已经被注册"})
+			return
+		}
+
+		user.Pwd = hashAndSalt([]byte(user.Pwd))
+		user.Role = null.IntFrom(1)
+
+		err = user.RegisterUser(db)
+		if err != nil {
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, err.Error()})
+			return
+		}
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int        `json:"status_code"`
+			Message    string     `json:"msg"`
+			Data       model.User `json:"data"`
+		}{
+			StatusCode: 200,
+			Message:    "注册成功",
+			Data:       user,
+		})
+		return
+	})
+}
+
+// UpdateRegistrationInfo 更改个人信息
+func UpdateRegistrationInfo(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		CheckRequiredParameters(r, "nickname", "phone", "gender", "avatar")
+		// TODO: validate phone
+
+		err := r.ParseForm()
+		PanicIfNotNil(err)
+
+		userID := GetUIDFromContext(r)
+		user, err := model.UserByID(db, int(userID))
+		PanicIfNotNil(err)
+
+		if user == nil {
+			panic(&RecordNotFound{
+				Error: errors.New("找不到用户"),
+			})
+		}
+
+		if err = util.SchemaDecoder.Decode(user, r.PostForm); err != nil {
+			PanicIfNotNil(err)
+		}
+
+		err = user.UpdateRegistrationInfo(db)
+		PanicIfNotNil(err)
+
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int         `json:"status_code"`
+			Message    string      `json:"msg"`
+			Data       *model.User `json:"data"`
+		}{
+			StatusCode: 200,
+			Message:    "更新成功",
+			Data:       user,
+		})
+	})
+}
+
+func hashAndSalt(pwd []byte) string {
+	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
+	if err != nil {
+		log.Println(err)
+	}
+	return string(hash)
+}
+
+// 修改密码
+func PasswordEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		CheckRequiredParameters(r, "phone", "code", "password")
+		r.ParseForm()
+
+		// userID := GetUIDFromContext(r)
+		_, err := model.CaptchaByPhoneAndCode(db, r.PostFormValue("phone"), r.PostFormValue("code"))
+		if err != nil {
+			util.RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode int    `json:"status_code"`
+				Message    string `json:"msg"`
+			}{
+				StatusCode: 208,
+				Message:    "手机号或者验证码不对",
+			})
+			return
+		}
+
+		u2, _ := model.UserByPhone(db, r.PostFormValue("phone"))
+		if u2 != nil {
+			// update password
+			u2.Pwd = hashAndSalt([]byte(r.PostFormValue("password")))
+			err := u2.UpdatePassword(db)
+			if err != nil {
+				util.RespondWithJSON(w, http.StatusOK, struct {
+					StatusCode int    `json:"status_code"`
+					Message    string `json:"msg"`
+				}{
+					StatusCode: 208,
+					Message:    "密码修改失败",
+				})
+				return
+			}
+
+			util.RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode int    `json:"status_code"`
+				Message    string `json:"msg"`
+			}{
+				StatusCode: 200,
+				Message:    "密码修改成功",
+			})
+			return
+		}
+
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int    `json:"status_code"`
+			Message    string `json:"msg"`
+		}{
+			StatusCode: 208,
+			Message:    "密码修改失败",
+		})
+		return
+	})
+}
 
 // GetUserEndpoint 获取用户
 func GetUserEndpoint(db *sql.DB) http.HandlerFunc {
@@ -84,6 +238,115 @@ func GetUserProfileEndpoint(db *sql.DB) http.HandlerFunc {
 				BuyRequests:  buyRequests,
 				HelpRequests: helpRequests,
 			},
+		})
+	})
+}
+
+// ApplySellerEndpoint 申请成为卖家
+func ApplySellerEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		CheckRequiredParameters(r, "real_name", "identity_card_num", "identity_card_front", "identity_card_back")
+		err := r.ParseForm()
+		PanicIfNotNil(err)
+
+		userID := GetUIDFromContext(r)
+		user, err := model.UserByID(db, userID)
+		PanicIfNotNil(err)
+		if user == nil {
+			panic(&RecordNotFound{
+				Error: errors.New("找不到用户"),
+			})
+		}
+
+		if err = util.SchemaDecoder.Decode(user, r.PostForm); err != nil {
+			PanicIfNotNil(err)
+		}
+
+		// user.IsVerified = null.BoolFrom(true)
+		user.Role = null.IntFrom(2)
+
+		err = user.ApplySeller(db)
+		if err != nil {
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{StatusCode: 220, Message: err.Error()})
+			return
+		}
+
+		util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{StatusCode: 200, Message: "申请成功，请等待审核"})
+	})
+}
+
+// ApplyExpertEndpoint 申请成为专家
+func ApplyExpertEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		CheckRequiredParameters(r, "real_name", "identity_card_num", "identity_card_front", "identity_card_back", "expertise", "resume", "from_code")
+
+		err := r.ParseForm()
+		PanicIfNotNil(err)
+
+		userID := GetUIDFromContext(r)
+		user, err := model.UserByID(db, userID)
+		PanicIfNotNil(err)
+		if user == nil {
+			panic(&RecordNotFound{
+				Error: errors.New("找不到用户"),
+			})
+		}
+
+		if err = util.SchemaDecoder.Decode(user, r.PostForm); err != nil {
+			PanicIfNotNil(err)
+		}
+
+		// TODO
+		// user.IsVerified = null.BoolFrom(true)
+		// TODO
+		user.Role = null.IntFrom(3)
+
+		err = user.ApplyExpert(db)
+		if err != nil {
+			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{
+				StatusCode: 220,
+				Message:    err.Error(),
+			})
+			return
+		}
+
+		util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{
+			StatusCode: 200,
+			Message:    "申请成功，请等待审核",
+		})
+		return
+	})
+}
+
+// 用户列表
+func ListUsersEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		qs := r.URL.Query()
+		count, _ := strconv.Atoi(qs.Get("count"))
+		start, _ := strconv.Atoi(qs.Get("start"))
+
+		if count < 1 {
+			count = 10
+		}
+
+		if start < 0 {
+			start = 0
+		}
+
+		users, err := model.GetAllUsers(db, start, count)
+		if err != nil {
+			util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int          `json:"status_code"`
+			Message    string       `json:"msg"`
+			Data       []model.User `json:"data"`
+		}{
+			StatusCode: 200,
+			Message:    "查询成功",
+			Data:       users,
 		})
 	})
 }
