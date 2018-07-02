@@ -141,9 +141,6 @@ func (a *App) initializeRoutes(jwtmiddleware *jwtmiddleware.JWTMiddleware) {
 
 	r.Handle("/comments", Protected(PublishCommentEndpoint(a.DB))).Methods("POST")
 
-	// 查询news/buy_requests/help_requests的所有评论
-	r.HandleFunc("/comments", ListCommentsEndpoint(a.DB)).Methods("GET")
-
 	r.Handle("/favorable", Protected(FavorableEndpoint(a.DB))).Methods("PUT")
 	r.Handle("/likable", Protected(LikableEndpoint(a.DB))).Methods("PUT")
 
@@ -163,6 +160,14 @@ func (a *App) initializeRoutes(jwtmiddleware *jwtmiddleware.JWTMiddleware) {
 	r.Handle("/my/chips", Protected(ListMyChipsEndpoint(a.DB))).Methods("GET")
 
 	r.Handle("/my/favorites", Protected(ListFavoritesEndpoint(a.DB))).Methods("GET")
+
+	// 我的帮助
+	r.Handle("/my/help_request_comments", Protected(ListMyCommentsEndpoint(a.DB))).Methods("GET")
+
+	// 查询news/buy_requests/help_requests的所有评论
+	r.HandleFunc("/comments", ListCommentsEndpoint(a.DB)).Methods("GET")
+	// 删除评论
+	r.Handle("/comments/{id:[0-9]+}", Protected(DeleteCommentEndpoint(a.DB))).Methods("DELETE")
 
 	r.HandleFunc("/chips/{id:[0-9]+}", GetChipEndpoint(a.DB)).Methods("GET")
 	r.HandleFunc("/help_requests/{id:[0-9]+}", GetHelpRequestEndpoint(a.DB)).Methods("GET")
