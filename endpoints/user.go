@@ -161,8 +161,8 @@ func PasswordEndpoint(db *sql.DB) http.HandlerFunc {
 			StatusCode int    `json:"status_code"`
 			Message    string `json:"msg"`
 		}{
-			StatusCode: 208,
-			Message:    "密码修改失败",
+			StatusCode: 207,
+			Message:    "手机不存在",
 		})
 		return
 	})
