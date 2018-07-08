@@ -48,7 +48,7 @@ func UserByEmail(db XODB, email string) (*User, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`id, nickname, pwd, phone, email, biography, avatar, gender, created_at, login_date ` +
+		`id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified ` +
 		`FROM news.users ` +
 		`WHERE email = ?`
 
@@ -58,7 +58,7 @@ func UserByEmail(db XODB, email string) (*User, error) {
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, email).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Biography, &u.Avatar, &u.Gender, &u.CreatedAt, &u.LoginDate)
+	err = db.QueryRow(sqlstr, email).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Avatar, &u.Gender, &u.Biography, &u.CreatedAt, &u.LoginDate, &u.RealName, &u.IdentityCardNum, &u.IdentityCardFront, &u.IdentityCardBack, &u.FromCode, &u.License, &u.Expertise, &u.Resume, &u.Role, &u.IsVerified)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +71,7 @@ func UserByPhone(db XODB, phone string) (*User, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`id, nickname, pwd, phone, email, biography, avatar, gender, created_at, login_date ` +
+		`id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified ` +
 		`FROM news.users ` +
 		`WHERE phone = ?`
 
@@ -81,7 +81,7 @@ func UserByPhone(db XODB, phone string) (*User, error) {
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, phone).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Biography, &u.Avatar, &u.Gender, &u.CreatedAt, &u.LoginDate)
+	err = db.QueryRow(sqlstr, phone).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Avatar, &u.Gender, &u.Biography, &u.CreatedAt, &u.LoginDate, &u.RealName, &u.IdentityCardNum, &u.IdentityCardFront, &u.IdentityCardBack, &u.FromCode, &u.License, &u.Expertise, &u.Resume, &u.Role, &u.IsVerified)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func UserByPhoneOrEmail(db XODB, phone, email string) (*User, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`id, nickname, pwd, phone, email, biography, avatar, gender, created_at, login_date ` +
+		`id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified ` +
 		`FROM news.users ` +
 		`WHERE phone = ? OR email = ?`
 
@@ -104,7 +104,7 @@ func UserByPhoneOrEmail(db XODB, phone, email string) (*User, error) {
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, phone, email).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Biography, &u.Avatar, &u.Gender, &u.CreatedAt, &u.LoginDate)
+	err = db.QueryRow(sqlstr, phone, email).Scan(&u.ID, &u.Nickname, &u.Pwd, &u.Phone, &u.Email, &u.Avatar, &u.Gender, &u.Biography, &u.CreatedAt, &u.LoginDate, &u.RealName, &u.IdentityCardNum, &u.IdentityCardFront, &u.IdentityCardBack, &u.FromCode, &u.License, &u.Expertise, &u.Resume, &u.Role, &u.IsVerified)
 	if err != nil {
 		return nil, err
 	}
