@@ -1,2 +1,5 @@
 doc
 .env.local
+.idea
+.git
+yuanxin_api

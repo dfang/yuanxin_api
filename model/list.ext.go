@@ -152,6 +152,33 @@ func GetMyHelpRequestComments(db *sql.DB, start, count int, userID int) ([]Comme
 
 	return items, nil
 }
+
+// GetMyFavorites Get My Favorites
+func GetMyFavorites(db *sql.DB, start, count int, userID int) ([]Favorite, error) {
+	statement := fmt.Sprintf("SELECT * FROM news.favorites where user_id = '%d' LIMIT %d, %d", userID, start, count)
+	log.Println(statement)
+
+	rows, err := db.Query(statement)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	items := []Favorite{}
+
+	for rows.Next() {
+		var item Favorite
+		if err := rows.Scan(&item.ID, &item.UserID, &item.FavorableType, &item.FavorableID, &item.CreatedAt); err != nil {
+			return nil, err
+		}
+		items = append(items, item)
+	}
+
+	return items, nil
+}
+
 func GetFavorites(db *sql.DB, start, count int, favorableType string, favorableID int) ([]Favorite, error) {
 	statement := fmt.Sprintf("SELECT * FROM news.favorites where favorable_type = '%s' AND favorable_id = '%d' LIMIT %d, %d", favorableType, favorableID, start, count)
 	log.Println(statement)

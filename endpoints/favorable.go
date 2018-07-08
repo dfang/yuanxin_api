@@ -118,14 +118,13 @@ func DestroyFavoriteEndpoint(db *sql.DB) http.HandlerFunc {
 // 收藏
 func ListFavoritesEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		qs := r.URL.Query()
-		CheckRequiredQueryStrings(r, "favorable_type", "favorable_id")
-
+		// CheckRequiredQueryStrings(r, "favorable_type", "favorable_id")
+		userID := GetUIDFromContext(r)
 		count, _ := strconv.Atoi(qs.Get("count"))
 		start, _ := strconv.Atoi(qs.Get("start"))
-		favorableID, _ := strconv.Atoi(qs.Get("favorable_id"))
-		favorableType := qs.Get("favorable_type")
+		// favorableID, _ := strconv.Atoi(qs.Get("favorable_id"))
+		// favorableType := qs.Get("favorable_type")
 
 		if count < 1 {
 			count = 10
@@ -135,7 +134,7 @@ func ListFavoritesEndpoint(db *sql.DB) http.HandlerFunc {
 			start = 0
 		}
 
-		favorites, err := model.GetFavorites(db, start, count, favorableType, favorableID)
+		favorites, err := model.GetMyFavorites(db, start, count, userID)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
 			return
