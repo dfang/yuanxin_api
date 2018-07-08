@@ -2,7 +2,6 @@ package endpoints
 
 import (
 	"database/sql"
-	"time"
 
 	"net/http"
 	"strconv"
@@ -55,20 +54,20 @@ func PublishChipEndpoint(db *sql.DB) http.HandlerFunc {
 
 		var chip model.Chip
 
-		manufactureDate := r.PostForm.Get("manufacture_date")
-		r.PostForm.Del("manufacture_date")
+		// manufactureDate := r.PostForm.Get("manufacture_date")
+		// r.PostForm.Del("manufacture_date")
 		if err := util.SchemaDecoder.Decode(&chip, r.PostForm); err != nil {
 			PanicIfNotNil(err)
 		}
 
 		// 临时hack
-		t, err := time.Parse("2006-01", manufactureDate)
-		if err != nil {
-			panic("manufacture_date 不合法")
-		}
+		// t, err := time.Parse("2006-01", manufactureDate)
+		// if err != nil {
+		// 	panic("manufacture_date 不合法")
+		// }
 		userID := GetUIDFromContext(r)
 		chip.UserID = null.IntFrom(int64(userID))
-		chip.ManufactureDate = null.TimeFrom(t)
+		// chip.ManufactureDate = null.TimeFrom(t)
 		chip.IsVerified = null.BoolFrom(true)
 
 		err = chip.Insert(db)
