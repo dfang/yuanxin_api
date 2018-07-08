@@ -224,3 +224,53 @@ func GetAllUsers(db *sql.DB, start, count int) ([]User, error) {
 
 	return users, nil
 }
+
+// GetAllProfessionalUsers 认证专家列表
+func GetAllProfessionalUsers(db *sql.DB, start, count int) ([]User, error) {
+	sqlstr := fmt.Sprintf("SELECT id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified FROM news.users WHERE is_verified = TRUE AND role = 3 LIMIT %d, %d ", start, count)
+
+	rows, err := db.Query(sqlstr)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	users := []User{}
+
+	for rows.Next() {
+		var user User
+		if err := rows.Scan(&user.ID, &user.Nickname, &user.Pwd, &user.Phone, &user.Email, &user.Avatar, &user.Gender, &user.Biography, &user.CreatedAt, &user.LoginDate, &user.RealName, &user.IdentityCardNum, &user.IdentityCardFront, &user.IdentityCardBack, &user.FromCode, &user.License, &user.Expertise, &user.Resume, &user.Role, &user.IsVerified); err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
+}
+
+// GetAllSellerUsers 认证专家列表
+func GetAllSellerUsers(db *sql.DB, start, count int) ([]User, error) {
+	sqlstr := fmt.Sprintf("SELECT id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified FROM news.users WHERE is_verified = TRUE AND role = 2 LIMIT %d, %d ", start, count)
+
+	rows, err := db.Query(sqlstr)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	users := []User{}
+
+	for rows.Next() {
+		var user User
+		if err := rows.Scan(&user.ID, &user.Nickname, &user.Pwd, &user.Phone, &user.Email, &user.Avatar, &user.Gender, &user.Biography, &user.CreatedAt, &user.LoginDate, &user.RealName, &user.IdentityCardNum, &user.IdentityCardFront, &user.IdentityCardBack, &user.FromCode, &user.License, &user.Expertise, &user.Resume, &user.Role, &user.IsVerified); err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
+}

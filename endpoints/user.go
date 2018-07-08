@@ -405,3 +405,69 @@ func ListUsersEndpoint(db *sql.DB) http.HandlerFunc {
 		})
 	})
 }
+
+// 认证专家列表
+func ListProfessionalsEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		qs := r.URL.Query()
+		count, _ := strconv.Atoi(qs.Get("count"))
+		start, _ := strconv.Atoi(qs.Get("start"))
+
+		if count < 1 {
+			count = 10
+		}
+
+		if start < 0 {
+			start = 0
+		}
+
+		users, err := model.GetAllProfessionalUsers(db, start, count)
+		if err != nil {
+			util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int          `json:"status_code"`
+			Message    string       `json:"msg"`
+			Data       []model.User `json:"data"`
+		}{
+			StatusCode: 200,
+			Message:    "查询成功",
+			Data:       users,
+		})
+	})
+}
+
+// 认证卖家列表
+func ListSellersEndpoint(db *sql.DB) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		qs := r.URL.Query()
+		count, _ := strconv.Atoi(qs.Get("count"))
+		start, _ := strconv.Atoi(qs.Get("start"))
+
+		if count < 1 {
+			count = 10
+		}
+
+		if start < 0 {
+			start = 0
+		}
+
+		users, err := model.GetAllSellerUsers(db, start, count)
+		if err != nil {
+			util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		util.RespondWithJSON(w, http.StatusOK, struct {
+			StatusCode int          `json:"status_code"`
+			Message    string       `json:"msg"`
+			Data       []model.User `json:"data"`
+		}{
+			StatusCode: 200,
+			Message:    "查询成功",
+			Data:       users,
+		})
+	})
+}

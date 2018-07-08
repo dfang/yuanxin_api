@@ -118,6 +118,8 @@ func (a *App) initializeRoutes(jwtmiddleware *jwtmiddleware.JWTMiddleware) {
 	r.HandleFunc("/news/{id:[0-9]+}", GetNewsItemEndpoint(a.DB)).Methods("GET")
 
 	r.HandleFunc("/users/{id:[0-9]+}", GetUserEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/users/professionals", ListProfessionalsEndpoint(a.DB)).Methods("GET")
+	r.HandleFunc("/users/sellers", ListSellersEndpoint(a.DB)).Methods("GET")
 	r.HandleFunc("/users/{id:[0-9]+}/profile", GetUserProfileEndpoint(a.DB)).Methods("GET")
 
 	r.HandleFunc("/captcha/send", SendSMSEndpoint(a.DB)).Methods("POST")
