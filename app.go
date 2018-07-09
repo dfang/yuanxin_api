@@ -161,7 +161,10 @@ func (a *App) initializeRoutes(jwtmiddleware *jwtmiddleware.JWTMiddleware) {
 	r.Handle("/my/help_requests", Protected(ListMyHelpRequestEndpoint(a.DB))).Methods("GET")
 	r.Handle("/my/chips", Protected(ListMyChipsEndpoint(a.DB))).Methods("GET")
 
-	r.Handle("/my/favorites", Protected(ListFavoritesEndpoint(a.DB))).Methods("GET")
+	r.Handle("/my/favorites", Protected(ListMyFavoritesEndpoint(a.DB))).Methods("GET")
+
+	// /favorites?favorable_type=news&favorable_id=1
+	r.Handle("/favorites", Protected(ListMyFavoritesByTypeEndpoint(a.DB))).Methods("GET")
 
 	// 我的帮助
 	r.Handle("/my/help_request_comments", Protected(ListMyCommentsEndpoint(a.DB))).Methods("GET")

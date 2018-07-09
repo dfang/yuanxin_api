@@ -179,8 +179,8 @@ func GetMyFavorites(db *sql.DB, start, count int, userID int) ([]Favorite, error
 	return items, nil
 }
 
-func GetFavorites(db *sql.DB, start, count int, favorableType string, favorableID int) ([]Favorite, error) {
-	statement := fmt.Sprintf("SELECT * FROM news.favorites where favorable_type = '%s' AND favorable_id = '%d' LIMIT %d, %d", favorableType, favorableID, start, count)
+func GetFavorites(db *sql.DB, start, count int, userID int, favorableType string, favorableID int) ([]Favorite, error) {
+	statement := fmt.Sprintf("SELECT * FROM news.favorites where user_id = '%d' AND favorable_type = '%s' AND favorable_id = '%d' LIMIT %d, %d", userID, favorableType, favorableID, start, count)
 	log.Println(statement)
 
 	rows, err := db.Query(statement)
