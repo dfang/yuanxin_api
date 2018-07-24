@@ -7,11 +7,22 @@ import (
 	"os"
 
 	"github.com/dfang/yuanxin_api/model"
+	"github.com/gomodule/redigo/redis"
 	_ "github.com/jpfuentes2/go-env/autoload"
 	"github.com/robfig/cron"
 )
 
 var a App
+
+// Make a redis pool
+var redisPool = &redis.Pool{
+	MaxActive: 5,
+	MaxIdle:   5,
+	Wait:      true,
+	Dial: func() (redis.Conn, error) {
+		return redis.Dial("tcp", ":6379")
+	},
+}
 
 func main() {
 	a = App{}
@@ -34,6 +45,19 @@ func main() {
 		fmt.Println("Server listening on 0.0.0.0:9090")
 		a.Run(":9090")
 	}
+
+	// Make an enqueuer with a particular namespace
+	// var enqueuer = work.NewEnqueuer("work", redisPool)
+	// _, err := enqueuer.Enqueue("register_user_to_netease_im", work.Q{"user_id": 4})
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// pool := work.NewWorkerPool(nil, 10, "work", redisPool)
+	// log.Println("enqueue a cron job ....")
+	// pool.PeriodicallyEnqueue("* * * * *", "cron_job_craw_news") // This will enqueue a "cron_job_craw_news" job every hour
+
+	// pool.PeriodicallyEnqueue("* * * * *", "register_user_to_netease_im") // This will enqueue a "cron_job_craw_news" job every hour
+	// pool.Job("register_user_to_netease_im", (*yuanxin_worker.Context).RegisterAccid) // Still need to register a handler for this job separately
 
 	// add a job, craw news every hour
 	c := cron.New()

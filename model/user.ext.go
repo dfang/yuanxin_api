@@ -43,6 +43,29 @@ func (u *User) RegisterUser(db XODB) error {
 	return nil
 }
 
+func (u *User) UpdateAccInfo(db XODB) error {
+	var err error
+	// if doesn't exist, bail
+	if !u._exists {
+		return errors.New("update failed: does not exist")
+	}
+
+	// if deleted, bail
+	if u._deleted {
+		return errors.New("update failed: marked for deletion")
+	}
+
+	// sql query
+	const sqlstr = `UPDATE news.users SET ` +
+		`acc_id = ?, acc_token = ?` +
+		` WHERE id = ?`
+
+	// run query
+	XOLog(sqlstr, u.AccID, u.AccToken, u.ID)
+	_, err = db.Exec(sqlstr, u.AccID, u.AccToken, u.ID)
+	return err
+}
+
 func UserByEmail(db XODB, email string) (*User, error) {
 	var err error
 

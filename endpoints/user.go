@@ -12,6 +12,8 @@ import (
 	"github.com/dfang/yuanxin_api/model"
 	"github.com/dfang/yuanxin_api/util"
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/gocraft/work"
+	"github.com/gomodule/redigo/redis"
 	"golang.org/x/crypto/bcrypt"
 	null "gopkg.in/guregu/null.v3"
 
@@ -53,6 +55,40 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 			util.RespondWithJSON(w, http.StatusOK, PayLoadFrom{200, err.Error()})
 			return
 		}
+
+		// TODO RegisterUser To IM
+		// info := im.UserInfo{
+		// 	Accid: "helloworld",
+		// 	Token: "acc_token",
+		// }
+		// client := im.Init("d45545b3eeb821970eab26931859871e", "d31182026a36")
+		// client.CreateAccid(info)
+
+		var redisPool = &redis.Pool{
+			MaxActive: 5,
+			MaxIdle:   5,
+			Wait:      true,
+			Dial: func() (redis.Conn, error) {
+				return redis.Dial("tcp", ":6379")
+			},
+		}
+
+		// Register to netease IM
+		// u.AccID = null.StringFrom(GenAccID(u.Email.String, u.Phone.String))
+		// u.AccToken = null.StringFrom(GenAccToken(u.Email.String, u.Phone.String))
+		// user.AccID = null.StringFrom("helloworld1")
+		// user.AccToken = null.StringFrom("acc_token22")
+
+		log.Println("enqueue a job ....")
+		// Make an enqueuer with a particular namespace
+		var enqueuer = work.NewEnqueuer("work", redisPool)
+		//Enqueue a job
+		// _, err = enqueuer.EnqueueIn("register_user_to_netease_im", 10, work.Q{"user_id": user.ID, "accid": user.AccID.String, "token": user.AccToken.String})
+		_, err = enqueuer.EnqueueIn("register_user_to_netease_im", 10, work.Q{"user_id": user.ID})
+		if err != nil {
+			log.Fatal(err)
+		}
+
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode int        `json:"status_code"`
 			Message    string     `json:"msg"`
