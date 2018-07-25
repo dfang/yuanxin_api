@@ -46,7 +46,7 @@ func (a *App) Initialize(user, password, host, dbName string) {
 	// error: "sql: Scan error on column index 7: null: cannot scan type []uint8 into null.Time: [50 48 49 56 45 48 52 45 49 52 32 49 51 58 52 56 58 48 52]"
 	// https://github.com/xo/xo/issues/19
 	connectionString := fmt.Sprintf("%s:%s@%s/%s?parseTime=true", user, password, host, dbName)
-	fmt.Printf("connectionString is %s\n", connectionString)
+	log.Debugf("connectionString is %s\n", connectionString)
 
 	var err error
 	a.DB, err = sql.Open("mysql", connectionString)
@@ -60,14 +60,14 @@ func (a *App) Initialize(user, password, host, dbName string) {
 	}
 
 	model.XOLog = func(s string, p ...interface{}) {
-		fmt.Printf("> SQL: %s -- params: %v\n", s, p)
+		log.Debugf("> SQL: %s -- params: %v\n", s, p)
 	}
 	// Log as JSON instead of the default ASCII formatter.
-	log.SetFormatter(&log.JSONFormatter{})
+	// log.SetFormatter(&log.JSONFormatter{})
+
 	// Output to stdout instead of the default stderr
-	// Can be any io.Writer, see below for File example
 	log.SetOutput(os.Stdout)
-	// Only log the warning severity or above.
+
 	log.SetLevel(log.DebugLevel)
 
 	a.Router = mux.NewRouter()

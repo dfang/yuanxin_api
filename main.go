@@ -3,19 +3,18 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/dfang/yuanxin_api/model"
 	_ "github.com/jpfuentes2/go-env/autoload"
 	"github.com/robfig/cron"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
 	a := App{}
 
-	log.Printf("APP_DB_USER: %s, APP_DB_PASSWORD: %s, APP_DB_HOST: %s, APP_DB_NAME: %s", os.Getenv("APP_DB_USER"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_HOST"), os.Getenv("APP_DB_NAME"))
-
+	log.Debugf("APP_DB_USER: %s, APP_DB_PASSWORD: %s, APP_DB_HOST: %s, APP_DB_NAME: %s", os.Getenv("APP_DB_USER"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_HOST"), os.Getenv("APP_DB_NAME"))
 	a.Initialize(os.Getenv("APP_DB_USER"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_HOST"), os.Getenv("APP_DB_NAME"))
 
 	var Craw bool

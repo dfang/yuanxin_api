@@ -7,5 +7,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /go/bin/yuanxin_a
 FROM alpine:3.4
 LABEL maintainer="df1228@gmail.com"
 EXPOSE 9090
-COPY --from=builder /go/bin/* /usr/local/bin/
+WORKDIR /app
+COPY --from=builder /go/bin/* /app/
 CMD [ "yuanxin_api" ]

@@ -4,11 +4,12 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/dfang/yuanxin_api/model"
 	"github.com/dfang/yuanxin_api/util"
@@ -57,14 +58,6 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		// TODO RegisterUser To IM
-		// info := im.UserInfo{
-		// 	Accid: "helloworld",
-		// 	Token: "acc_token",
-		// }
-		// client := im.Init("d45545b3eeb821970eab26931859871e", "d31182026a36")
-		// client.CreateAccid(info)
-
 		var redisConnString = fmt.Sprintf("%s:%s", os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT"))
 		var redisPool = &redis.Pool{
 			MaxActive: 5,
@@ -75,20 +68,16 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 			},
 		}
 
-		// Register to netease IM
-		// u.AccID = null.StringFrom(GenAccID(u.Email.String, u.Phone.String))
-		// u.AccToken = null.StringFrom(GenAccToken(u.Email.String, u.Phone.String))
-		// user.AccID = null.StringFrom("helloworld1")
-		// user.AccToken = null.StringFrom("acc_token22")
+		log.Debugln("enqueue a job ....")
 
-		log.Println("enqueue a job ....")
 		// Make an enqueuer with a particular namespace
 		var enqueuer = work.NewEnqueuer("work", redisPool)
 		//Enqueue a job
 		// _, err = enqueuer.EnqueueIn("register_user_to_netease_im", 10, work.Q{"user_id": user.ID, "accid": user.AccID.String, "token": user.AccToken.String})
 		_, err = enqueuer.EnqueueIn("register_user_to_netease_im", 10, work.Q{"user_id": user.ID})
 		if err != nil {
-			log.Fatal(err)
+			// TODO: Alert
+			log.Errorln(err)
 		}
 
 		util.RespondWithJSON(w, http.StatusOK, struct {
