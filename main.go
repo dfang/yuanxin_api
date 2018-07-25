@@ -7,25 +7,12 @@ import (
 	"os"
 
 	"github.com/dfang/yuanxin_api/model"
-	"github.com/gomodule/redigo/redis"
 	_ "github.com/jpfuentes2/go-env/autoload"
 	"github.com/robfig/cron"
 )
 
-var a App
-
-// Make a redis pool
-var redisPool = &redis.Pool{
-	MaxActive: 5,
-	MaxIdle:   5,
-	Wait:      true,
-	Dial: func() (redis.Conn, error) {
-		return redis.Dial("tcp", ":6379")
-	},
-}
-
 func main() {
-	a = App{}
+	a := App{}
 
 	log.Printf("APP_DB_USER: %s, APP_DB_PASSWORD: %s, APP_DB_HOST: %s, APP_DB_NAME: %s", os.Getenv("APP_DB_USER"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_HOST"), os.Getenv("APP_DB_NAME"))
 

@@ -3,6 +3,7 @@ package endpoints
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -64,12 +65,13 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 		// client := im.Init("d45545b3eeb821970eab26931859871e", "d31182026a36")
 		// client.CreateAccid(info)
 
+		var redisConnString = fmt.Sprintf("%s:%s", os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT"))
 		var redisPool = &redis.Pool{
 			MaxActive: 5,
 			MaxIdle:   5,
 			Wait:      true,
 			Dial: func() (redis.Conn, error) {
-				return redis.Dial("tcp", ":6379")
+				return redis.Dial("tcp", redisConnString)
 			},
 		}
 
