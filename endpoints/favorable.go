@@ -152,15 +152,14 @@ func ListMyFavoritesEndpoint(db *sql.DB) http.HandlerFunc {
 	})
 }
 
-// 收藏 /favorites?favorable_type=news&favorable_id=1
+// 收藏 /favorites?favorable_type=news
 func ListMyFavoritesByTypeEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		qs := r.URL.Query()
-		CheckRequiredQueryStrings(r, "favorable_type", "favorable_id")
+		CheckRequiredQueryStrings(r, "favorable_type")
 		userID := GetUIDFromContext(r)
 		count, _ := strconv.Atoi(qs.Get("count"))
 		start, _ := strconv.Atoi(qs.Get("start"))
-		favorableID, _ := strconv.Atoi(qs.Get("favorable_id"))
 		favorableType := qs.Get("favorable_type")
 
 		if count < 1 {
@@ -171,20 +170,69 @@ func ListMyFavoritesByTypeEndpoint(db *sql.DB) http.HandlerFunc {
 			start = 0
 		}
 
-		favorites, err := model.GetFavorites(db, start, count, userID, favorableType, favorableID)
-		if err != nil {
-			util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
-			return
-		}
+		switch favorableType {
+		case "news_item":
+			favorites, err := model.GetNewsFavorites(db, start, count, userID)
+			if err != nil {
+				util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
+				return
+			}
 
-		util.RespondWithJSON(w, http.StatusOK, struct {
-			StatusCode int              `json:"status_code"`
-			Message    string           `json:"msg"`
-			Data       []model.Favorite `json:"data"`
-		}{
-			StatusCode: 200,
-			Message:    "查询成功",
-			Data:       favorites,
-		})
+			util.RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode int              `json:"status_code"`
+				Message    string           `json:"msg"`
+				Data       []model.NewsItem `json:"data"`
+			}{
+				StatusCode: 200,
+				Message:    "查询成功",
+				Data:       favorites,
+			})
+		case "chip":
+			favorites, err := model.GetChipsFavorites(db, start, count, userID)
+			if err != nil {
+				util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
+				return
+			}
+
+			util.RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode int          `json:"status_code"`
+				Message    string       `json:"msg"`
+				Data       []model.Chip `json:"data"`
+			}{
+				StatusCode: 200,
+				Message:    "查询成功",
+				Data:       favorites,
+			})
+		case "buy_request":
+			favorites, err := model.GetBuyRequestFavorites(db, start, count, userID)
+			if err != nil {
+				util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
+				return
+			}
+			util.RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode int                `json:"status_code"`
+				Message    string             `json:"msg"`
+				Data       []model.BuyRequest `json:"data"`
+			}{
+				StatusCode: 200,
+				Message:    "查询成功",
+				Data:       favorites,
+			})
+		case "help_request":
+			favorites, err := model.GetHelpRequestFavorites(db, start, count, userID)
+			if err != nil {
+				util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
+				return
+			}
+			util.RespondWithJSON(w, http.StatusOK, struct {
+				StatusCode int                 `json:"status_code"`
+				Message    string              `json:"msg"`
+				Data       []model.HelpRequest `json:"data"`
+			}{
+				StatusCode: 200,
+				Message:    "查询成功",
+				Data:       favorites,
+			})
+		}
 	})
 }

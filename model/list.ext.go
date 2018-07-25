@@ -179,8 +179,30 @@ func GetMyFavorites(db *sql.DB, start, count int, userID int) ([]Favorite, error
 	return items, nil
 }
 
-func GetFavorites(db *sql.DB, start, count int, userID int, favorableType string, favorableID int) ([]Favorite, error) {
-	statement := fmt.Sprintf("SELECT * FROM news.favorites where user_id = '%d' AND favorable_type = '%s' AND favorable_id = '%d' LIMIT %d, %d", userID, favorableType, favorableID, start, count)
+func GetNewsFavorites(db *sql.DB, start, count int, userID int) ([]NewsItem, error) {
+	statement := fmt.Sprintf("SELECT * FROM news_items where id in ( SELECT favorable_id FROM news.favorites where user_id = '%d' and favorable_type = 'news_item') LIMIT %d, %d", userID, start, count)
+	log.Println(statement)
+
+	rows, err := db.Query(statement)
+	if err != nil {
+		return nil, err
+	}
+
+	news := []NewsItem{}
+
+	for rows.Next() {
+		var item NewsItem
+		if err := rows.Scan(&item.ID, &item.Title, &item.Description, &item.Body, &item.Image, &item.Type, &item.Link, &item.Source, &item.UpdatedAt); err != nil {
+			return nil, err
+		}
+		news = append(news, item)
+	}
+
+	return news, nil
+}
+
+func GetChipsFavorites(db *sql.DB, start, count int, userID int) ([]Chip, error) {
+	statement := fmt.Sprintf("SELECT * FROM chips where id in ( SELECT favorable_id FROM news.favorites where user_id = '%d' and favorable_type = 'chip') LIMIT %d, %d", userID, start, count)
 	log.Println(statement)
 
 	rows, err := db.Query(statement)
@@ -191,11 +213,11 @@ func GetFavorites(db *sql.DB, start, count int, userID int, favorableType string
 
 	defer rows.Close()
 
-	items := []Favorite{}
+	items := []Chip{}
 
 	for rows.Next() {
-		var item Favorite
-		if err := rows.Scan(&item.ID, &item.UserID, &item.FavorableType, &item.FavorableID, &item.CreatedAt); err != nil {
+		var item Chip
+		if err := rows.Scan(&item.ID, &item.UserID, &item.SerialNumber, &item.Vendor, &item.Amount, &item.ManufactureDate, &item.UnitPrice, &item.Specification, &item.IsVerified, &item.Version, &item.Volume); err != nil {
 			return nil, err
 		}
 		items = append(items, item)
@@ -204,6 +226,55 @@ func GetFavorites(db *sql.DB, start, count int, userID int, favorableType string
 	return items, nil
 }
 
+func GetBuyRequestFavorites(db *sql.DB, start, count int, userID int) ([]BuyRequest, error) {
+	statement := fmt.Sprintf("SELECT * FROM buy_requests where id in ( SELECT favorable_id FROM news.favorites where user_id = '%d' and favorable_type = 'buy_request') LIMIT %d, %d", userID, start, count)
+	log.Println(statement)
+
+	rows, err := db.Query(statement)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	items := []BuyRequest{}
+
+	for rows.Next() {
+		var item BuyRequest
+		if err := rows.Scan(&item.ID, &item.UserID, &item.Title, &item.Content, &item.Amount, &item.CreatedAt); err != nil {
+			return nil, err
+		}
+		items = append(items, item)
+	}
+
+	return items, nil
+}
+
+func GetHelpRequestFavorites(db *sql.DB, start, count int, userID int) ([]HelpRequest, error) {
+	statement := fmt.Sprintf("SELECT * FROM help_requests where id in ( SELECT favorable_id FROM news.favorites where user_id = '%d' and favorable_type = 'help_request') LIMIT %d, %d", userID, start, count)
+	log.Println(statement)
+
+	rows, err := db.Query(statement)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	items := []HelpRequest{}
+
+	for rows.Next() {
+		var item HelpRequest
+		if err := rows.Scan(&item.ID, &item.UserID, &item.Title, &item.Content, &item.Amount, &item.CreatedAt); err != nil {
+			return nil, err
+		}
+		items = append(items, item)
+	}
+
+	return items, nil
+}
 func GetFavoriteBy(db *sql.DB, favorableType string, favorableID int64, userID int64) (*Favorite, error) {
 
 	var err error
