@@ -192,7 +192,7 @@ func GetNewsFavorites(db *sql.DB, start, count int, userID int) ([]NewsItem, err
 
 	for rows.Next() {
 		var item NewsItem
-		if err := rows.Scan(&item.ID, &item.Title, &item.Description, &item.Body, &item.Image, &item.Type, &item.Link, &item.Source, &item.UpdatedAt); err != nil {
+		if err := rows.Scan(&item.ID, &item.Title, &item.Description, &item.Body, &item.Type, &item.Link, &item.Image, &item.Source, &item.UpdatedAt); err != nil {
 			return nil, err
 		}
 		news = append(news, item)
