@@ -170,6 +170,7 @@ func GetBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		sqlstr := "SELECT buy_requests.*, users.nickname, users.avatar FROM buy_requests JOIN users on users.id = buy_requests.user_id where buy_requests.id = ?;"
+		userID := GetUIDFromContext(r)
 
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["id"])
@@ -181,7 +182,9 @@ func GetBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.Title, &result.Content, &result.Amount, &result.CreatedAt, &result.NickName, &result.Avatar)
 		PanicIfNotNil(err)
 
-		result.IsLiked = null.BoolFrom(false)
+		// result.IsLiked = null.BoolFrom(false)
+		flag := model.IsLikedByUser(db, "buy_request", id, userID)
+		result.IsLiked = null.BoolFrom(flag)
 
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode int                    `json:"status_code"`

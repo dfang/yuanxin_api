@@ -183,6 +183,7 @@ func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sqlstr := "SELECT chips.*, users.nickname, users.avatar FROM chips JOIN users on users.id = chips.user_id where chips.id = ?;"
 		vars := mux.Vars(r)
+		userID := GetUIDFromContext(r)
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			panic("convertion error")
@@ -192,7 +193,9 @@ func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 		PanicIfNotNil(err)
 
 		// TODO need to query db
-		result.IsLiked = null.BoolFrom(false)
+		// result.IsLiked = null.BoolFrom(false)
+		flag := model.IsLikedByUser(db, "chip", id, userID)
+		result.IsLiked = null.BoolFrom(flag)
 
 		chips, err := model.SearchChips(db, result.SerialNumber.String, 0, 10)
 		buyRequests, err := model.SearchChipsInBuyRequests(db, result.SerialNumber.String, 0, 10)

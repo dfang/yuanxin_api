@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -296,4 +297,29 @@ func GetAllSellerUsers(db *sql.DB, start, count int) ([]User, error) {
 	}
 
 	return users, nil
+}
+
+// 查询news_item,help_request, buy_request, chips是否被当前用户liked
+func IsLikedByUser(db *sql.DB, objType string, objID int, userID int) bool {
+	var count int
+	var sqlstr string
+	switch objType {
+	case "news_item":
+		sqlstr = fmt.Sprintf("SELECT count(*) from news_items join favorites where favorable_type = 'news_item' and favorable_id = '%d' and user_id = '%d'", objID, userID)
+	case "chip":
+		sqlstr = fmt.Sprintf("SELECT count(*) from chips join favorites where favorable_type = 'chip' and favorable_id = '%d' and user_id = '%d'", objID, userID)
+	case "buy_request":
+		sqlstr = fmt.Sprintf("SELECT count(*) from buy_requests join favorites where favorable_type = 'buy_request' and favorable_id = '%d' and user_id = '%d'", objID, userID)
+	case "help_request":
+		sqlstr = fmt.Sprintf("SELECT count(*) from help_requests join favorites where favorable_type = 'help_request' and favorable_id = '%d' and user_id = '%d'", objID, userID)
+	}
+	fmt.Println(sqlstr)
+	err := db.QueryRow(sqlstr, objID, userID).Scan(&count)
+	if err != nil && err != sql.ErrNoRows {
+		log.Println(err)
+	}
+	if count >= 1 {
+		return true
+	}
+	return false
 }

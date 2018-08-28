@@ -13,7 +13,8 @@ CREATE TABLE news_items(
     link varchar(255),
     image varchar(255),
     source varchar(255),
-    updated_at datetime
+    updated_at datetime,
+    is_liked boolean
 );
 
 CREATE TABLE users(
@@ -77,7 +78,8 @@ CREATE TABLE help_requests(
     title varchar(255),
     content text,
     amount int, -- 悬赏金额
-    created_at datetime
+    created_at datetime,
+    is_liked boolean
 );
 
 -- 求购
@@ -87,7 +89,8 @@ CREATE TABLE buy_requests(
     title varchar(255),
     content text,
     amount int, -- 求购数量， -1表示不限
-    created_at datetime
+    created_at datetime,
+    is_liked boolean
 );
 
 -- 芯片
@@ -102,7 +105,8 @@ CREATE table chips (
     specification varchar(255),
     is_verified boolean, -- 审核通过
     version varchar(255),
-    volume int
+    volume int,
+    is_liked boolean -- 是否收藏
 );
 
 -- 收藏

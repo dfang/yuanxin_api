@@ -20,7 +20,7 @@ type NewsItem struct {
 	Image       null.String `json:"image"`       // image
 	Source      null.String `json:"source"`      // source
 	UpdatedAt   null.Time   `json:"updated_at"`  // updated_at
-
+	IsLiked     null.Bool   `json:"is_liked"`    // is_liked
 	// xo fields
 	_exists, _deleted bool
 }
@@ -87,12 +87,12 @@ func (ni *NewsItem) Update(db XODB) error {
 
 	// sql query
 	const sqlstr = `UPDATE news.news_items SET ` +
-		`title = ?, description = ?, body = ?, type = ?, link = ?, image = ?, source = ?, updated_at = ?` +
+		`title = ?, description = ?, body = ?, type = ?, link = ?, image = ?, source = ?, updated_at = ?, is_liked = ?` +
 		` WHERE id = ?`
 
 	// run query
-	XOLog(sqlstr, ni.Title, ni.Description, ni.Body, ni.Type, ni.Link, ni.Image, ni.Source, ni.UpdatedAt, ni.ID)
-	_, err = db.Exec(sqlstr, ni.Title, ni.Description, ni.Body, ni.Type, ni.Link, ni.Image, ni.Source, ni.UpdatedAt, ni.ID)
+	XOLog(sqlstr, ni.Title, ni.Description, ni.Body, ni.Type, ni.Link, ni.Image, ni.Source, ni.UpdatedAt, ni.IsLiked, ni.ID)
+	_, err = db.Exec(sqlstr, ni.Title, ni.Description, ni.Body, ni.Type, ni.Link, ni.Image, ni.Source, ni.UpdatedAt, ni.IsLiked, ni.ID)
 	return err
 }
 
@@ -143,7 +143,7 @@ func NewsItemByID(db XODB, id int) (*NewsItem, error) {
 
 	// sql query
 	const sqlstr = `SELECT ` +
-		`id, title, description, body, type, link, image, source, updated_at ` +
+		`id, title, description, body, type, link, image, source, updated_at, is_liked ` +
 		`FROM news.news_items ` +
 		`WHERE id = ?`
 
@@ -153,7 +153,7 @@ func NewsItemByID(db XODB, id int) (*NewsItem, error) {
 		_exists: true,
 	}
 
-	err = db.QueryRow(sqlstr, id).Scan(&ni.ID, &ni.Title, &ni.Description, &ni.Body, &ni.Type, &ni.Link, &ni.Image, &ni.Source, &ni.UpdatedAt)
+	err = db.QueryRow(sqlstr, id).Scan(&ni.ID, &ni.Title, &ni.Description, &ni.Body, &ni.Type, &ni.Link, &ni.Image, &ni.Source, &ni.UpdatedAt, &ni.IsLiked)
 	if err != nil {
 		return nil, err
 	}

@@ -173,6 +173,7 @@ func GetHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		sqlstr := "SELECT help_requests.*, users.nickname, users.avatar FROM help_requests JOIN users on users.id = help_requests.user_id where help_requests.id = ?;"
+		userID := GetUIDFromContext(r)
 
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["id"])
@@ -184,7 +185,8 @@ func GetHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.Title, &result.Content, &result.Amount, &result.CreatedAt, &result.NickName, &result.Avatar)
 		PanicIfNotNil(err)
 
-		result.IsLiked = null.BoolFrom(false)
+		flag := model.IsLikedByUser(db, "help_request", id, userID)
+		result.IsLiked = null.BoolFrom(flag)
 
 		util.RespondWithJSON(w, http.StatusOK, struct {
 			StatusCode int                     `json:"status_code"`

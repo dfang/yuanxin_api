@@ -9,6 +9,7 @@ import (
 	"github.com/dfang/yuanxin_api/model"
 	"github.com/dfang/yuanxin_api/util"
 	"github.com/gorilla/mux"
+	null "gopkg.in/guregu/null.v3"
 )
 
 func ListNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
@@ -49,6 +50,8 @@ func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 
+		userID := GetUIDFromContext(r)
+
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusBadRequest, "Invalid ID")
@@ -77,6 +80,8 @@ func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 			return
 		} else {
 
+			flag := model.IsLikedByUser(db, "new_item", id, userID)
+			ni.IsLiked = null.BoolFrom(flag)
 			util.RespondWithJSON(w, http.StatusOK, struct {
 				StatusCode int             `json:"status_code"`
 				Message    string          `json:"msg"`

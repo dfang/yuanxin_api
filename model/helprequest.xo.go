@@ -17,6 +17,7 @@ type HelpRequest struct {
 	Content   null.String `json:"content"`                  // content
 	Amount    null.Int    `json:"amount"`                   // amount
 	CreatedAt null.Time   `json:"created_at"`               // created_at
+	IsLiked   null.Bool   `json:"is_liked"`                 // is_liked
 
 	// xo fields
 	_exists, _deleted bool
