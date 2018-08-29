@@ -8,6 +8,7 @@ import (
 
 	"github.com/dfang/yuanxin_api/model"
 	"github.com/dfang/yuanxin_api/util"
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	null "gopkg.in/guregu/null.v3"
 )
@@ -168,22 +169,30 @@ type buyRequestDetailResult struct {
 // GetBuyRequestEndpoint Get buy_request detail
 func GetBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		sqlstr := "SELECT buy_requests.*, users.nickname, users.avatar FROM buy_requests JOIN users on users.id = buy_requests.user_id where buy_requests.id = ?;"
-		userID := GetUIDFromContext(r)
-
+		// userID := GetUIDFromContext(r)
 		vars := mux.Vars(r)
+		var userID int
+		currentUser := r.Context().Value("user")
+		if currentUser != nil {
+			claims := currentUser.(*jwt.Token).Claims.(jwt.MapClaims)
+			userID = int(claims["uid"].(float64))
+		}
+
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			panic("convertion error")
 		}
 		var result buyRequestDetailResult
 
-		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.Title, &result.Content, &result.Amount, &result.CreatedAt, &result.NickName, &result.Avatar)
+		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.Title, &result.Content, &result.Amount, &result.CreatedAt, &result.NickName, &result.Avatar, &result.IsLiked)
 		PanicIfNotNil(err)
 
 		// result.IsLiked = null.BoolFrom(false)
-		flag := model.IsLikedByUser(db, "buy_request", id, userID)
+		flag := false
+		if userID != 0 {
+			flag = model.IsLikedByUser(db, "buy_request", id, userID)
+		}
 		result.IsLiked = null.BoolFrom(flag)
 
 		util.RespondWithJSON(w, http.StatusOK, struct {

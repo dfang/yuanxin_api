@@ -2,12 +2,15 @@ package endpoints
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/dfang/yuanxin_api/model"
 	"github.com/dfang/yuanxin_api/util"
+	jwt "github.com/dgrijalva/jwt-go"
+
 	"github.com/gorilla/mux"
 	null "gopkg.in/guregu/null.v3"
 )
@@ -49,8 +52,26 @@ func ListNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
+		var userID int
+		currentUser := r.Context().Value("user")
+		if currentUser != nil {
+			claims := currentUser.(*jwt.Token).Claims.(jwt.MapClaims)
+			userID = int(claims["uid"].(float64))
+		}
 
-		userID := GetUIDFromContext(r)
+		fmt.Println(userID)
+		// fmt.Println(currentUser.(*jwt.Token).Claims)
+		// fmt.Println(claims["uid"])
+		// if currentUser != nil {
+		// 	currentUser.(*jwt.Token).Claims["uid"]
+		// }
+
+		// currentUser := context.Get(r, "user")
+		// fmt.Println("kkkkkkkkkkkkkkkk")
+		// fmt.Println(currentUser)
+
+		// userID := GetUIDFromContext(r)
+		// fmt.Println(userID)
 
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
@@ -79,8 +100,10 @@ func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 			}
 			return
 		} else {
-
-			flag := model.IsLikedByUser(db, "new_item", id, userID)
+			flag := false
+			if userID != 0 {
+				flag = model.IsLikedByUser(db, "news_item", id, userID)
+			}
 			ni.IsLiked = null.BoolFrom(flag)
 			util.RespondWithJSON(w, http.StatusOK, struct {
 				StatusCode int             `json:"status_code"`

@@ -8,6 +8,7 @@ import (
 
 	"github.com/dfang/yuanxin_api/model"
 	"github.com/dfang/yuanxin_api/util"
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	null "gopkg.in/guregu/null.v3"
 )
@@ -183,18 +184,29 @@ func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		sqlstr := "SELECT chips.*, users.nickname, users.avatar FROM chips JOIN users on users.id = chips.user_id where chips.id = ?;"
 		vars := mux.Vars(r)
-		userID := GetUIDFromContext(r)
+
+		var userID int
+		currentUser := r.Context().Value("user")
+		if currentUser != nil {
+			claims := currentUser.(*jwt.Token).Claims.(jwt.MapClaims)
+			userID = int(claims["uid"].(float64))
+		}
+
+		// userID := GetUIDFromContext(r)
 		id, err := strconv.Atoi(vars["id"])
 		if err != nil {
 			panic("convertion error")
 		}
 		var result chipDetailResult
-		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.SerialNumber, &result.Vendor, &result.Amount, &result.ManufactureDate, &result.UnitPrice, &result.Specification, &result.IsVerified, &result.Vendor, &result.Volume, &result.NickName, &result.Avatar)
+		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.SerialNumber, &result.Vendor, &result.Amount, &result.ManufactureDate, &result.UnitPrice, &result.Specification, &result.IsVerified, &result.Vendor, &result.Volume, &result.IsLiked, &result.NickName, &result.Avatar)
 		PanicIfNotNil(err)
 
 		// TODO need to query db
 		// result.IsLiked = null.BoolFrom(false)
-		flag := model.IsLikedByUser(db, "chip", id, userID)
+		flag := false
+		if userID != 0 {
+			flag = model.IsLikedByUser(db, "chip", id, userID)
+		}
 		result.IsLiked = null.BoolFrom(flag)
 
 		chips, err := model.SearchChips(db, result.SerialNumber.String, 0, 10)

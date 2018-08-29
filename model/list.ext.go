@@ -33,7 +33,7 @@ func GetChips(db *sql.DB, start, count int) ([]Chip, error) {
 }
 
 func GetHelpRequests(db *sql.DB, start, count int) ([]HelpRequest, error) {
-	statement := fmt.Sprintf("SELECT id, user_id, title, content, amount, created_at FROM news.help_requests ORDER BY created_at DESC LIMIT %d, %d", start, count)
+	statement := fmt.Sprintf("SELECT id, user_id, title, content, amount, created_at, is_liked FROM news.help_requests ORDER BY created_at DESC LIMIT %d, %d", start, count)
 	XOLog(statement)
 
 	rows, err := db.Query(statement)
@@ -47,7 +47,7 @@ func GetHelpRequests(db *sql.DB, start, count int) ([]HelpRequest, error) {
 
 	for rows.Next() {
 		var hr HelpRequest
-		if err := rows.Scan(&hr.ID, &hr.UserID, &hr.Title, &hr.Content, &hr.Amount, &hr.CreatedAt); err != nil {
+		if err := rows.Scan(&hr.ID, &hr.UserID, &hr.Title, &hr.Content, &hr.Amount, &hr.CreatedAt, &hr.IsLiked); err != nil {
 			return nil, err
 		}
 		hrs = append(hrs, hr)
@@ -192,7 +192,7 @@ func GetNewsFavorites(db *sql.DB, start, count int, userID int) ([]NewsItem, err
 
 	for rows.Next() {
 		var item NewsItem
-		if err := rows.Scan(&item.ID, &item.Title, &item.Description, &item.Body, &item.Type, &item.Link, &item.Image, &item.Source, &item.UpdatedAt); err != nil {
+		if err := rows.Scan(&item.ID, &item.Title, &item.Description, &item.Body, &item.Type, &item.Link, &item.Image, &item.Source, &item.UpdatedAt, &item.IsLiked); err != nil {
 			return nil, err
 		}
 		news = append(news, item)
@@ -217,7 +217,7 @@ func GetChipsFavorites(db *sql.DB, start, count int, userID int) ([]Chip, error)
 
 	for rows.Next() {
 		var item Chip
-		if err := rows.Scan(&item.ID, &item.UserID, &item.SerialNumber, &item.Vendor, &item.Amount, &item.ManufactureDate, &item.UnitPrice, &item.Specification, &item.IsVerified, &item.Version, &item.Volume); err != nil {
+		if err := rows.Scan(&item.ID, &item.UserID, &item.SerialNumber, &item.Vendor, &item.Amount, &item.ManufactureDate, &item.UnitPrice, &item.Specification, &item.IsVerified, &item.Version, &item.Volume, &item.IsLiked); err != nil {
 			return nil, err
 		}
 		items = append(items, item)
@@ -242,7 +242,7 @@ func GetBuyRequestFavorites(db *sql.DB, start, count int, userID int) ([]BuyRequ
 
 	for rows.Next() {
 		var item BuyRequest
-		if err := rows.Scan(&item.ID, &item.UserID, &item.Title, &item.Content, &item.Amount, &item.CreatedAt); err != nil {
+		if err := rows.Scan(&item.ID, &item.UserID, &item.Title, &item.Content, &item.Amount, &item.CreatedAt, &item.IsLiked); err != nil {
 			return nil, err
 		}
 		items = append(items, item)
@@ -267,7 +267,7 @@ func GetHelpRequestFavorites(db *sql.DB, start, count int, userID int) ([]HelpRe
 
 	for rows.Next() {
 		var item HelpRequest
-		if err := rows.Scan(&item.ID, &item.UserID, &item.Title, &item.Content, &item.Amount, &item.CreatedAt); err != nil {
+		if err := rows.Scan(&item.ID, &item.UserID, &item.Title, &item.Content, &item.Amount, &item.CreatedAt, &item.IsLiked); err != nil {
 			return nil, err
 		}
 		items = append(items, item)
@@ -337,7 +337,7 @@ func SearchChips(db *sql.DB, q string, start, count int) ([]Chip, error) {
 
 	for rows.Next() {
 		var chip Chip
-		if err := rows.Scan(&chip.ID, &chip.UserID, &chip.SerialNumber, &chip.Vendor, &chip.Amount, &chip.ManufactureDate, &chip.UnitPrice, &chip.Specification, &chip.IsVerified, &chip.Version, &chip.Volume); err != nil {
+		if err := rows.Scan(&chip.ID, &chip.UserID, &chip.SerialNumber, &chip.Vendor, &chip.Amount, &chip.ManufactureDate, &chip.UnitPrice, &chip.Specification, &chip.IsVerified, &chip.Version, &chip.Volume, &chip.IsLiked); err != nil {
 			return nil, err
 		}
 		chips = append(chips, chip)
@@ -361,7 +361,7 @@ func SearchChipsInBuyRequests(db *sql.DB, q string, start, count int) ([]BuyRequ
 
 	for rows.Next() {
 		var br BuyRequest
-		if err := rows.Scan(&br.ID, &br.UserID, &br.Title, &br.Content, &br.Amount, &br.CreatedAt); err != nil {
+		if err := rows.Scan(&br.ID, &br.UserID, &br.Title, &br.Content, &br.Amount, &br.CreatedAt, &br.IsLiked); err != nil {
 			return nil, err
 		}
 		brs = append(brs, br)
@@ -370,7 +370,7 @@ func SearchChipsInBuyRequests(db *sql.DB, q string, start, count int) ([]BuyRequ
 }
 
 func ChipsByUserID(db *sql.DB, userID, start, count int) ([]Chip, error) {
-	statement := fmt.Sprintf("SELECT id, user_id, serial_number, vendor, amount, manufacture_date, unit_price, specification, is_verified, version, volume FROM chips WHERE user_id = %d ORDER BY manufacture_date DESC LIMIT %d, %d", userID, start, count)
+	statement := fmt.Sprintf("SELECT id, user_id, serial_number, vendor, amount, manufacture_date, unit_price, specification, is_verified, version, volume, is_liked FROM chips WHERE user_id = %d ORDER BY manufacture_date DESC LIMIT %d, %d", userID, start, count)
 	XOLog(statement)
 
 	rows, err := db.Query(statement)
@@ -384,7 +384,7 @@ func ChipsByUserID(db *sql.DB, userID, start, count int) ([]Chip, error) {
 
 	for rows.Next() {
 		var chip Chip
-		if err := rows.Scan(&chip.ID, &chip.UserID, &chip.SerialNumber, &chip.Vendor, &chip.Amount, &chip.ManufactureDate, &chip.UnitPrice, &chip.Specification, &chip.IsVerified, &chip.Version, &chip.Volume); err != nil {
+		if err := rows.Scan(&chip.ID, &chip.UserID, &chip.SerialNumber, &chip.Vendor, &chip.Amount, &chip.ManufactureDate, &chip.UnitPrice, &chip.Specification, &chip.IsVerified, &chip.Version, &chip.Volume, &chip.IsLiked); err != nil {
 			return nil, err
 		}
 		chips = append(chips, chip)
@@ -394,7 +394,7 @@ func ChipsByUserID(db *sql.DB, userID, start, count int) ([]Chip, error) {
 }
 
 func BuyRequestsByUserID(db *sql.DB, userID, start, count int) ([]BuyRequest, error) {
-	statement := fmt.Sprintf("SELECT id, user_id, title, content, amount, created_at FROM news.buy_requests WHERE user_id = %d ORDER BY created_at DESC LIMIT %d, %d ", userID, start, count)
+	statement := fmt.Sprintf("SELECT id, user_id, title, content, amount, created_at, is_liked FROM news.buy_requests WHERE user_id = %d ORDER BY created_at DESC LIMIT %d, %d ", userID, start, count)
 	XOLog(statement)
 
 	rows, err := db.Query(statement)
@@ -407,7 +407,7 @@ func BuyRequestsByUserID(db *sql.DB, userID, start, count int) ([]BuyRequest, er
 
 	for rows.Next() {
 		var br BuyRequest
-		if err := rows.Scan(&br.ID, &br.UserID, &br.Title, &br.Content, &br.Amount, &br.CreatedAt); err != nil {
+		if err := rows.Scan(&br.ID, &br.UserID, &br.Title, &br.Content, &br.Amount, &br.CreatedAt, &br.IsLiked); err != nil {
 			return nil, err
 		}
 		brs = append(brs, br)
@@ -417,7 +417,7 @@ func BuyRequestsByUserID(db *sql.DB, userID, start, count int) ([]BuyRequest, er
 }
 
 func HelpRequestsByUserID(db *sql.DB, userID, start, count int) ([]HelpRequest, error) {
-	statement := fmt.Sprintf("SELECT id, user_id, title, content, amount, created_at FROM news.help_requests WHERE user_id = %d ORDER BY created_at DESC LIMIT %d, %d", userID, start, count)
+	statement := fmt.Sprintf("SELECT id, user_id, title, content, amount, created_at, is_liked FROM news.help_requests WHERE user_id = %d ORDER BY created_at DESC LIMIT %d, %d", userID, start, count)
 	XOLog(statement)
 
 	rows, err := db.Query(statement)
@@ -431,7 +431,7 @@ func HelpRequestsByUserID(db *sql.DB, userID, start, count int) ([]HelpRequest, 
 
 	for rows.Next() {
 		var hr HelpRequest
-		if err := rows.Scan(&hr.ID, &hr.UserID, &hr.Title, &hr.Content, &hr.Amount, &hr.CreatedAt); err != nil {
+		if err := rows.Scan(&hr.ID, &hr.UserID, &hr.Title, &hr.Content, &hr.Amount, &hr.CreatedAt, &hr.IsLiked); err != nil {
 			return nil, err
 		}
 		hrs = append(hrs, hr)

@@ -307,14 +307,16 @@ func IsLikedByUser(db *sql.DB, objType string, objID int, userID int) bool {
 	case "news_item":
 		sqlstr = fmt.Sprintf("SELECT count(*) from news_items join favorites where favorable_type = 'news_item' and favorable_id = '%d' and user_id = '%d'", objID, userID)
 	case "chip":
-		sqlstr = fmt.Sprintf("SELECT count(*) from chips join favorites where favorable_type = 'chip' and favorable_id = '%d' and user_id = '%d'", objID, userID)
+		sqlstr = fmt.Sprintf("SELECT count(*) from chips join favorites where chips.user_id = favorites.user_id and favorable_type = 'chip' and favorable_id = '%d' and chips.user_id = '%d'", objID, userID)
 	case "buy_request":
-		sqlstr = fmt.Sprintf("SELECT count(*) from buy_requests join favorites where favorable_type = 'buy_request' and favorable_id = '%d' and user_id = '%d'", objID, userID)
+		sqlstr = fmt.Sprintf("SELECT count(*) from buy_requests join favorites where buy_requests.user_id = favorites.user_id and favorable_type = 'buy_request' and favorable_id = '%d' and buy_requests.user_id = '%d'", objID, userID)
 	case "help_request":
-		sqlstr = fmt.Sprintf("SELECT count(*) from help_requests join favorites where favorable_type = 'help_request' and favorable_id = '%d' and user_id = '%d'", objID, userID)
+		sqlstr = fmt.Sprintf("SELECT count(*) from help_requests join favorites where help_requests.user_id = favorites.user_id and favorable_type = 'help_request' and favorable_id = '%d' and help_requests.user_id = '%d'", objID, userID)
 	}
+
 	fmt.Println(sqlstr)
-	err := db.QueryRow(sqlstr, objID, userID).Scan(&count)
+
+	err := db.QueryRow(sqlstr).Scan(&count)
 	if err != nil && err != sql.ErrNoRows {
 		log.Println(err)
 	}
