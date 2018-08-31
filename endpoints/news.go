@@ -2,14 +2,12 @@ package endpoints
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/dfang/yuanxin_api/model"
 	"github.com/dfang/yuanxin_api/util"
-	jwt "github.com/dgrijalva/jwt-go"
 
 	"github.com/gorilla/mux"
 	null "gopkg.in/guregu/null.v3"
@@ -53,24 +51,8 @@ func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		var userID int
-		currentUser := r.Context().Value("user")
-		if currentUser != nil {
-			claims := currentUser.(*jwt.Token).Claims.(jwt.MapClaims)
-			userID = int(claims["uid"].(float64))
-		}
-
-		fmt.Println(userID)
-		// fmt.Println(currentUser.(*jwt.Token).Claims)
-		// fmt.Println(claims["uid"])
-		// if currentUser != nil {
-		// 	currentUser.(*jwt.Token).Claims["uid"]
-		// }
-
-		// currentUser := context.Get(r, "user")
-		// fmt.Println("kkkkkkkkkkkkkkkk")
-		// fmt.Println(currentUser)
-
-		// userID := GetUIDFromContext(r)
+		userID, _ = strconv.Atoi(r.Header.Get("X-UserID"))
+		// fmt.Println(vars)
 		// fmt.Println(userID)
 
 		id, err := strconv.Atoi(vars["id"])
@@ -115,6 +97,5 @@ func GetNewsItemEndpoint(db *sql.DB) http.HandlerFunc {
 				Data:       ni,
 			})
 		}
-
 	})
 }

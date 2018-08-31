@@ -8,7 +8,6 @@ import (
 
 	"github.com/dfang/yuanxin_api/model"
 	"github.com/dfang/yuanxin_api/util"
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	null "gopkg.in/guregu/null.v3"
 )
@@ -186,11 +185,7 @@ func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 		vars := mux.Vars(r)
 
 		var userID int
-		currentUser := r.Context().Value("user")
-		if currentUser != nil {
-			claims := currentUser.(*jwt.Token).Claims.(jwt.MapClaims)
-			userID = int(claims["uid"].(float64))
-		}
+		userID, _ = strconv.Atoi(r.Header.Get("X-UserID"))
 
 		// userID := GetUIDFromContext(r)
 		id, err := strconv.Atoi(vars["id"])

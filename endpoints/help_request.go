@@ -8,7 +8,6 @@ import (
 
 	"github.com/dfang/yuanxin_api/model"
 	"github.com/dfang/yuanxin_api/util"
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	null "gopkg.in/guregu/null.v3"
 )
@@ -176,11 +175,7 @@ func GetHelpRequestEndpoint(db *sql.DB) http.HandlerFunc {
 		sqlstr := "SELECT help_requests.*, users.nickname, users.avatar FROM help_requests JOIN users on users.id = help_requests.user_id where help_requests.id = ?;"
 		// userID := GetUIDFromContext(r)
 		var userID int
-		currentUser := r.Context().Value("user")
-		if currentUser != nil {
-			claims := currentUser.(*jwt.Token).Claims.(jwt.MapClaims)
-			userID = int(claims["uid"].(float64))
-		}
+		userID, _ = strconv.Atoi(r.Header.Get("X-UserID"))
 
 		vars := mux.Vars(r)
 		id, err := strconv.Atoi(vars["id"])

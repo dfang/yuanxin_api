@@ -174,10 +174,10 @@ func (a *App) initializeRoutes(jwtmiddleware *jwtmiddleware.JWTMiddleware) {
 	r.Handle("/comments/{id:[0-9]+}", Protected(DeleteCommentEndpoint(a.DB))).Methods("DELETE")
 
 	// 这四个的详情需要显示收藏状态，未登录永远显示false，登录需要获取当前用户
-	r.Handle("/news/{id:[0-9]+}", Protected(GetNewsItemEndpoint(a.DB))).Methods("GET")
-	r.Handle("/chips/{id:[0-9]+}", Protected(GetChipEndpoint(a.DB))).Methods("GET")
-	r.Handle("/help_requests/{id:[0-9]+}", Protected(GetHelpRequestEndpoint(a.DB))).Methods("GET")
-	r.Handle("/buy_requests/{id:[0-9]+}", Protected(GetBuyRequestEndpoint(a.DB))).Methods("GET")
+	r.Handle("/news/{id:[0-9]+}", GetNewsItemEndpoint(a.DB)).Methods("GET")
+	r.Handle("/chips/{id:[0-9]+}", GetChipEndpoint(a.DB)).Methods("GET")
+	r.Handle("/help_requests/{id:[0-9]+}", GetHelpRequestEndpoint(a.DB)).Methods("GET")
+	r.Handle("/buy_requests/{id:[0-9]+}", GetBuyRequestEndpoint(a.DB)).Methods("GET")
 
 	// helpers
 	r.HandleFunc("/users", ListUsersEndpoint(a.DB)).Methods("GET")
