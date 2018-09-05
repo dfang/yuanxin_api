@@ -21,7 +21,7 @@ type Chip struct {
 	Specification   null.String `json:"specification"`                              // specification
 	IsVerified      null.Bool   `json:"is_verified" schema:"unit_price"`            // is_verified
 	Version         null.String `json:"version"`                                    // 版本
-	Volume          null.Int    `json:"volume"`                                     // 容量
+	Volume          null.String `json:"volume"`                                     // 容量
 	IsLiked         null.Bool   `json:"is_liked"`                                   // is_liked
 
 	// xo fields

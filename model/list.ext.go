@@ -8,6 +8,25 @@ import (
 	null "gopkg.in/guregu/null.v3"
 )
 
+type ChipDetailResult struct {
+	ID              int                `json:"id"`               // id
+	UserID          null.Int           `json:"user_id"`          // user_id
+	SerialNumber    null.String        `json:"serial_number"`    // serial_number
+	Vendor          null.String        `json:"vendor"`           // vendor
+	Amount          null.Int           `json:"amount"`           // amount
+	ManufactureDate null.Time          `json:"manufacture_date"` // manufacture_date
+	UnitPrice       null.Float         `json:"unit_price"`       // unit_price
+	Specification   null.String        `json:"specification"`    // specification
+	IsVerified      null.Bool          `json:"is_verified"`      // is_verified
+	Version         null.String        `json:"version"`
+	Volume          null.String        `json:"volume"`
+	NickName        null.String        `json:"nickname"`
+	Avatar          null.String        `json:"avatar"`
+	IsLiked         null.Bool          `json:"is_liked"`
+	Chips           []ChipDetailResult `json:"chips"`
+	BuyRequests     []BuyRequest       `json:"buy_requests"`
+}
+
 func GetChips(db *sql.DB, start, count int) ([]Chip, error) {
 	statement := fmt.Sprintf("SELECT id, user_id, serial_number, vendor, amount, manufacture_date, unit_price, specification, is_verified FROM chips ORDER BY manufacture_date DESC LIMIT %d, %d", start, count)
 	XOLog(statement)
@@ -322,8 +341,8 @@ func GetLikeBy(db *sql.DB, commentID int64, userID int64) (*Like, error) {
 }
 
 // SearchChips  芯片详情页面
-func SearchChips(db *sql.DB, q string, start, count int) ([]Chip, error) {
-	statement := fmt.Sprintf("select * from chips where serial_number like '%%%s%%' LIMIT %d, %d", q, start, count)
+func SearchChips(db *sql.DB, q string, start, count int) ([]ChipDetailResult, error) {
+	statement := fmt.Sprintf("select chips.*, users.nickname, users.avatar  from chips JOIN users on users.id = chips.user_id where serial_number like '%%%s%%' LIMIT %d, %d", q, start, count)
 	XOLog(statement)
 
 	rows, err := db.Query(statement)
@@ -333,14 +352,14 @@ func SearchChips(db *sql.DB, q string, start, count int) ([]Chip, error) {
 	}
 
 	defer rows.Close()
-	chips := []Chip{}
+	chips := []ChipDetailResult{}
 
 	for rows.Next() {
-		var chip Chip
-		if err := rows.Scan(&chip.ID, &chip.UserID, &chip.SerialNumber, &chip.Vendor, &chip.Amount, &chip.ManufactureDate, &chip.UnitPrice, &chip.Specification, &chip.IsVerified, &chip.Version, &chip.Volume, &chip.IsLiked); err != nil {
+		var result ChipDetailResult
+		if err := rows.Scan(&result.ID, &result.UserID, &result.SerialNumber, &result.Vendor, &result.Amount, &result.ManufactureDate, &result.UnitPrice, &result.Specification, &result.IsVerified, &result.Version, &result.Volume, &result.IsLiked, &result.NickName, &result.Avatar); err != nil {
 			return nil, err
 		}
-		chips = append(chips, chip)
+		chips = append(chips, result)
 	}
 
 	return chips, nil

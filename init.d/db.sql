@@ -105,7 +105,7 @@ CREATE table chips (
     specification varchar(255),
     is_verified boolean, -- 审核通过
     version varchar(255),
-    volume int,
+    volume varchar(255),
     is_liked boolean -- 是否收藏
 );
 
@@ -136,7 +136,7 @@ CREATE table likes (
     user_id int,
     comment_id int,
     created_at datetime
-)
+);
 
 -- CREATE TRIGGER sum_likes AFTER INSERT ON likes(
   

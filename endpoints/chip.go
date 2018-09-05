@@ -159,25 +159,6 @@ func DeleteChipEndpoint(db *sql.DB) http.HandlerFunc {
 	})
 }
 
-type chipDetailResult struct {
-	ID              int                `json:"id"`               // id
-	UserID          null.Int           `json:"user_id"`          // user_id
-	SerialNumber    null.String        `json:"serial_number"`    // serial_number
-	Vendor          null.String        `json:"vendor"`           // vendor
-	Amount          null.Int           `json:"amount"`           // amount
-	ManufactureDate null.Time          `json:"manufacture_date"` // manufacture_date
-	UnitPrice       null.Float         `json:"unit_price"`       // unit_price
-	Specification   null.String        `json:"specification"`    // specification
-	IsVerified      null.Bool          `json:"is_verified"`      // is_verified
-	Vesion          null.String        `json:"version"`
-	Volume          null.Int           `json:"volume"`
-	NickName        null.String        `json:"nickname"`
-	Avatar          null.String        `json:"avatar"`
-	IsLiked         null.Bool          `json:"is_liked"`
-	Chips           []model.Chip       `json:"chips"`
-	BuyRequests     []model.BuyRequest `json:"buy_requests"`
-}
-
 // GetChipEndpoint Get chip detail
 func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -192,8 +173,8 @@ func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			panic("convertion error")
 		}
-		var result chipDetailResult
-		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.SerialNumber, &result.Vendor, &result.Amount, &result.ManufactureDate, &result.UnitPrice, &result.Specification, &result.IsVerified, &result.Vendor, &result.Volume, &result.IsLiked, &result.NickName, &result.Avatar)
+		var result model.ChipDetailResult
+		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.SerialNumber, &result.Vendor, &result.Amount, &result.ManufactureDate, &result.UnitPrice, &result.Specification, &result.IsVerified, &result.Version, &result.Volume, &result.IsLiked, &result.NickName, &result.Avatar)
 		PanicIfNotNil(err)
 
 		// TODO need to query db
@@ -211,9 +192,9 @@ func GetChipEndpoint(db *sql.DB) http.HandlerFunc {
 		result.BuyRequests = buyRequests
 
 		util.RespondWithJSON(w, http.StatusOK, struct {
-			StatusCode int              `json:"status_code"`
-			Message    string           `json:"msg"`
-			Data       chipDetailResult `json:"data"`
+			StatusCode int                    `json:"status_code"`
+			Message    string                 `json:"msg"`
+			Data       model.ChipDetailResult `json:"data"`
 		}{
 			StatusCode: 200,
 			Message:    "查询成功",
