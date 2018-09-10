@@ -434,7 +434,7 @@ func ListUsersEndpoint(db *sql.DB) http.HandlerFunc {
 }
 
 // 认证专家列表
-func ListProfessionalsEndpoint(db *sql.DB) http.HandlerFunc {
+func ListExpertsEndpoint(db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		qs := r.URL.Query()
 		count, _ := strconv.Atoi(qs.Get("count"))
@@ -448,7 +448,7 @@ func ListProfessionalsEndpoint(db *sql.DB) http.HandlerFunc {
 			start = 0
 		}
 
-		users, err := model.GetAllProfessionalUsers(db, start, count)
+		users, err := model.GetAllExpertUsers(db, start, count)
 		if err != nil {
 			util.RespondWithJSON(w, http.StatusInternalServerError, err.Error())
 			return

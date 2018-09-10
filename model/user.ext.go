@@ -249,8 +249,8 @@ func GetAllUsers(db *sql.DB, start, count int) ([]User, error) {
 	return users, nil
 }
 
-// GetAllProfessionalUsers 认证专家列表
-func GetAllProfessionalUsers(db *sql.DB, start, count int) ([]User, error) {
+// GetAllExpertUsers 认证专家列表
+func GetAllExpertUsers(db *sql.DB, start, count int) ([]User, error) {
 	sqlstr := fmt.Sprintf("SELECT id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified FROM news.users WHERE is_verified = TRUE AND role = 3 LIMIT %d, %d ", start, count)
 
 	rows, err := db.Query(sqlstr)
