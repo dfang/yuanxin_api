@@ -180,7 +180,7 @@ func GetBuyRequestEndpoint(db *sql.DB) http.HandlerFunc {
 		}
 		var result buyRequestDetailResult
 
-		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.Title, &result.Content, &result.Amount, &result.CreatedAt, &result.NickName, &result.Avatar, &result.IsLiked)
+		err = db.QueryRow(sqlstr, id).Scan(&result.ID, &result.UserID, &result.Title, &result.Content, &result.Amount, &result.CreatedAt, &result.IsLiked, &result.NickName, &result.Avatar)
 		PanicIfNotNil(err)
 
 		// result.IsLiked = null.BoolFrom(false)
