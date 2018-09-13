@@ -36,7 +36,7 @@ CREATE TABLE users(
     license varchar(256), -- 卖家营业执照, 必填？
     expertise varchar(256), -- 专家擅长领域, 必填？
     resume varchar(512), -- 专家简历, 必填?
-    role int, -- 普通用户1，卖家2，专家3
+    role int, -- 专家1，卖家2，其他普通用户
     is_verified boolean, -- 审核通过
     remark text, -- 备注
     acc_id varchar(100), -- im用户名

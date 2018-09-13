@@ -50,7 +50,7 @@ func RegistrationEndpoint(db *sql.DB) http.HandlerFunc {
 		}
 
 		user.Pwd = hashAndSalt([]byte(user.Pwd))
-		user.Role = null.IntFrom(1)
+		// user.Role = null.IntFrom(1)
 
 		err = user.RegisterUser(db)
 		if err != nil {
