@@ -251,7 +251,7 @@ func GetAllUsers(db *sql.DB, start, count int) ([]User, error) {
 
 // GetAllExpertUsers 认证专家列表
 func GetAllExpertUsers(db *sql.DB, start, count int) ([]User, error) {
-	sqlstr := fmt.Sprintf("SELECT id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified FROM news.users WHERE is_verified = TRUE AND role = 3 LIMIT %d, %d ", start, count)
+	sqlstr := fmt.Sprintf("SELECT id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified FROM news.users WHERE is_verified = TRUE AND role = 1 LIMIT %d, %d ", start, count)
 
 	rows, err := db.Query(sqlstr)
 
@@ -274,7 +274,7 @@ func GetAllExpertUsers(db *sql.DB, start, count int) ([]User, error) {
 	return users, nil
 }
 
-// GetAllSellerUsers 认证专家列表
+// GetAllSellerUsers 认证卖家列表
 func GetAllSellerUsers(db *sql.DB, start, count int) ([]User, error) {
 	sqlstr := fmt.Sprintf("SELECT id, nickname, pwd, phone, email, avatar, gender, biography, created_at, login_date, real_name, identity_card_num, identity_card_front, identity_card_back, from_code, license, expertise, resume, role, is_verified FROM news.users WHERE is_verified = TRUE AND role = 2 LIMIT %d, %d ", start, count)
 

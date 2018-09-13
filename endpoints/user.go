@@ -381,7 +381,7 @@ func ApplyExpertEndpoint(db *sql.DB) http.HandlerFunc {
 		// TODO
 		// user.IsVerified = null.BoolFrom(true)
 		// TODO
-		user.Role = null.IntFrom(3)
+		user.Role = null.IntFrom(1)
 
 		err = user.ApplyExpert(db)
 		if err != nil {
